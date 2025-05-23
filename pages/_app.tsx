@@ -45,7 +45,7 @@ const wagmiAdapter = new WagmiAdapter({
 });
 
 // ✅ Create AppKit instance
-createAppKit({
+const appKit = createAppKit({
   adapters: [wagmiAdapter],
   networks,
   projectId,
