@@ -1,6 +1,4 @@
 // pages/_app.tsx
-'use client';
-
 import React from 'react';
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
@@ -14,13 +12,20 @@ import { cookieStorage, createStorage } from 'wagmi';
 import { type Config, cookieToInitialState } from 'wagmi';
 import type { Chain } from 'viem';
 
-// ✅ Create the required QueryClient
-const queryClient = new QueryClient();
+// Create the QueryClient
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      staleTime: 60 * 1000, // 1 minute
+    },
+  },
+});
 
-// ✅ WalletConnect Project ID - Get this from https://cloud.reown.com
+// WalletConnect Project ID
 const projectId = 'd1f17d2a950ed5ae72e2378345aeba58';
 
-// ✅ Set up metadata
+// Set up metadata
 const metadata = {
   name: 'Aura Web',
   description: 'Aura Web Application',
@@ -28,10 +33,10 @@ const metadata = {
   icons: ['https://aura-web.com/icon.png']
 };
 
-// ✅ Set up networks
+// Set up networks
 const networks = [base] as [Chain, ...Chain[]];
 
-// ✅ Create Wagmi Adapter
+// Create Wagmi Adapter
 const wagmiAdapter = new WagmiAdapter({
   storage: createStorage({
     storage: cookieStorage
@@ -44,7 +49,7 @@ const wagmiAdapter = new WagmiAdapter({
   ssr: true
 });
 
-// ✅ Create AppKit instance
+// Create AppKit instance
 const appKit = createAppKit({
   adapters: [wagmiAdapter],
   networks,
@@ -58,14 +63,19 @@ const appKit = createAppKit({
   }
 });
 
-// ✅ Main App
+// Main App
 export default function App({ Component, pageProps }: AppProps) {
+  const [mounted, setMounted] = React.useState(false);
   const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig as Config);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <WagmiProvider config={wagmiAdapter.wagmiConfig} initialState={initialState}>
       <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
+        {mounted && <Component {...pageProps} />}
       </QueryClientProvider>
     </WagmiProvider>
   );
