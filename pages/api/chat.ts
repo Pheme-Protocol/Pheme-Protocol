@@ -1,11 +1,17 @@
-export default async function handler(req, res) {
+// pages/api/chat.ts
+
+import type { NextApiRequest, NextApiResponse } from 'next'
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { message } = req.body;
 
   if (!message || typeof message !== 'string') {
     return res.status(400).json({ error: 'Invalid message' });
   }
 
-  // Replace this with your actual OpenAI call
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
