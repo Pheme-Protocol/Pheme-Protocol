@@ -8,9 +8,9 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-6">
-      <div className="mb-8 flex items-center justify-center">
+      <div className="w-full max-w-[320px] mb-8">
         <div className="transition-transform hover:scale-105 duration-300">
-          <AuraLogo className="sm:w-[320px]" />
+          <AuraLogo width={320} height={80} />
         </div>
       </div>
 
