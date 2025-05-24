@@ -13,22 +13,30 @@ declare global {
 export function ConnectButton() {
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
+  const { open } = useAppKit();
 
   if (!isConnected) {
     return (
-      <appkit-button />
+      <button
+        onClick={() => open()}
+        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-semibold"
+      >
+        Connect Wallet
+      </button>
     );
   }
 
   return (
     <button
       onClick={() => disconnect()}
-      className="rounded-full border border-solid transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-6 sm:px-8"
+      className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 font-semibold flex items-center gap-2"
     >
-      Disconnect
-      <span className="text-xs opacity-70">
-        ({address?.slice(0, 6)}...{address?.slice(-4)})
-      </span>
+      <span>Disconnect</span>
+      {address && (
+        <span className="text-sm opacity-80">
+          ({address.slice(0, 6)}...{address.slice(-4)})
+        </span>
+      )}
     </button>
   );
 } 
