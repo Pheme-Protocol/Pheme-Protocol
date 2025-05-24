@@ -25,20 +25,33 @@ const nextConfig = {
     };
     return config;
   },
-  // Add domain configuration
+  // Add domain configuration with support for both www and non-www
   async headers() {
     return [
       {
         source: '/:path*',
         headers: [
-          { key: 'Access-Control-Allow-Origin', value: 'https://aurabot.app' },
-          { key: 'Access-Control-Allow-Methods', value: 'GET,POST,OPTIONS' },
-          { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization' },
+          { 
+            key: 'Access-Control-Allow-Origin', 
+            value: 'https://aurabot.app, https://www.aurabot.app' 
+          },
+          { 
+            key: 'Access-Control-Allow-Methods', 
+            value: 'GET,POST,OPTIONS,PUT,DELETE' 
+          },
+          { 
+            key: 'Access-Control-Allow-Headers', 
+            value: 'X-Requested-With, Content-Type, Authorization' 
+          },
+          {
+            key: 'Access-Control-Allow-Credentials',
+            value: 'true'
+          }
         ],
       },
     ];
   },
-  // Add domain redirects and rewrites
+  // Add domain redirects and rewrites for both www and non-www
   async rewrites() {
     return {
       beforeFiles: [
@@ -47,7 +60,7 @@ const nextConfig = {
           has: [
             {
               type: 'host',
-              value: 'aurabot.app',
+              value: '(www.)?aurabot.app'
             },
           ],
           destination: '/api/:path*',
