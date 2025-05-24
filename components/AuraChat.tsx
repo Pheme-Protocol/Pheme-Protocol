@@ -39,7 +39,8 @@ export function AuraChat() {
     setMessages((prev) => [...prev, { sender: 'You', text: input }]);
 
     try {
-      const res = await fetch('/api/chat', {
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+      const res = await fetch(`${baseUrl}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: input }),

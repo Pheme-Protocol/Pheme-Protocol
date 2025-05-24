@@ -5,6 +5,7 @@
   "installCommand": "npm install",
   "framework": "nextjs",
   "regions": ["lhr1"],
+  "trailingSlash": false,
   "headers": [
     {
       "source": "/(.*)",
@@ -30,15 +31,26 @@
   ],
   "redirects": [
     {
-      "source": "/",
+      "source": "/:path*",
       "has": [
         {
           "type": "host",
           "value": "www.aurabot.app"
         }
       ],
-      "destination": "https://aurabot.app",
+      "destination": "https://aurabot.app/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "aurabot.vercel.app"
+        }
+      ],
+      "destination": "https://aurabot.app/:path*",
       "permanent": true
     }
   ]
-} 
+}

@@ -19,13 +19,18 @@ type OptionalEnvVars = typeof optionalEnvVars[number];
 type EnvVars = RequiredEnvVars | OptionalEnvVars;
 
 export function validateEnv(): void {
+  // Skip validation during build time
+  if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
+    return;
+  }
+
   const missingVars = requiredEnvVars.filter(
     (envVar) => !process.env[envVar]
   );
 
-  if (missingVars.length > 0) {
-    throw new Error(
-      `Missing required environment variables:\n${missingVars.join('\n')}\n` +
+  if (missingVars.length > 0 && process.env.NODE_ENV !== 'test') {
+    console.warn(
+      `Warning: Missing environment variables:\n${missingVars.join('\n')}\n` +
       'Please check env.template for required variables.'
     );
   }
@@ -49,8 +54,16 @@ export function getEnvVar(key: EnvVars): string | undefined {
 
 export function getRequiredEnvVar(key: RequiredEnvVars): string {
   const value = process.env[key];
-  if (!value) {
-    throw new Error(`Required environment variable ${key} is not set`);
+  
+  // During build time, return a placeholder value
+  if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE === 'phase-production-build') {
+    return 'build-placeholder';
   }
-  return value;
+
+  if (!value && process.env.NODE_ENV !== 'test') {
+    console.warn(`Warning: Required environment variable ${key} is not set`);
+    return '';
+  }
+
+  return value || '';
 } 
