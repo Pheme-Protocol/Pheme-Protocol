@@ -1,8 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  experimental: {
+    esmExternals: true
+  },
   transpilePackages: ['@reown/appkit', '@reown/appkit-adapter-wagmi', 'wagmi', 'viem'],
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
+    // Add handling for .mjs files
+    config.module.rules.push({
+      test: /\.mjs$/,
+      include: /node_modules/,
+      type: 'javascript/auto',
+    });
     config.resolve.fallback = {
       ...config.resolve.fallback,
       fs: false,
@@ -15,9 +24,6 @@ const nextConfig = {
       zlib: false,
     };
     return config;
-  },
-  env: {
-    NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: 'd1f17d2a950ed5ae72e2378345aeba58',
   }
 };
 

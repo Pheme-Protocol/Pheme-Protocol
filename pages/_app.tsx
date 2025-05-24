@@ -42,17 +42,16 @@ const queryClient = new QueryClient({
 
 // WalletConnect Project ID
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
-
 if (!projectId) {
   throw new Error('Missing NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID');
 }
 
 // Set up metadata
 const metadata = {
-  name: 'Aura Web',
-  description: 'Aura Web Application',
-  url: 'https://aura-web.com',
-  icons: ['https://aura-web.com/icon.png']
+  name: 'AURA CHATBOT',
+  description: 'AURA CHATBOT - Your AI Assistant',
+  url: 'https://aura-chatbot.com',
+  icons: ['https://aura-chatbot.com/icon.png']
 };
 
 // Set up networks
