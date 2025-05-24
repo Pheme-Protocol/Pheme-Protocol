@@ -24,7 +24,37 @@ const nextConfig = {
       zlib: false,
     };
     return config;
-  }
+  },
+  // Add domain configuration
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: 'https://aurabot.app' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET,POST,OPTIONS' },
+          { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization' },
+        ],
+      },
+    ];
+  },
+  // Add domain redirects and rewrites
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/api/:path*',
+          has: [
+            {
+              type: 'host',
+              value: 'aurabot.app',
+            },
+          ],
+          destination: '/api/:path*',
+        },
+      ],
+    };
+  },
 };
 
 module.exports = nextConfig; 
