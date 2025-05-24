@@ -2,11 +2,16 @@ import { http, createConfig } from 'wagmi'
 import { walletConnect } from 'wagmi/connectors'
 import { base } from 'wagmi/chains'
 
+// Check for required environment variable
+if (!process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID) {
+  throw new Error('Missing NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID');
+}
+
 export const wagmiConfig = createConfig({
   chains: [base],
   connectors: [
     walletConnect({
-      projectId: '3d44d5da3ee637236301d71b7ed34b40', // ✅ your real WC Project ID
+      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
       showQrModal: true, // 🔥 this MUST be true!
     }),
   ],
