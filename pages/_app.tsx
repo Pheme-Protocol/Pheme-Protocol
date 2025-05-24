@@ -20,19 +20,28 @@
 import React from 'react';
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
+import { type NextComponentType } from 'next';
+import { useAppKitProvider } from '@reown/appkit/react';
+import { createConfig, WagmiConfig } from 'wagmi';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { http } from 'viem';
+import { mainnet } from 'viem/chains';
+import Head from 'next/head';
 import { WagmiProvider } from 'wagmi';
 import { base } from '@reown/appkit/networks';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 import { createAppKit } from '@reown/appkit/react';
 import { cookieStorage, createStorage } from 'wagmi';
 import { type Config, cookieToInitialState } from 'wagmi';
 import type { Chain } from 'viem';
-import { http } from 'viem';
-import Head from 'next/head';
-import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { publicProvider } from 'wagmi/providers/public';
-import { WalletKitProvider } from '@reown/walletkit';
+
+// Create wagmi config
+const config = createConfig({
+  chains: [mainnet],
+  transports: {
+    [mainnet.id]: http(),
+  },
+});
 
 // Create the QueryClient
 const queryClient = new QueryClient({
@@ -42,19 +51,6 @@ const queryClient = new QueryClient({
       staleTime: 60 * 1000, // 1 minute
     },
   },
-});
-
-// Configure chains & providers
-const { chains, provider, webSocketProvider } = configureChains(
-  [base],
-  [publicProvider()]
-);
-
-// Set up wagmi client
-const client = createClient({
-  autoConnect: true,
-  provider,
-  webSocketProvider,
 });
 
 // WalletConnect Project ID
@@ -112,32 +108,10 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <>
-      <Head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <link rel="icon" href="/favicon.ico" />
-        <title>Aura Web</title>
-      </Head>
-      <WagmiConfig client={client}>
-        <WalletKitProvider
-          projectId={projectId}
-          chains={chains}
-          metadata={{
-            name: 'Aura Web',
-            description: 'Aura Web Application',
-            url: 'https://aura-web.com',
-            icons: ['https://aura-web.com/icon.png']
-          }}
-        >
-          <WagmiProvider config={wagmiAdapter.wagmiConfig} initialState={initialState}>
-            <QueryClientProvider client={queryClient}>
-              {mounted && <Component {...pageProps} />}
-            </QueryClientProvider>
-          </WagmiProvider>
-        </WalletKitProvider>
-      </WagmiConfig>
-    </>
+    <WagmiProvider config={wagmiAdapter.wagmiConfig} initialState={initialState}>
+      <QueryClientProvider client={queryClient}>
+        {mounted && <Component {...pageProps} />}
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }
