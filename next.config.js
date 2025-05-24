@@ -45,11 +45,11 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self' https://*.autobot.app https://*.aurabot.app https://*.vercel.app; " +
-                   "img-src 'self' data: https://*.autobot.app https://*.aurabot.app https://*.vercel.app; " +
+            value: "default-src 'self' https://aurabot.app https://*.aurabot.app https://*.vercel.app; " +
+                   "img-src 'self' data: https://aurabot.app https://*.aurabot.app https://*.vercel.app; " +
                    "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
                    "style-src 'self' 'unsafe-inline'; " +
-                   "connect-src 'self' https://*.autobot.app https://*.aurabot.app https://*.vercel.app https://api.openai.com; " +
+                   "connect-src 'self' https://aurabot.app https://*.aurabot.app https://*.vercel.app https://api.openai.com; " +
                    "frame-ancestors 'none';"
           },
           {

@@ -29,6 +29,12 @@ import { cookieStorage, createStorage } from 'wagmi';
 import { type Config, cookieToInitialState } from 'wagmi';
 import type { Chain } from 'viem';
 import { http } from 'viem';
+import { validateEnv, getRequiredEnvVar } from '../utils/env';
+
+// Validate environment variables
+if (typeof window === 'undefined') {
+  validateEnv();
+}
 
 // Create the QueryClient
 const queryClient = new QueryClient({
@@ -40,9 +46,8 @@ const queryClient = new QueryClient({
   },
 });
 
-// Ensure required environment variables
-const requiredProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID as string;
-if (!requiredProjectId) throw new Error('Missing NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID');
+// Get required environment variables
+const requiredProjectId = getRequiredEnvVar('NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID');
 
 // Set up networks
 const networks = [base] as [Chain, ...Chain[]];

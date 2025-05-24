@@ -6,6 +6,26 @@ This is a Next.js project bootstrapped with create-next-app.
 
 This repository does not permit the use of its code or content by Generative AI systems. See [NO_AI.md](NO_AI.md) for detailed restrictions and policies regarding AI usage.
 
+## Environment Setup
+
+1. Copy the environment template:
+```bash
+cp env.template .env.local
+```
+
+2. Fill in the required environment variables:
+
+Required variables:
+- `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`: Get from [WalletConnect Cloud](https://cloud.walletconnect.com/)
+- `OPENAI_API_KEY`: Get from [OpenAI API Keys](https://platform.openai.com/api-keys)
+
+Optional variables:
+- `NEXT_PUBLIC_SITE_URL`: Your production site URL
+- `NODE_ENV`: development/production/test
+- `NEXT_PUBLIC_ANALYTICS_ENABLED`: Enable analytics tracking
+- `RATE_LIMIT_REQUESTS`: Rate limit requests per minute
+- `RATE_LIMIT_WINDOW_MS`: Rate limit window in milliseconds
+
 ## Getting Started
 
 First, run the development server:
@@ -69,3 +89,24 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+```
+
+## Production Deployment
+
+1. Set up environment variables in your Vercel project
+2. Configure DNS settings for your domain
+3. Deploy to production
+
+```bash
+npm run build
+npm start
+```
