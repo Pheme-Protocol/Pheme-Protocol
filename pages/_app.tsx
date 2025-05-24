@@ -2,8 +2,7 @@
 import React from 'react';
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-
-import { WagmiProvider, createConfig, http } from 'wagmi';
+import { WagmiProvider } from 'wagmi';
 import { base } from '@reown/appkit/networks';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
@@ -11,6 +10,7 @@ import { createAppKit } from '@reown/appkit/react';
 import { cookieStorage, createStorage } from 'wagmi';
 import { type Config, cookieToInitialState } from 'wagmi';
 import type { Chain } from 'viem';
+import { http } from 'viem';
 
 // Create the QueryClient
 const queryClient = new QueryClient({
@@ -54,7 +54,7 @@ const wagmiAdapter = new WagmiAdapter({
 });
 
 // Create AppKit instance
-const appKit = createAppKit({
+createAppKit({
   adapters: [wagmiAdapter],
   networks,
   projectId,
