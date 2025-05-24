@@ -20,6 +20,7 @@
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ConnectButton } from './ConnectButton';
+import Image from 'next/image';
 
 export function AuraChat() {
   const { isConnected } = useAccount();
@@ -59,7 +60,10 @@ export function AuraChat() {
   return (
     <div className="w-full max-w-2xl bg-gray-800 p-4 rounded-lg space-y-3">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-blue-400">🔮 Talk to AURA</h2>
+        <h2 className="text-xl font-semibold text-blue-400 flex items-center">
+          <Image src="/aura_wave.svg" alt="AURA Wave" width={32} height={32} className="mr-2" />
+          Talk to AURA
+        </h2>
         <ConnectButton />
       </div>
 
