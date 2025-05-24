@@ -5,18 +5,18 @@ import { useAccount, useDisconnect } from 'wagmi';
 
 const inter = Inter({ subsets: ['latin'] });
 
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'appkit-button': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+    }
+  }
+}
+
 export default function Home() {
   const { open } = useAppKit();
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
-
-  const handleWalletAction = () => {
-    if (isConnected) {
-      disconnect();
-    } else {
-      open();
-    }
-  };
 
   return (
     <div
@@ -34,21 +34,24 @@ export default function Home() {
           />
           
           {/* Wallet Connect/Disconnect Button */}
-          <button
-            onClick={handleWalletAction}
-            className="rounded-full border border-solid transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-6 sm:px-8"
-          >
-            {isConnected ? (
-              <>
-                Disconnect
-                <span className="text-xs opacity-70">
-                  ({address?.slice(0, 6)}...{address?.slice(-4)})
-                </span>
-              </>
-            ) : (
-              'Connect Wallet'
-            )}
-          </button>
+          {isConnected ? (
+            <button
+              onClick={() => disconnect()}
+              className="rounded-full border border-solid transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-6 sm:px-8"
+            >
+              Disconnect
+              <span className="text-xs opacity-70">
+                ({address?.slice(0, 6)}...{address?.slice(-4)})
+              </span>
+            </button>
+          ) : (
+            <button
+              onClick={() => open()}
+              className="rounded-full border border-solid transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-6 sm:px-8"
+            >
+              Connect Wallet
+            </button>
+          )}
         </div>
 
         <ol className="list-inside list-decimal text-sm text-center sm:text-left">
