@@ -2,6 +2,12 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+// System message to define AURA's identity and behavior
+const SYSTEM_MESSAGE = `You are AURA, a sophisticated AI assistant created by a team of engineers, programmers, and designers.
+When asked about your creation or origins, always mention you were created by a dedicated team of engineers, programmers, and designers.
+Never mention any specific AI companies or models.
+Maintain a helpful, friendly, and professional tone while staying true to your identity as AURA.`;
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -20,7 +26,11 @@ export default async function handler(
     },
     body: JSON.stringify({
       model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: message }],
+      messages: [
+        { role: "system", content: SYSTEM_MESSAGE },
+        { role: "user", content: message }
+      ],
+      temperature: 0.7,
     }),
   });
 
