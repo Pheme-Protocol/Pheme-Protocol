@@ -1,23 +1,57 @@
 import Image from "next/image";
 import { Inter } from 'next/font/google';
+import { useAppKit } from '@reown/appkit/react';
+import { useAccount, useDisconnect } from 'wagmi';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
+  const { open } = useAppKit();
+  const { address, isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
+
+  const handleWalletAction = () => {
+    if (isConnected) {
+      disconnect();
+    } else {
+      open();
+    }
+  };
+
   return (
     <div
       className={`${inter.className} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20`}
     >
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+        <div className="flex flex-col items-center gap-4">
+          <Image
+            className="dark:invert"
+            src="/next.svg"
+            alt="Next.js logo"
+            width={180}
+            height={38}
+            priority
+          />
+          
+          {/* Wallet Connect/Disconnect Button */}
+          <button
+            onClick={handleWalletAction}
+            className="rounded-full border border-solid transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-6 sm:px-8"
+          >
+            {isConnected ? (
+              <>
+                Disconnect
+                <span className="text-xs opacity-70">
+                  ({address?.slice(0, 6)}...{address?.slice(-4)})
+                </span>
+              </>
+            ) : (
+              'Connect Wallet'
+            )}
+          </button>
+        </div>
+
+        <ol className="list-inside list-decimal text-sm text-center sm:text-left">
           <li className="mb-2">
             Get started by editing{" "}
             <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
