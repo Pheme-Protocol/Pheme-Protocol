@@ -25,23 +25,30 @@ const nextConfig = {
     };
     return config;
   },
-  // Add domain configuration with support for both www and non-www
+  // Enhanced domain configuration
   async headers() {
+    const allowedOrigins = [
+      'https://aurabot.app',
+      'https://www.aurabot.app',
+      'http://localhost:3000',
+      'http://localhost:3002'
+    ];
+
     return [
       {
-        source: '/:path*',
+        source: '/api/:path*',
         headers: [
-          { 
-            key: 'Access-Control-Allow-Origin', 
-            value: 'https://aurabot.app, https://www.aurabot.app' 
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*'  // Temporarily allow all origins while debugging
           },
-          { 
-            key: 'Access-Control-Allow-Methods', 
-            value: 'GET,POST,OPTIONS,PUT,DELETE' 
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, POST, PUT, DELETE, OPTIONS'
           },
-          { 
-            key: 'Access-Control-Allow-Headers', 
-            value: 'X-Requested-With, Content-Type, Authorization' 
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'X-Requested-With, Content-Type, Authorization, Accept'
           },
           {
             key: 'Access-Control-Allow-Credentials',
@@ -49,25 +56,44 @@ const nextConfig = {
           }
         ],
       },
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*'  // Temporarily allow all origins while debugging
+          }
+        ],
+      }
     ];
   },
-  // Add domain redirects and rewrites for both www and non-www
+  // Simplified rewrites configuration
   async rewrites() {
     return {
       beforeFiles: [
         {
           source: '/api/:path*',
-          has: [
-            {
-              type: 'host',
-              value: '(www.)?aurabot.app'
-            },
-          ],
           destination: '/api/:path*',
-        },
-      ],
+        }
+      ]
     };
   },
+  // Add redirects to handle www to non-www
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.aurabot.app',
+          },
+        ],
+        destination: 'https://aurabot.app/:path*',
+        permanent: true,
+      },
+    ];
+  }
 };
 
 module.exports = nextConfig; 
