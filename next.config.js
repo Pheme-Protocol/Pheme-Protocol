@@ -27,41 +27,46 @@ const nextConfig = {
   },
   // Security headers configuration
   async headers() {
+    const securityHeaders = [
+      {
+        key: 'X-Frame-Options',
+        value: 'DENY'
+      },
+      {
+        key: 'Access-Control-Allow-Methods',
+        value: 'GET, POST, PUT, DELETE, OPTIONS'
+      },
+      {
+        key: 'Access-Control-Allow-Headers',
+        value: 'X-Requested-With, Content-Type, Authorization, Accept'
+      }
+    ];
+
+    // Only add CORS in development
+    if (process.env.NODE_ENV === 'development') {
+      securityHeaders.push({
+        key: 'Access-Control-Allow-Origin',
+        value: '*'
+      });
+    }
+
     return [
       {
         source: '/:path*',
-        headers: [
-          {
-            key: 'Access-Control-Allow-Origin',
-            value: '*'
-          },
-          {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET, POST, PUT, DELETE, OPTIONS'
-          },
-          {
-            key: 'Access-Control-Allow-Headers',
-            value: 'X-Requested-With, Content-Type, Authorization, Accept'
-          },
-          {
-            key: 'Content-Security-Policy',
-            value: "default-src 'self' https://aurabot.app https://*.aurabot.app https://*.vercel.app; " +
-                   "img-src 'self' data: https://aurabot.app https://*.aurabot.app https://*.vercel.app; " +
-                   "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
-                   "style-src 'self' 'unsafe-inline'; " +
-                   "connect-src 'self' https://aurabot.app https://*.aurabot.app https://*.vercel.app https://api.openai.com; " +
-                   "frame-ancestors 'none';"
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY'
-          }
-        ],
+        headers: securityHeaders
       }
     ];
   },
-  // Simplified rewrites
+  // Domain configuration for production
   async rewrites() {
+    if (process.env.NODE_ENV === 'development') {
+      return [
+        {
+          source: '/api/:path*',
+          destination: 'https://aurabot.app/api/:path*'
+        }
+      ];
+    }
     return [];
   }
 };
