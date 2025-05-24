@@ -23,7 +23,11 @@ const queryClient = new QueryClient({
 });
 
 // WalletConnect Project ID
-const projectId = 'd1f17d2a950ed5ae72e2378345aeba58';
+const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
+
+if (!projectId) {
+  throw new Error('Missing NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID');
+}
 
 // Set up metadata
 const metadata = {
