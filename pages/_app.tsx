@@ -40,19 +40,9 @@ const queryClient = new QueryClient({
   },
 });
 
-// WalletConnect Project ID
-const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
-if (!projectId) {
-  throw new Error('Missing NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID');
-}
-
-// Set up metadata
-const metadata = {
-  name: 'AURA CHATBOT',
-  description: 'AURA CHATBOT - Your AI Assistant',
-  url: 'https://aura-chatbot.com',
-  icons: ['https://aura-chatbot.com/icon.png']
-};
+// Ensure required environment variables
+const requiredProjectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID as string;
+if (!requiredProjectId) throw new Error('Missing NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID');
 
 // Set up networks
 const networks = [base] as [Chain, ...Chain[]];
@@ -62,26 +52,12 @@ const wagmiAdapter = new WagmiAdapter({
   storage: createStorage({
     storage: cookieStorage
   }),
-  projectId,
+  projectId: requiredProjectId,
   networks,
   transports: {
     [base.id]: http()
   },
   ssr: true
-});
-
-// Create AppKit instance
-createAppKit({
-  adapters: [wagmiAdapter],
-  networks,
-  projectId,
-  metadata,
-  features: {
-    analytics: true,
-    email: true,
-    socials: ['google', 'x', 'github', 'discord', 'apple'],
-    emailShowWallets: true
-  }
 });
 
 // Main App
@@ -91,6 +67,30 @@ export default function App({ Component, pageProps }: AppProps) {
 
   React.useEffect(() => {
     setMounted(true);
+  }, []);
+
+  // Initialize AppKit in browser only
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const origin = window.location.origin;
+    createAppKit({
+      adapters: [wagmiAdapter],
+      networks,
+      projectId: requiredProjectId,
+      metadata: {
+        name: 'AURA',
+        description: 'AURA - Web3 Chat Platform',
+        url: origin,
+        icons: [origin + '/aura_logo.svg']
+      },
+      features: {
+        analytics: true,
+        email: true,
+        socials: ['google', 'x', 'github', 'discord', 'apple'],
+        emailShowWallets: true
+      }
+    });
   }, []);
 
   return (
