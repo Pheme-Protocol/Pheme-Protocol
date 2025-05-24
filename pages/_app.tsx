@@ -73,30 +73,45 @@ export default function App({ Component, pageProps }: AppProps) {
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const origin = window.location.origin;
-    createAppKit({
-      adapters: [wagmiAdapter],
-      networks,
-      projectId: requiredProjectId,
-      metadata: {
-        name: 'AURA',
-        description: 'AURA - Web3 Chat Platform',
-        url: origin,
-        icons: [origin + '/aura_logo.svg']
-      },
-      features: {
-        analytics: true,
-        email: true,
-        socials: ['google', 'x', 'github', 'discord', 'apple'],
-        emailShowWallets: true
-      }
-    });
+    try {
+      const origin = window.location.origin;
+      console.log('Initializing AppKit with origin:', origin);
+      
+      createAppKit({
+        adapters: [wagmiAdapter],
+        networks,
+        projectId: requiredProjectId,
+        metadata: {
+          name: 'AURA',
+          description: 'AURA - Web3 Chat Platform',
+          url: origin,
+          icons: [origin + '/aura_logo.svg']
+        },
+        features: {
+          analytics: true,
+          email: true,
+          socials: ['google', 'x', 'github', 'discord', 'apple'],
+          emailShowWallets: true
+        }
+      });
+      console.log('AppKit initialized successfully');
+    } catch (error) {
+      console.error('Failed to initialize AppKit:', error);
+    }
   }, []);
+
+  if (!mounted) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-black text-white">
+        <p>Loading application...</p>
+      </div>
+    );
+  }
 
   return (
     <WagmiProvider config={wagmiAdapter.wagmiConfig} initialState={initialState}>
       <QueryClientProvider client={queryClient}>
-        {mounted && <Component {...pageProps} />}
+        <Component {...pageProps} />
       </QueryClientProvider>
     </WagmiProvider>
   );

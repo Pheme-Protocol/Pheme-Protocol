@@ -26,23 +26,41 @@ export function AuraChat() {
   const { isConnected } = useAccount();
   const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
   const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
 
     if (!input.trim()) return;
 
+    setIsLoading(true);
     setMessages((prev) => [...prev, { sender: 'You', text: input }]);
 
-    const res = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: input }),
-    });
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: input }),
+      });
 
-    const data = await res.json();
-    setMessages((prev) => [...prev, { sender: 'AURA', text: data.reply }]);
-    setInput('');
+      const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to get response');
+      }
+
+      setMessages((prev) => [...prev, { sender: 'AURA', text: data.reply }]);
+      setInput('');
+    } catch (err) {
+      console.error('Chat error:', err);
+      setError('Failed to send message. Please try again.');
+      // Remove the user's message if it failed
+      setMessages((prev) => prev.slice(0, -1));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!isConnected) {
@@ -61,7 +79,20 @@ export function AuraChat() {
     <div className="w-full max-w-2xl bg-gray-800 p-4 rounded-lg space-y-3">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-blue-400 flex items-center">
-          <Image src="/Aura_wave.svg" alt="AURA Wave" width={48} height={48} className="mr-2" priority quality={100} />
+          <div className="relative w-12 h-12 mr-2">
+            <Image 
+              src="/Aura_wave.svg" 
+              alt="AURA Wave" 
+              width={48} 
+              height={48} 
+              priority 
+              quality={100}
+              onError={(e) => {
+                const img = e.target as HTMLImageElement;
+                img.style.display = 'none';
+              }}
+            />
+          </div>
           Talk to AURA
         </h2>
         <ConnectButton />
@@ -80,6 +111,11 @@ export function AuraChat() {
             <strong>{msg.sender}:</strong> {msg.text}
           </div>
         ))}
+        {error && (
+          <div className="p-3 rounded bg-red-500 text-white">
+            Error: {error}
+          </div>
+        )}
       </div>
 
       <form onSubmit={handleSend} className="flex">
@@ -89,12 +125,18 @@ export function AuraChat() {
           placeholder="Ask me anything..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          disabled={isLoading}
         />
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-600 text-white px-6 rounded-r-lg font-semibold"
+          className={`px-6 rounded-r-lg font-semibold ${
+            isLoading
+              ? 'bg-gray-500 cursor-not-allowed'
+              : 'bg-blue-500 hover:bg-blue-600'
+          } text-white`}
+          disabled={isLoading}
         >
-          Send
+          {isLoading ? 'Sending...' : 'Send'}
         </button>
       </form>
     </div>
