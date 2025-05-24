@@ -8,13 +8,22 @@ interface AuraLogoProps {
 
 export default function AuraLogo({ width = 280, height = 70, className = '' }: AuraLogoProps) {
   return (
-    <Image
-      src="/aura_logo.svg"
-      alt="AURA Logo"
-      width={width}
-      height={height}
-      priority
-      className={`w-auto ${className}`}
-    />
+    <div 
+      className={`relative ${className}`} 
+      style={{ 
+        width: width || '100%',
+        height: height || 'auto',
+        aspectRatio: '4/1'
+      }}
+    >
+      <Image
+        src="/aura_logo.svg"
+        alt="AURA Logo"
+        fill
+        priority
+        className="object-contain"
+        sizes={`(max-width: 640px) ${width}px, ${width}px`}
+      />
+    </div>
   );
 } 
