@@ -1,4 +1,10 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Aura Chat
+
+This is a Next.js project bootstrapped with create-next-app.
+
+## ⚠️ Important Notice: AI Usage Restrictions
+
+This repository does not permit the use of its code or content by Generative AI systems. See [NO_AI.md](NO_AI.md) for detailed restrictions and policies regarding AI usage.
 
 ## Getting Started
 
@@ -17,6 +23,25 @@ bun dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+
+## Features
+
+- Secure wallet connection/disconnection
+- Real-time chat interface
+- Modern, responsive UI
+- Web3 integration
+
+## License
+
+This project is licensed under the AGPL-3.0 License - see the [LICENSE](LICENSE) file for details.
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## AI Policy
+
+This project strictly prohibits the use of its code and content for AI training or generation. See [NO_AI.md](NO_AI.md) for complete details.
 
 [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
