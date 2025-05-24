@@ -1,7 +1,28 @@
+/**
+ * Aura Chat - A Web3-enabled chat application with wallet integration
+ * Copyright (C) 2024 Aura Chat
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 // components/AuraChat.tsx
 import { useState } from 'react';
+import { useAccount } from 'wagmi';
+import { ConnectButton } from './ConnectButton';
 
 export function AuraChat() {
+  const { isConnected } = useAccount();
   const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
   const [input, setInput] = useState('');
 
@@ -23,9 +44,24 @@ export function AuraChat() {
     setInput('');
   };
 
+  if (!isConnected) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6">
+        <h1 className="text-3xl font-bold text-blue-400">Welcome to AURA Chat</h1>
+        <p className="text-gray-400 text-center max-w-md">
+          Connect your wallet to start chatting with AURA, your AI assistant.
+        </p>
+        <ConnectButton />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-2xl bg-gray-800 p-4 rounded-lg space-y-3">
-      <h2 className="text-xl font-semibold mb-4 text-blue-400">🔮 Talk to AURA</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold text-blue-400">🔮 Talk to AURA</h2>
+        <ConnectButton />
+      </div>
 
       <div className="h-96 overflow-y-scroll space-y-3 mb-4">
         {messages.map((msg, idx) => (
