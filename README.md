@@ -33,7 +33,13 @@ You can start editing the page by modifying `pages/index.tsx`. The page auto-upd
 
 ## License
 
-This project is licensed under the AGPL-3.0 License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **GNU AGPLv3** License.
+
+🛡️ No use of this codebase is permitted in training, fine-tuning, or prompting of generative AI models.
+
+For commercial use, attribution and AGPL compliance are required.
+
+See the [LICENSE](LICENSE) file and [NO_AI.md](NO_AI.md) for full details.
 
 ## Contributing
 
