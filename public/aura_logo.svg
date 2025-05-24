@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="200" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(20, 20)">
+    <!-- Circle background -->
+    <circle cx="80" cy="80" r="80" fill="#0084FF"/>
+    
+    <!-- Inner O shape -->
+    <circle 
+      cx="80" 
+      cy="80" 
+      r="45" 
+      fill="none" 
+      stroke="white" 
+      stroke-width="18"
+    />
+    
+    <!-- AURA text -->
+    <text
+      x="200"
+      y="105"
+      font-size="100"
+      font-family="Arial Black, Arial, sans-serif"
+      fill="white"
+      font-weight="900"
+      letter-spacing="2"
+    >
+      AURA
+    </text>
+  </g>
+</svg> 
