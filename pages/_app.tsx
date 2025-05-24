@@ -17,31 +17,18 @@
  */
 
 // pages/_app.tsx
-import React from 'react';
 import '../styles/globals.css';
+import React from 'react';
 import type { AppProps } from 'next/app';
-import { type NextComponentType } from 'next';
-import { useAppKitProvider } from '@reown/appkit/react';
-import { createConfig, WagmiConfig } from 'wagmi';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { http } from 'viem';
-import { mainnet } from 'viem/chains';
-import Head from 'next/head';
 import { WagmiProvider } from 'wagmi';
 import { base } from '@reown/appkit/networks';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 import { createAppKit } from '@reown/appkit/react';
 import { cookieStorage, createStorage } from 'wagmi';
 import { type Config, cookieToInitialState } from 'wagmi';
 import type { Chain } from 'viem';
-
-// Create wagmi config
-const config = createConfig({
-  chains: [mainnet],
-  transports: {
-    [mainnet.id]: http(),
-  },
-});
+import { http } from 'viem';
 
 // Create the QueryClient
 const queryClient = new QueryClient({
