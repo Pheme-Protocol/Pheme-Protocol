@@ -16,7 +16,7 @@ export default function Home() {
 
       {!isConnected && (
         <div className="text-center">
-          <p className="mb-4">Connect your wallet to start using AURA Chat</p>
+          <p className="mb-4">Connect your wallet to start using AURA</p>
           <ConnectButton />
         </div>
       )}
