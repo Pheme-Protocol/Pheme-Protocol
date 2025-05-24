@@ -25,22 +25,15 @@ const nextConfig = {
     };
     return config;
   },
-  // Enhanced domain configuration
+  // Security headers configuration
   async headers() {
-    const allowedOrigins = [
-      'https://aurabot.app',
-      'https://www.aurabot.app',
-      'http://localhost:3000',
-      'http://localhost:3002'
-    ];
-
     return [
       {
-        source: '/api/:path*',
+        source: '/:path*',
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
-            value: '*'  // Temporarily allow all origins while debugging
+            value: '*'
           },
           {
             key: 'Access-Control-Allow-Methods',
@@ -51,48 +44,25 @@ const nextConfig = {
             value: 'X-Requested-With, Content-Type, Authorization, Accept'
           },
           {
-            key: 'Access-Control-Allow-Credentials',
-            value: 'true'
-          }
-        ],
-      },
-      {
-        source: '/:path*',
-        headers: [
+            key: 'Content-Security-Policy',
+            value: "default-src 'self' https://*.aurabot.app https://*.vercel.app; " +
+                   "img-src 'self' data: https://*.aurabot.app https://*.vercel.app; " +
+                   "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+                   "style-src 'self' 'unsafe-inline'; " +
+                   "connect-src 'self' https://*.aurabot.app https://*.vercel.app https://api.openai.com; " +
+                   "frame-ancestors 'none';"
+          },
           {
-            key: 'Access-Control-Allow-Origin',
-            value: '*'  // Temporarily allow all origins while debugging
+            key: 'X-Frame-Options',
+            value: 'DENY'
           }
         ],
       }
     ];
   },
-  // Simplified rewrites configuration
+  // Simplified rewrites
   async rewrites() {
-    return {
-      beforeFiles: [
-        {
-          source: '/api/:path*',
-          destination: '/api/:path*',
-        }
-      ]
-    };
-  },
-  // Add redirects to handle www to non-www
-  async redirects() {
-    return [
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'www.aurabot.app',
-          },
-        ],
-        destination: 'https://aurabot.app/:path*',
-        permanent: true,
-      },
-    ];
+    return [];
   }
 };
 
