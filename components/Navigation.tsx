@@ -6,11 +6,11 @@ export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const links = [
-    { name: 'Docs', href: 'https://docs.aurabot.app' },
-    { name: 'GitHub', href: 'https://github.com/AuraChatBot' },
-    { name: 'Whitepaper', href: 'https://aurabot.app/whitepaper' },
-    { name: 'DAO Forum', href: 'https://forum.aurabot.app' }
+  const navigation = [
+    { name: 'Docs', href: 'https://docs.pheme.app' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Whitepaper', href: 'https://pheme.app/whitepaper' },
+    { name: 'DAO Forum', href: 'https://forum.pheme.app' }
   ];
 
   // Close dropdown when clicking outside
@@ -60,7 +60,7 @@ export function Navigation() {
             : 'scale-95 opacity-0 -translate-y-2 pointer-events-none'
         }`}
       >
-        {links.map((link) => (
+        {navigation.map((link) => (
           <a
             key={link.name}
             href={link.href}

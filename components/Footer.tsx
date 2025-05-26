@@ -1,9 +1,9 @@
 export function Footer() {
   const links = [
-    { name: 'Docs', href: 'https://docs.aurabot.app' },
-    { name: 'GitHub', href: 'https://github.com/AuraChatBot' },
-    { name: 'Whitepaper', href: 'https://aurabot.app/whitepaper' },
-    { name: 'DAO Forum', href: 'https://forum.aurabot.app' }
+    { name: 'Docs', href: 'https://docs.pheme.app' },
+    { name: 'GitHub', href: 'https://github.com/PhemeAI' },
+    { name: 'Whitepaper', href: 'https://pheme.app/whitepaper' },
+    { name: 'DAO Forum', href: 'https://forum.pheme.app' }
   ];
 
   return (
@@ -32,10 +32,10 @@ export function Footer() {
             </div>
             <div className="flex items-center gap-4">
               <a
-                href="https://x.com/aurabotai"
+                href="https://x.com/phemeai"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-gray-500"
                 aria-label="Follow us on X (Twitter)"
               >
                 <svg
@@ -47,10 +47,10 @@ export function Footer() {
                 </svg>
               </a>
               <a
-                href="https://t.me/aurabotai"
+                href="https://t.me/phemeai"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-gray-500"
                 aria-label="Join us on Telegram"
               >
                 <svg

@@ -9,10 +9,10 @@ const SUPPORT_SYSTEM_MESSAGE = `You are PHEME Support, a helpful AI assistant fo
 5. Provide helpful resources and documentation links
 
 Key Information:
-- Website: https://aurabot.app
-- Documentation: https://docs.aurabot.app
+- Website: https://pheme.app
+- Documentation: https://docs.pheme.app
 - GitHub: https://github.com/AuraChatBot
-- Support Email: support@aurabot.app
+- Support Email: support@pheme.app
 
 Always be:
 - Professional and friendly
@@ -21,7 +21,7 @@ Always be:
 - Patient and understanding
 - Knowledgeable about PHEME's features
 
-If you cannot help with a specific issue, guide users to email support@aurabot.app.`;
+If you cannot help with a specific issue, guide users to email support@pheme.app.`;
 
 export default async function handler(
   req: NextApiRequest,

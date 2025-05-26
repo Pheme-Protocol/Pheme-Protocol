@@ -21,7 +21,7 @@ const connectors = connectorsForWallets([
   projectId,
   appName: 'PHEME',
   appDescription: 'PHEME - Web3 Chat Platform',
-  appUrl: 'https://aurabot.app'
+  appUrl: 'https://pheme.app'
 })
 
 const config = createConfig({
@@ -45,7 +45,7 @@ export default function Web3ModalProviderInner({ children }: Props) {
         <RainbowKitProvider
           appInfo={{
             appName: 'PHEME',
-            learnMoreUrl: 'https://aurabot.app',
+            learnMoreUrl: 'https://pheme.app',
           }}
           modalSize="compact"
           showRecentTransactions={true}
