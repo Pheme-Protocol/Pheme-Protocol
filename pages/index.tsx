@@ -15,6 +15,8 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [waitlistStatus, setWaitlistStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [key, setKey] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [input, setInput] = useState('');
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -146,7 +148,11 @@ export default function Home() {
               ) : (
                 <div key={key} className="bg-white dark:bg-gray-900 rounded-[40px] text-gray-900 dark:text-white p-3 shadow-2xl border-8 border-gray-900 dark:border-black relative overflow-hidden">
                   {/* Device Frame Details */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-gray-800/5 to-transparent pointer-events-none" aria-hidden="true"></div>
+                  <div 
+                    className="absolute inset-0 bg-gradient-to-b from-gray-800/5 to-transparent pointer-events-none" 
+                    aria-hidden="true"
+                    tabIndex={-1}
+                  ></div>
                   <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-gray-200/20 to-transparent"></div>
                   
                   {/* iPhone Notch */}
@@ -161,52 +167,36 @@ export default function Home() {
                   <div className="bg-white dark:bg-gray-900 rounded-3xl p-4 min-h-[500px] shadow-inner relative">
                     <div className="absolute inset-0 bg-gradient-to-b from-white/50 dark:from-white/5 to-transparent opacity-50 rounded-3xl pointer-events-none"></div>
                     <h3 className="font-bold text-center text-xl mb-6">Talk to PHEME</h3>
-                    <div className="animate-fade space-y-4">
-                      <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm" role="log" aria-live="polite">
-                        <div className="typing-indicator mb-2">
+                    <div className="space-y-4" role="log" aria-live="polite">
+                      <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm">
+                        <div className="typing-indicator mb-2" aria-hidden="true">
                           <span className="dot"></span>
                           <span className="dot"></span>
                           <span className="dot"></span>
                         </div>
-                        <span className="block text-gray-900 dark:text-white">Verify my smart contract development skills.</span>
+                        <span className="block text-gray-900 dark:text-gray-100">Verify my smart contract development skills.</span>
                       </div>
-                      <div className="bg-blue-500 text-white p-3 rounded-2xl rounded-tr-sm max-w-[80%] ml-auto shadow-sm">
-                        <div className="typing-indicator mb-2">
+                      
+                      <div className="bg-blue-700 text-white p-3 rounded-2xl rounded-tr-sm max-w-[80%] ml-auto shadow-sm">
+                        <div className="typing-indicator mb-2" aria-hidden="true">
                           <span className="dot"></span>
                           <span className="dot"></span>
                           <span className="dot"></span>
                         </div>
                         <span className="block">Please provide links to your projects or repository</span>
                       </div>
-                      <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm">
-                        <div className="typing-indicator mb-2">
-                          <span className="dot"></span>
-                          <span className="dot"></span>
-                          <span className="dot"></span>
-                        </div>
-                        <span className="block text-gray-900 dark:text-white">https://github.com/user/project1</span>
-                      </div>
-                      <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm">
-                        <div className="typing-indicator mb-2">
-                          <span className="dot"></span>
-                          <span className="dot"></span>
-                          <span className="dot"></span>
-                        </div>
-                        <span className="block text-gray-900 dark:text-white">https://github.com/user/project2</span>
-                      </div>
-                      <div className="bg-blue-500 text-white p-3 rounded-2xl rounded-tr-sm max-w-[80%] ml-auto shadow-sm">
-                        <div className="typing-indicator mb-2">
-                          <span className="dot"></span>
-                          <span className="dot"></span>
-                          <span className="dot"></span>
-                        </div>
-                        <span className="block">Your skills have been verified. A certificate will be issued onchain.</span>
-                      </div>
                     </div>
                     <div className="mt-6">
-                      <div className="w-full border rounded-full p-3 text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 text-center shadow-sm">
-                        Connect wallet to start chatting...
-                      </div>
+                      <button
+                        className={`px-6 py-2 rounded-lg font-semibold transition-all duration-300 ${
+                          isLoading || !input.trim()
+                            ? 'bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 cursor-not-allowed'
+                            : 'bg-blue-700 text-white hover:bg-blue-800 dark:hover:bg-blue-600'
+                        }`}
+                        disabled={isLoading || !input.trim()}
+                      >
+                        {isLoading ? 'Connecting...' : 'Connect Wallet'}
+                      </button>
                     </div>
                   </div>
 

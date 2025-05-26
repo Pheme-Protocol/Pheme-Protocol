@@ -12,6 +12,13 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    color: var(--text-light);
+    background: var(--background-light);
+  }
+
+  .dark body {
+    color: var(--text-dark);
+    background: var(--background-dark);
   }
 }
 
@@ -65,9 +72,12 @@
 }
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --primary-light: #2563eb;
+  --primary-dark: #60a5fa;
+  --text-light: #1f2937;
+  --text-dark: #f3f4f6;
+  --background-light: #ffffff;
+  --background-dark: #111827;
 }
 
 @media (prefers-color-scheme: dark) {
