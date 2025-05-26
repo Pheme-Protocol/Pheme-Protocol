@@ -22,7 +22,7 @@ import type { AppProps } from 'next/app';
 import { Web3ModalProvider } from '../components/Web3ModalProvider';
 import Head from 'next/head';
 
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   return (
     <Web3ModalProvider>
       <Head>
@@ -39,3 +39,5 @@ export default function App({ Component, pageProps }: AppProps) {
     </Web3ModalProvider>
   );
 }
+
+export default App; 
