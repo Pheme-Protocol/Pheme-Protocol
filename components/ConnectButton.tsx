@@ -42,7 +42,7 @@ export function ConnectButton() {
           return (
             <button
               onClick={openConnectModal}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-semibold"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-semibold"
             >
               Connect Wallet
             </button>
@@ -52,7 +52,7 @@ export function ConnectButton() {
         return (
           <button
             onClick={() => disconnect()}
-            className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 font-semibold flex items-center gap-2"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-semibold flex items-center gap-2"
           >
             <span>Disconnect</span>
             <span className="text-sm opacity-80">

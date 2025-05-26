@@ -2,7 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@reown/appkit', '@reown/appkit-adapter-wagmi', 'wagmi', 'viem'],
-  distDir: 'dist',
   webpack: (config) => {
     config.module.rules.push({
       test: /\.m?js$/,

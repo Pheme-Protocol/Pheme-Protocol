@@ -19,24 +19,41 @@
 // pages/_app.tsx
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import { Web3ModalProvider } from '../components/Web3ModalProvider';
+import { Inter } from 'next/font/google';
 import Head from 'next/head';
+import { Web3ModalProvider } from '../components/Web3ModalProvider';
+import { ThemeProvider } from '../contexts/ThemeContext';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+  weight: ['400', '500', '600', '700'],
+});
 
 function App({ Component, pageProps }: AppProps) {
   return (
-    <Web3ModalProvider>
-      <Head>
-        <title>AuraBot - AI Chat Assistant</title>
-        <link rel="icon" href="/Aura_wave.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/Aura_wave.svg" />
-        <link rel="shortcut icon" type="image/svg+xml" href="/Aura_wave.svg" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-      </Head>
-      <Component {...pageProps} />
-    </Web3ModalProvider>
+    <ThemeProvider>
+      <Web3ModalProvider>
+        <main className={`${inter.variable} font-sans antialiased`}>
+          <Head>
+            <title>AURA - Earn Trust Onchain</title>
+            <link rel="icon" href="/Aura_wave.svg" type="image/svg+xml" />
+            <link rel="icon" href="/favicon.ico" sizes="any" />
+            <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+            <link rel="shortcut icon" type="image/svg+xml" href="/Aura_wave.svg" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta name="theme-color" content="#60A5FA" />
+            <meta name="description" content="AURA is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation." />
+            <meta property="og:title" content="AURA - Earn Trust Onchain" />
+            <meta property="og:description" content="AURA is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation." />
+            <meta property="og:image" content="/Aura_wave.svg" />
+            <meta name="twitter:card" content="summary_large_image" />
+          </Head>
+          <Component {...pageProps} />
+        </main>
+      </Web3ModalProvider>
+    </ThemeProvider>
   );
 }
 
