@@ -11,17 +11,37 @@ export function SupportChat() {
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const previousActiveElement = useRef<HTMLElement | null>(null);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Focus input when chat opens
+  // Store the previously focused element when opening chat
   useEffect(() => {
     if (isOpen) {
+      previousActiveElement.current = document.activeElement as HTMLElement;
       inputRef.current?.focus();
+    } else {
+      // Restore focus when closing
+      previousActiveElement.current?.focus();
     }
+  }, [isOpen]);
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (!document.getElementById('support-chat-dialog')?.contains(document.activeElement)) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleTabKey);
+    return () => document.removeEventListener('keydown', handleTabKey);
   }, [isOpen]);
 
   const handleClose = useCallback(() => {
@@ -93,26 +113,50 @@ export function SupportChat() {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [isOpen, handleClose]);
 
+  // Add overlay click handler
+  const handleOverlayClick = useCallback((e: React.MouseEvent) => {
+    // Only close if clicking the overlay itself, not its children
+    if (e.target === e.currentTarget) {
+      handleClose();
+    }
+  }, [handleClose]);
+
   return (
     <>
+      {/* Accessible Blur Overlay */}
+      {isOpen && (
+        <div
+          onClick={handleOverlayClick}
+          className="fixed inset-0 bg-black/5 backdrop-blur-sm transition-all duration-300 z-40"
+          role="presentation"
+          aria-hidden="true"
+          // Prevent screen readers from navigating to hidden content
+          tabIndex={-1}
+        />
+      )}
+
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-6 right-6 bg-primary-light dark:bg-primary-dark text-white p-4 rounded-full shadow-lg hover:scale-110 transition-all duration-300 z-50 group ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
         aria-label="Open support chat"
         aria-expanded={isOpen}
+        aria-controls="support-chat-dialog"
       >
         <MessageCircle className="w-6 h-6 transition-transform duration-300 group-hover:rotate-12" aria-hidden="true" />
       </button>
 
       {/* Chat Interface */}
       <div 
+        id="support-chat-dialog"
         className={`fixed bottom-6 right-6 w-96 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl transition-all duration-300 transform z-50 ${
           isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
         }`}
         role="dialog"
         aria-label="Support chat window"
         aria-modal="true"
+        // Trap focus within the chat when open
+        tabIndex={isOpen ? 0 : -1}
       >
         {/* Header */}
         <div 
@@ -219,6 +263,15 @@ export function SupportChat() {
             </button>
           </div>
         </form>
+      </div>
+
+      {/* Accessibility announcement for screen readers */}
+      <div 
+        role="status" 
+        aria-live="polite" 
+        className="sr-only"
+      >
+        {isOpen ? 'Support chat opened' : 'Support chat closed'}
       </div>
     </>
   );
