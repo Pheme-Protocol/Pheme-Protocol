@@ -28,7 +28,7 @@ export function Footer() {
           {/* Copyright and Social Links */}
           <div className="flex items-center gap-6">
             <div className="text-gray-400 text-sm">
-              © {new Date().getFullYear()} AURA. All rights reserved.
+              © {new Date().getFullYear()} PHEME. All rights reserved.
             </div>
             <div className="flex items-center gap-4">
               <a

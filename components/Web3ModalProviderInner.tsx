@@ -11,7 +11,7 @@ const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
 if (!projectId) throw new Error('Missing NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID')
 
 const { wallets } = getDefaultWallets({
-  appName: 'AURA',
+  appName: 'PHEME',
   projectId
 })
 
@@ -19,8 +19,8 @@ const connectors = connectorsForWallets([
   ...wallets,
 ], {
   projectId,
-  appName: 'AURA',
-  appDescription: 'AURA - Web3 Chat Platform',
+  appName: 'PHEME',
+  appDescription: 'PHEME - Web3 Chat Platform',
   appUrl: 'https://aurabot.app'
 })
 
@@ -44,7 +44,7 @@ export default function Web3ModalProviderInner({ children }: Props) {
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
           appInfo={{
-            appName: 'AURA',
+            appName: 'PHEME',
             learnMoreUrl: 'https://aurabot.app',
           }}
           modalSize="compact"

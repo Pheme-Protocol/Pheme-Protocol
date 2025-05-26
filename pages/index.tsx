@@ -44,7 +44,7 @@ export default function Home() {
         <div className="flex items-center gap-3">
           <Image 
             src="/Aura_wave.svg" 
-            alt="AURA Logo" 
+            alt="PHEME Logo" 
             width={38} 
             height={38}
             priority
@@ -54,7 +54,7 @@ export default function Home() {
               transform: 'translateZ(0)'
             }}
           />
-          <h1 className="text-4xl font-bold text-primary-light dark:text-primary-dark">AURA</h1>
+          <h1 className="text-4xl font-bold text-primary-light dark:text-primary-dark">PHEME</h1>
         </div>
         <Navigation />
       </header>
@@ -160,7 +160,7 @@ export default function Home() {
                   {/* Chat Content */}
                   <div className="bg-white dark:bg-gray-900 rounded-3xl p-4 min-h-[500px] shadow-inner relative">
                     <div className="absolute inset-0 bg-gradient-to-b from-white/50 dark:from-white/5 to-transparent opacity-50 rounded-3xl pointer-events-none"></div>
-                    <h3 className="font-bold text-center text-xl mb-6">Talk to AURA</h3>
+                    <h3 className="font-bold text-center text-xl mb-6">Talk to PHEME</h3>
                     <div className="space-y-4">
                       <div className="animate-fade-in-1 bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm">
                         <div className="typing-indicator mb-2">

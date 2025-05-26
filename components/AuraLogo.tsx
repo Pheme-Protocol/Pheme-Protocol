@@ -18,7 +18,7 @@ export default function AuraLogo({ width = 38, height = 38, className = '' }: Au
     >
       <Image
         src="/Aura_wave.svg"
-        alt="AURA Logo"
+        alt="PHEME Logo"
         width={width}
         height={height}
         priority

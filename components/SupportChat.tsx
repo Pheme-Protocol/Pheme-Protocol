@@ -5,7 +5,7 @@ import Image from 'next/image';
 export function SupportChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([
-    { role: 'assistant', content: 'Hi! I\'m AURA Support. How can I help you today?' }
+    { role: 'assistant', content: 'Hi! I\'m PHEME Support. How can I help you today?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +17,7 @@ export function SupportChat() {
         setIsOpen(false);
         // Reset messages to initial state after closing
         setTimeout(() => {
-          setMessages([{ role: 'assistant', content: 'Hi! I\'m AURA Support. How can I help you today?' }]);
+          setMessages([{ role: 'assistant', content: 'Hi! I\'m PHEME Support. How can I help you today?' }]);
         }, 300);
       }
     } else {
@@ -86,14 +86,14 @@ export function SupportChat() {
             <div className="rounded-full bg-primary-light dark:bg-primary-dark p-1">
               <Image 
                 src="/Aura_wave.svg" 
-                alt="AURA Support" 
+                alt="PHEME Support" 
                 width={20} 
                 height={20}
                 className="w-5 h-5"
               />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 dark:text-white">AURA Support</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white">PHEME Support</h3>
               <p className="text-sm text-gray-500 dark:text-gray-400">Always here to help</p>
             </div>
           </div>

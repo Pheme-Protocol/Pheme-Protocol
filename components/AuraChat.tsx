@@ -55,7 +55,7 @@ export function AuraChat() {
         throw new Error(data.error || 'Failed to get response');
       }
 
-      setMessages((prev) => [...prev, { sender: 'AURA', text: data.reply, id: generateMessageId() }]);
+      setMessages((prev) => [...prev, { sender: 'PHEME', text: data.reply, id: generateMessageId() }]);
       setInput('');
     } catch (err) {
       console.error('Chat error:', err);
@@ -74,7 +74,7 @@ export function AuraChat() {
         <div className="rounded-full bg-[#60A5FA] p-0.5">
           <Image 
             src="/Aura_wave.svg" 
-            alt="AURA Logo" 
+            alt="PHEME Logo" 
             width={20} 
             height={20}
             priority
@@ -86,7 +86,7 @@ export function AuraChat() {
           />
         </div>
         <div>
-          <h3 className="font-bold text-lg">AURA Chat</h3>
+          <h3 className="font-bold text-lg">PHEME Chat</h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">AI-powered skill verification</p>
         </div>
       </div>
@@ -95,8 +95,8 @@ export function AuraChat() {
       <div className="h-[400px] overflow-y-auto p-6 space-y-4 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
         {messages.length === 0 ? (
           <div className="text-center text-gray-500 dark:text-gray-400 mt-8 animate-fade-in">
-            <p className="text-lg font-medium mb-2">Welcome to AURA Chat!</p>
-            <p className="text-sm">Ask me to verify your skills or learn more about the AURA protocol.</p>
+            <p className="text-lg font-medium mb-2">Welcome to PHEME Chat!</p>
+            <p className="text-sm">Ask me to verify your skills or learn more about the PHEME protocol.</p>
           </div>
         ) : (
           messages.map((msg, idx) => (
@@ -129,7 +129,7 @@ export function AuraChat() {
         )}
         {isLoading && (
           <div className="flex justify-center animate-fade-in">
-            <div className="animate-pulse text-gray-400 dark:text-gray-500">AURA is typing...</div>
+            <div className="animate-pulse text-gray-400 dark:text-gray-500">PHEME is typing...</div>
           </div>
         )}
       </div>
@@ -140,7 +140,7 @@ export function AuraChat() {
           <input
             type="text"
             className="flex-1 border-2 border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 transition-colors duration-300"
-            placeholder="Talk to AURA..."
+            placeholder="Talk to PHEME..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={isLoading}
