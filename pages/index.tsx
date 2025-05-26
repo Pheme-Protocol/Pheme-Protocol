@@ -72,7 +72,7 @@ export default function Home() {
                 The bridge between who you are and who you want to become.
               </p>
               <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-                Aura is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation.
+                Pheme is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation.
               </p>
 
               {/* Call-to-Action Buttons */}
