@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ConnectButton } from '../components/ConnectButton';
 import { useAccount } from 'wagmi';
-import { AuraChat } from '../components/AuraChat';
+import { PhemeChat } from '../components/PhemeChat';
 import { Wallet, UserCheck, Users } from 'lucide-react';
-import AuraLogo from '../components/AuraLogo';
+import PhemeLogo from '../components/PhemeLogo';
 import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
 import { SupportChat } from '../components/SupportChat';
@@ -45,7 +45,7 @@ export default function Home() {
       <header className="container mx-auto px-4 py-6 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <Image 
-            src="/Aura_wave.svg" 
+            src="/Pheme_wave.svg" 
             alt="PHEME Logo" 
             width={38} 
             height={38}
@@ -82,7 +82,7 @@ export default function Home() {
                 <ConnectButton />
                 <button 
                   onClick={() => setShowWaitlistModal(true)}
-                  className="border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white px-6 py-2.5 rounded-md font-semibold hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 transition-colors"
+                  className="border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white px-6 py-2.5 rounded-md font-semibold hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 focus:ring-2 focus:ring-gray-500 focus:outline-none transition-colors"
                 >
                   Join Waitlist
                 </button>
@@ -144,7 +144,7 @@ export default function Home() {
             {/* Right Content - Chat Interface */}
             <div className="lg:sticky lg:top-8">
               {isConnected ? (
-                <AuraChat />
+                <PhemeChat />
               ) : (
                 <div key={key} className="bg-white dark:bg-gray-900 rounded-[40px] text-gray-900 dark:text-white p-3 shadow-2xl border-8 border-gray-900 dark:border-black relative overflow-hidden">
                   {/* Device Frame Details */}
@@ -168,30 +168,67 @@ export default function Home() {
                     <div className="absolute inset-0 bg-gradient-to-b from-white/50 dark:from-white/5 to-transparent opacity-50 rounded-3xl pointer-events-none"></div>
                     <h3 className="font-bold text-center text-xl mb-6">Talk to PHEME</h3>
                     <div className="space-y-4" role="log" aria-live="polite">
-                      <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm">
-                        <div className="typing-indicator mb-2" aria-hidden="true">
-                          <span className="dot"></span>
-                          <span className="dot"></span>
-                          <span className="dot"></span>
+                      <div className="animate-fade-in-1">
+                        <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm">
+                          <div className="typing-indicator mb-2" aria-hidden="true">
+                            <span className="dot"></span>
+                            <span className="dot"></span>
+                            <span className="dot"></span>
+                          </div>
+                          <span className="block text-gray-900 dark:text-gray-50">Hi! I'd like to verify my smart contract development skills.</span>
                         </div>
-                        <span className="block text-gray-900 dark:text-gray-100">Verify my smart contract development skills.</span>
                       </div>
                       
-                      <div className="bg-blue-700 text-white p-3 rounded-2xl rounded-tr-sm max-w-[80%] ml-auto shadow-sm">
-                        <div className="typing-indicator mb-2" aria-hidden="true">
-                          <span className="dot"></span>
-                          <span className="dot"></span>
-                          <span className="dot"></span>
+                      <div className="animate-fade-in-2">
+                        <div className="bg-blue-700 text-white p-3 rounded-2xl rounded-tr-sm max-w-[80%] ml-auto shadow-sm">
+                          <div className="typing-indicator mb-2" aria-hidden="true">
+                            <span className="dot"></span>
+                            <span className="dot"></span>
+                            <span className="dot"></span>
+                          </div>
+                          <span className="block">I can help with that! Please share your GitHub profile or project repositories.</span>
                         </div>
-                        <span className="block">Please provide links to your projects or repository</span>
+                      </div>
+
+                      <div className="animate-fade-in-3">
+                        <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm">
+                          <div className="typing-indicator mb-2" aria-hidden="true">
+                            <span className="dot"></span>
+                            <span className="dot"></span>
+                            <span className="dot"></span>
+                          </div>
+                          <span className="block text-gray-900 dark:text-gray-50">https://github.com/user/project</span>
+                        </div>
+                      </div>
+
+                      <div className="animate-fade-in-4">
+                        <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm">
+                          <div className="typing-indicator mb-2" aria-hidden="true">
+                            <span className="dot"></span>
+                            <span className="dot"></span>
+                            <span className="dot"></span>
+                          </div>
+                          <span className="block text-gray-900 dark:text-gray-50">https://github.com/user/project-2</span>
+                        </div>
+                      </div>
+
+                      <div className="animate-fade-in-5">
+                        <div className="bg-blue-700 text-white p-3 rounded-2xl rounded-tr-sm max-w-[80%] ml-auto shadow-sm">
+                          <div className="typing-indicator mb-2" aria-hidden="true">
+                            <span className="dot"></span>
+                            <span className="dot"></span>
+                            <span className="dot"></span>
+                          </div>
+                          <span className="block">Your skills look promising! Let's connect your wallet to start the verification process.</span>
+                        </div>
                       </div>
                     </div>
                     <div className="mt-6">
                       <button
-                        className={`px-6 py-2 rounded-lg font-semibold transition-all duration-300 ${
+                        className={`w-full px-6 py-2 rounded-lg font-semibold transition-all duration-300 ${
                           isLoading || !input.trim()
                             ? 'bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 cursor-not-allowed'
-                            : 'bg-blue-700 text-white hover:bg-blue-800 dark:hover:bg-blue-600'
+                            : 'bg-blue-700 text-white hover:bg-blue-900 dark:hover:bg-blue-800 focus:ring-2 focus:ring-blue-500 focus:outline-none'
                         }`}
                         disabled={isLoading || !input.trim()}
                       >

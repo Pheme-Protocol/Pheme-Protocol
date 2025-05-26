@@ -11,7 +11,7 @@ const SUPPORT_SYSTEM_MESSAGE = `You are PHEME Support, a helpful AI assistant fo
 Key Information:
 - Website: https://pheme.app
 - Documentation: https://docs.pheme.app
-- GitHub: https://github.com/AuraChatBot
+- GitHub: https://github.com/PhemeAI
 - Support Email: support@pheme.app
 
 Always be:

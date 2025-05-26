@@ -1,4 +1,4 @@
-# AI Usage Policy for Aura Chat
+# AI Usage Policy for Pheme Protocol
 
 ## Important Notice
 

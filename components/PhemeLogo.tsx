@@ -1,12 +1,12 @@
 import Image from 'next/image';
 
-interface AuraLogoProps {
+interface PhemeLogoProps {
   width?: number;
   height?: number;
   className?: string;
 }
 
-export default function AuraLogo({ width = 38, height = 38, className = '' }: AuraLogoProps) {
+export default function PhemeLogo({ width = 38, height = 38, className = '' }: PhemeLogoProps) {
   return (
     <div 
       className={`relative inline-flex items-center justify-center ${className}`}
@@ -17,7 +17,7 @@ export default function AuraLogo({ width = 38, height = 38, className = '' }: Au
       }}
     >
       <Image
-        src="/Aura_wave.svg"
+        src="/Pheme_wave.svg"
         alt="PHEME Logo"
         width={width}
         height={height}

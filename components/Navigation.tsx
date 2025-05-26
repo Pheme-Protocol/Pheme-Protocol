@@ -5,6 +5,7 @@ import { ThemeToggle } from './ThemeToggle';
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const navigation = [
     { name: 'Docs', href: 'https://docs.pheme.app' },
@@ -27,51 +28,110 @@ export function Navigation() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
 
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!isOpen) return;
+
+      switch (event.key) {
+        case 'Escape':
+          setIsOpen(false);
+          buttonRef.current?.focus();
+          break;
+        case 'Tab':
+          // If shift+tab on first item or tab on last item, close dropdown
+          const focusableElements = dropdownRef.current?.querySelectorAll<HTMLElement>('a, button');
+          if (!focusableElements?.length) return;
+          
+          const firstElement = focusableElements[0];
+          const lastElement = focusableElements[focusableElements.length - 1];
+          const activeElement = document.activeElement;
+
+          if (event.shiftKey && activeElement === firstElement) {
+            event.preventDefault();
+            lastElement.focus();
+          } else if (!event.shiftKey && activeElement === lastElement) {
+            event.preventDefault();
+            firstElement.focus();
+          }
+          break;
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
   const handleSelect = (href: string) => {
     window.open(href, '_blank', 'noopener,noreferrer');
     setIsOpen(false);
   };
 
   return (
-    <nav className="flex items-center gap-4 relative">
-      <ThemeToggle />
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="p-2 hover:bg-gray-800 rounded-lg transition-all duration-300 hover:scale-110 group relative z-50"
-        aria-label="Toggle navigation menu"
-      >
-        <Menu className={`w-6 h-6 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''} group-hover:rotate-180`} />
-      </button>
-
-      {/* Backdrop Overlay */}
-      <div
-        className={`fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity duration-300 ${
-          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
-        onClick={() => setIsOpen(false)}
-      />
-
-      {/* Dropdown Menu */}
-      <div
-        ref={dropdownRef}
-        className={`absolute right-0 top-full mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg py-2 min-w-[200px] transform transition-all duration-300 origin-top-right z-50 ${
-          isOpen 
-            ? 'scale-100 opacity-100 translate-y-0' 
-            : 'scale-95 opacity-0 -translate-y-2 pointer-events-none'
-        }`}
-      >
-        {navigation.map((link) => (
+    <nav className="flex items-center gap-4" role="navigation">
+      {/* Desktop Navigation */}
+      <div className="hidden md:flex items-center gap-6">
+        {navigation.map((item) => (
           <a
-            key={link.name}
-            href={link.href}
+            key={item.name}
+            href={item.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 hover:pl-6 hover:text-primary-light dark:hover:text-primary-dark"
-            onClick={() => setIsOpen(false)}
+            className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors duration-200 text-sm font-medium"
           >
-            {link.name}
+            {item.name}
           </a>
         ))}
+        <ThemeToggle />
+      </div>
+
+      {/* Mobile Navigation */}
+      <div className="md:hidden">
+        <button
+          ref={buttonRef}
+          onClick={() => setIsOpen(!isOpen)}
+          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          aria-expanded={isOpen}
+          aria-haspopup="true"
+          aria-controls="mobile-menu"
+          aria-label="Open navigation menu"
+        >
+          <Menu className="w-6 h-6" aria-hidden="true" />
+        </button>
+
+        {/* Dropdown Menu */}
+        <div
+          id="mobile-menu"
+          ref={dropdownRef}
+          className={`absolute right-4 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 transition-all duration-200 ${
+            isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
+          }`}
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="mobile-menu-button"
+        >
+          <div className="py-1" role="none">
+            {navigation.map((item, index) => (
+              <a
+                key={item.name}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                role="menuitem"
+                tabIndex={isOpen ? 0 : -1}
+                onClick={() => handleSelect(item.href)}
+              >
+                {item.name}
+              </a>
+            ))}
+            <div className="px-4 py-2" role="none">
+              <ThemeToggle />
+            </div>
+          </div>
+        </div>
       </div>
     </nav>
   );

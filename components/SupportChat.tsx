@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -9,6 +9,20 @@ export function SupportChat() {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // Focus input when chat opens
+  useEffect(() => {
+    if (isOpen) {
+      inputRef.current?.focus();
+    }
+  }, [isOpen]);
 
   const handleClose = useCallback(() => {
     if (messages.length > 1) {
@@ -54,12 +68,30 @@ export function SupportChat() {
       console.error('Chat error:', error);
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: 'Sorry, I encountered an error. Please try again or email support@aurabot.app if the issue persists.' 
+        content: 'Sorry, I encountered an error. Please try again or email support@pheme.app if the issue persists.' 
       }]);
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Close chat on Escape
+      if (e.key === 'Escape' && isOpen) {
+        handleClose();
+      }
+      // Open chat on Ctrl+/ or Cmd+/
+      if ((e.ctrlKey || e.metaKey) && e.key === '/') {
+        e.preventDefault();
+        setIsOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [isOpen, handleClose]);
 
   return (
     <>
@@ -68,8 +100,9 @@ export function SupportChat() {
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-6 right-6 bg-primary-light dark:bg-primary-dark text-white p-4 rounded-full shadow-lg hover:scale-110 transition-all duration-300 z-50 group ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
         aria-label="Open support chat"
+        aria-expanded={isOpen}
       >
-        <MessageCircle className="w-6 h-6 transition-transform duration-300 group-hover:rotate-12" />
+        <MessageCircle className="w-6 h-6 transition-transform duration-300 group-hover:rotate-12" aria-hidden="true" />
       </button>
 
       {/* Chat Interface */}
@@ -79,14 +112,18 @@ export function SupportChat() {
         }`}
         role="dialog"
         aria-label="Support chat window"
+        aria-modal="true"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b dark:border-gray-700">
+        <div 
+          className="flex items-center justify-between p-4 border-b dark:border-gray-700"
+          role="banner"
+        >
           <div className="flex items-center gap-3">
             <div className="rounded-full bg-primary-light dark:bg-primary-dark p-1">
               <Image 
-                src="/Aura_wave.svg" 
-                alt="PHEME Support" 
+                src="/Pheme_wave.svg" 
+                alt="PHEME Logo" 
                 width={20} 
                 height={20}
                 className="w-5 h-5"
@@ -99,10 +136,10 @@ export function SupportChat() {
           </div>
           <button
             onClick={handleClose}
-            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
             aria-label="Close support chat"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
@@ -111,11 +148,14 @@ export function SupportChat() {
           className="p-4 h-96 overflow-y-auto space-y-4"
           role="log"
           aria-live="polite"
+          aria-label="Chat messages"
         >
           {messages.map((message, index) => (
             <div
               key={index}
               className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              role="article"
+              aria-label={`Message from ${message.role === 'user' ? 'you' : 'PHEME Support'}`}
             >
               <div
                 className={`max-w-[80%] p-3 rounded-2xl ${
@@ -123,47 +163,59 @@ export function SupportChat() {
                     ? 'bg-primary-light dark:bg-primary-dark text-white rounded-tr-sm'
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-tl-sm'
                 }`}
-                role={message.role === 'assistant' ? 'status' : 'none'}
               >
                 {message.content}
               </div>
             </div>
           ))}
           {isLoading && (
-            <div className="flex justify-start">
-              <div 
-                className="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-sm max-w-[80%]"
-                role="status"
-                aria-label="Loading response"
-              >
-                <Loader2 className="w-5 h-5 animate-spin text-gray-500 dark:text-gray-400" />
+            <div 
+              className="flex justify-start"
+              role="status"
+              aria-label="Loading response"
+            >
+              <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-sm max-w-[80%]">
+                <Loader2 className="w-5 h-5 animate-spin text-gray-500 dark:text-gray-400" aria-hidden="true" />
               </div>
             </div>
           )}
+          <div ref={chatEndRef} />
         </div>
 
-        {/* Input */}
-        <form onSubmit={handleSubmit} className="p-4 border-t dark:border-gray-700">
+        {/* Input Form */}
+        <form 
+          onSubmit={handleSubmit} 
+          className="p-4 border-t dark:border-gray-700"
+          role="form"
+          aria-label="Chat message input"
+        >
           <div className="flex gap-2">
+            <label htmlFor="support-chat-input" className="sr-only">
+              Type your message
+            </label>
             <input
+              id="support-chat-input"
+              ref={inputRef}
               type="text"
-              placeholder="Type your message..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="flex-1 p-2 border dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark"
-              aria-label="Message input"
+              placeholder="Type your message..."
+              className="flex-1 px-4 py-2 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark"
+              disabled={isLoading}
+              aria-disabled={isLoading}
             />
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className={`p-2 rounded-lg transition-all duration-300 ${
+              aria-disabled={!input.trim() || isLoading}
+              className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors ${
                 !input.trim() || isLoading
-                  ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed'
-                  : 'bg-primary-light dark:bg-primary-dark text-white hover:scale-105'
+                  ? 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+                  : 'bg-primary-light hover:bg-primary-light/90 dark:bg-primary-dark dark:hover:bg-primary-dark/90 text-white'
               }`}
-              aria-label="Send message"
             >
-              <Send className="w-5 h-5" />
+              <Send className="w-4 h-4" aria-hidden="true" />
+              <span className="sr-only">Send message</span>
             </button>
           </div>
         </form>

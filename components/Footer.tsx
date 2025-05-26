@@ -18,7 +18,7 @@ export function Footer() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white hover:text-blue-400 transition-colors text-sm"
+                className="text-gray-100 hover:text-blue-300 transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
                 {link.name}
               </a>
@@ -27,7 +27,7 @@ export function Footer() {
 
           {/* Copyright and Social Links */}
           <div className="flex items-center gap-6">
-            <div className="text-gray-400 text-sm">
+            <div className="text-gray-300 text-sm">
               © {new Date().getFullYear()} PHEME. All rights reserved.
             </div>
             <div className="flex items-center gap-4">
@@ -35,7 +35,7 @@ export function Footer() {
                 href="https://x.com/phemeai"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-gray-500"
+                className="text-gray-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400"
                 aria-label="Follow us on X (Twitter)"
               >
                 <svg
@@ -50,7 +50,7 @@ export function Footer() {
                 href="https://t.me/phemeai"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-gray-500"
+                className="text-gray-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400"
                 aria-label="Join us on Telegram"
               >
                 <svg
