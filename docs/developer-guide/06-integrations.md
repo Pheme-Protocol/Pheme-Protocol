@@ -22,7 +22,7 @@ graph TD
 ```typescript
 import { PhemeSDK } from '@pheme/sdk';
 
-const aura = new PhemeSDK({
+const pheme = new PhemeSDK({
     apiKey: 'your-api-key',
     environment: 'production',
     network: 'base'
@@ -46,7 +46,7 @@ const task = await pheme.createTask({
 ```python
 from pheme_sdk import PhemeSDK
 
-aura = PhemeSDK(
+pheme = PhemeSDK(
     api_key='your-api-key',
     environment='production',
     network='base'
@@ -56,7 +56,7 @@ aura = PhemeSDK(
 reputation = pheme.get_reputation(address)
 
 # Join guild
-guild = aura.join_guild(guild_id)
+guild = pheme.join_guild(guild_id)
 ```
 
 ## Smart Contract Integration
@@ -193,7 +193,7 @@ const app = express();
 
 app.post('/webhooks/pheme', express.json(), (req, res) => {
     // Verify signature
-    const signature = req.headers['x-aura-signature'];
+    const signature = req.headers['x-pheme-signature'];
     const isValid = verifySignature(req.body, signature, WEBHOOK_SECRET);
     
     if (!isValid) {
@@ -265,7 +265,7 @@ app.get('/oauth/callback', async (req, res) => {
 
 ### WebSocket Events
 ```typescript
-const ws = new WebSocket('wss://api.aurabot.xyz/ws');
+const ws = new WebSocket('wss://api.phemeai.xyz/ws');
 
 ws.onmessage = (event) => {
     const { type, data } = JSON.parse(event.data);
@@ -318,14 +318,14 @@ const analytics = await pheme.exportAnalytics({
 ### Data Import
 ```typescript
 // Import historical data
-await aura.importData({
+await pheme.importData({
     users: userData,
     tasks: taskData,
     validations: validationData
 });
 
 // Sync external achievements
-await aura.syncAchievements(address, {
+await pheme.syncAchievements(address, {
     platform: 'github',
     achievements: githubAchievements
 });
