@@ -1,12 +1,12 @@
-# 💰 AURA Token Economics
+# 💰 PHEME Token Economics
 
 > 🔗 **Related**: See [Governance Model](02-governance-model.md) for how tokens are used in governance.
 
 ## Token Overview
 
 ### Basic Information
-- **Name:** AURA Token
-- **Symbol:** $AURA
+- **Name:** PHEME Token
+- **Symbol:** $PHEME
 - **Type:** ERC-20
 - **Network:** Base
 - **Total Supply:** 1,000,000,000 (1 billion)
@@ -30,7 +30,7 @@
 
 ```mermaid
 pie
-    title "AURA Token Distribution"
+    title "PHEME Token Distribution"
     "Public Sale" : 35
     "Team & Founders" : 15
     "DAO Treasury" : 15
@@ -124,8 +124,8 @@ interface ValueFlows {
 ## Liquidity Management
 
 ### DEX Pairs
-- Base: AURA/ETH
-- Base: AURA/USDC
+- Base: PHEME/ETH
+- Base: PHEME/USDC
 - Future cross-chain bridges
 
 ### Liquidity Incentives
@@ -168,7 +168,7 @@ interface ValueFlows {
    - Administrative costs
    - Tool subscriptions
 
-> 📊 **Tracking**: View treasury analytics on [DAO Dashboard](https://dao.aurabot.xyz).
+> 📊 **Tracking**: View treasury analytics on [DAO Dashboard](https://dao.phemeai.xyz).
 
 ## Token Security
 
@@ -233,9 +233,9 @@ interface ProposalRights {
 ## Resources
 
 ### Official Links
-- [Token Contract](https://basescan.org/token/aura)
-- [Github](https://github.com/autonomous-aura/token)
-- [Documentation](https://docs.aurabot.xyz/token)
+- [Token Contract](https://basescan.org/token/pheme)
+- [Github](https://github.com/autonomous-pheme/token)
+- [Documentation](https://docs.phemeai.xyz/token)
 
 ### Tools
 - Token Explorer
