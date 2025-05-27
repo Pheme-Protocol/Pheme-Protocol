@@ -49,6 +49,7 @@ export default function Web3ModalProviderInner({ children }: Props) {
           }}
           modalSize="compact"
           showRecentTransactions={true}
+          initialChain={base}
         >
           {children}
         </RainbowKitProvider>

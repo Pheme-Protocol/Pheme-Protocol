@@ -39,7 +39,7 @@ function App({ Component, pageProps }: AppProps) {
           <Head>
             <title>PHEME - Earn Trust Onchain</title>
             <meta name="description" content="Pheme is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation." />
-            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
             <link rel="icon" href="/Pheme_wave.svg" type="image/svg+xml" />
             <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
             <link rel="shortcut icon" type="image/svg+xml" href="/Pheme_wave.svg" />

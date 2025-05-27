@@ -21,18 +21,35 @@ import { useState, useEffect, useRef } from 'react';
 import { useAccount } from 'wagmi';
 import Image from 'next/image';
 
-export function PhemeChat() {
+interface Message {
+  sender: string;
+  text: string;
+  id: string;
+}
+
+interface PhemeChatProps {
+  messages: Message[];
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+}
+
+export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
   const { isConnected } = useAccount();
-  const [messages, setMessages] = useState<{ sender: string; text: string; id: string }[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom when new messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesContainerRef.current && messagesEndRef.current) {
+      const container = messagesContainerRef.current;
+      const scrollHeight = container.scrollHeight;
+      const height = container.clientHeight;
+      const maxScroll = scrollHeight - height;
+      container.scrollTop = maxScroll > 0 ? maxScroll : 0;
+    }
   }, [messages]);
 
   // Handle keyboard shortcuts
@@ -65,24 +82,27 @@ export function PhemeChat() {
     setMessages((prev) => [...prev, { sender: 'You', text: input, id: userMessageId }]);
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
-      const res = await fetch(`${baseUrl}/api/chat`, {
+      console.log('Sending chat request...');
+      const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: input }),
       });
 
+      console.log('Response status:', res.status);
       const data = await res.json();
+      console.log('Response data:', data);
       
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to get response');
+        throw new Error(data.error || data.details || 'Failed to get response');
       }
 
       setMessages((prev) => [...prev, { sender: 'PHEME', text: data.reply, id: generateMessageId() }]);
       setInput('');
     } catch (err) {
       console.error('Chat error:', err);
-      setError('Failed to send message. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to send message. Please try again.';
+      setError(errorMessage);
       // Remove the user's message if it failed
       setMessages((prev) => prev.filter(msg => msg.id !== userMessageId));
     } finally {
@@ -92,18 +112,18 @@ export function PhemeChat() {
 
   return (
     <div 
-      className="bg-white dark:bg-gray-900 rounded-xl text-gray-900 dark:text-white shadow-lg overflow-hidden transition-colors duration-300"
+      className="bg-background-light dark:bg-background-dark rounded-xl text-text-light dark:text-text-dark shadow-lg overflow-hidden transition-colors duration-300 flex flex-col h-full"
       role="region"
       aria-label="PHEME Chat Interface"
     >
       {/* Chat Header */}
       <div 
-        className="bg-gray-50 dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-2.5 transition-colors duration-300"
+        className="bg-surface-light dark:bg-surface-dark px-6 py-4 border-b border-border-light dark:border-border-dark flex items-center gap-2.5 transition-colors duration-300 flex-shrink-0"
         role="banner"
         aria-label="Chat header"
       >
         <div 
-          className="rounded-full bg-[#60A5FA] p-0.5"
+          className="rounded-full bg-primary-light dark:bg-primary-dark p-0.5"
           role="img"
           aria-label="PHEME Logo"
         >
@@ -115,36 +135,32 @@ export function PhemeChat() {
             priority
             quality={100}
             className="flex-shrink-0"
-            style={{
-              transform: 'translateZ(0)'
-            }}
           />
         </div>
         <div>
-          <h1 className="font-bold text-lg">PHEME Chat</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400" aria-label="Chat description">AI-powered skill verification</p>
+          <h1 className="font-bold text-[19px] text-text-light dark:text-text-dark">PHEME Chat</h1>
+          <p className="text-sm text-text-muted-light dark:text-text-muted-dark">AI-powered skill verification</p>
         </div>
       </div>
 
       {/* Messages Container */}
       <div 
-        className="h-[400px] overflow-y-auto p-6 space-y-4 bg-gray-50 dark:bg-gray-900 transition-colors duration-300"
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto p-6 space-y-4 bg-surface-light dark:bg-surface-dark"
         role="log"
         aria-live="polite"
         aria-label="Chat messages"
-        aria-atomic="false"
       >
         {messages.length === 0 ? (
           <div 
-            className="text-center text-gray-500 dark:text-gray-400 mt-8 animate-fade-in"
+            className="text-center text-text-muted-light dark:text-text-muted-dark mt-8 animate-fade-in"
             role="status"
-            aria-label="Welcome message"
           >
-            <p className="text-lg font-medium mb-2">Welcome to PHEME Chat!</p>
-            <p className="text-sm">Ask me to verify your skills or learn more about the PHEME protocol.</p>
+            <p className="text-[19px] font-bold mb-2">Welcome to PHEME Chat!</p>
+            <p className="text-base">Ask me to verify your skills or learn more about the PHEME protocol.</p>
           </div>
         ) : (
-          messages.map((msg, idx) => (
+          messages.map((msg) => (
             <div
               key={msg.id}
               className={`flex ${msg.sender === 'You' ? 'justify-end' : 'justify-start'} animate-message-in`}
@@ -155,19 +171,19 @@ export function PhemeChat() {
               <div
                 className={`max-w-[80%] p-3 rounded-lg ${
                   msg.sender === 'You'
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white'
-                } transform transition-all duration-300 hover:scale-[1.02]`}
+                    ? 'bg-primary-light hover:bg-primary-hover-light dark:bg-primary-dark dark:hover:bg-primary-hover-dark text-white'
+                    : 'bg-surface-light dark:bg-surface-dark text-text-light dark:text-text-dark'
+                }`}
               >
-                <div className="text-sm font-medium mb-1 opacity-75">{msg.sender}</div>
-                <div className="break-words">{msg.text}</div>
+                <div className="text-[15px] font-bold mb-1">{msg.sender}</div>
+                <div className="break-words text-base">{msg.text}</div>
               </div>
             </div>
           ))
         )}
         {error && (
           <div 
-            className="p-3 rounded-lg bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-200 text-center animate-fade-in"
+            className="p-3 rounded-lg bg-error-light/10 dark:bg-error-dark/10 text-error-text-light dark:text-error-text-dark text-center animate-fade-in text-base"
             role="alert"
             aria-live="assertive"
           >
@@ -180,18 +196,18 @@ export function PhemeChat() {
             role="status"
             aria-live="polite"
           >
-            <div className="animate-pulse text-gray-400 dark:text-gray-500">
+            <div className="animate-pulse text-text-muted-light dark:text-text-muted-dark text-base">
               PHEME is typing...
             </div>
           </div>
         )}
-        <div ref={messagesEndRef} tabIndex={-1} />
+        <div ref={messagesEndRef} className="h-0" aria-hidden="true" />
       </div>
 
       {/* Input Form */}
       <form 
         onSubmit={handleSend}
-        className="p-4 border-t border-gray-200 dark:border-gray-700"
+        className="p-4 border-t border-border-light dark:border-border-dark flex-shrink-0"
         role="form"
         aria-label="Message input form"
       >
@@ -205,32 +221,26 @@ export function PhemeChat() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about skill verification..."
-            className="flex-1 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+            placeholder="Ask me anything..."
+            className="flex-1 px-4 py-2 rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark placeholder-text-placeholder-light dark:placeholder-text-placeholder-dark focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark text-base"
             disabled={isLoading}
             aria-disabled={isLoading}
             aria-label="Chat message input"
-            aria-describedby={error ? "chat-error" : undefined}
           />
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
             aria-disabled={!input.trim() || isLoading}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors duration-300 ${
+            className={`px-4 py-2 rounded-lg font-bold text-base transition-colors duration-300 ${
               !input.trim() || isLoading
-                ? 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'
-                : 'bg-blue-500 hover:bg-blue-600 text-white'
+                ? 'bg-surface-light dark:bg-surface-dark text-text-muted-light dark:text-text-muted-dark cursor-not-allowed'
+                : 'bg-primary-light hover:bg-primary-hover-light dark:bg-primary-dark dark:hover:bg-primary-hover-dark text-white'
             }`}
             aria-label="Send message"
           >
             Send
           </button>
         </div>
-        {error && (
-          <div id="chat-error" className="sr-only" role="alert">
-            {error}
-          </div>
-        )}
       </form>
     </div>
   );

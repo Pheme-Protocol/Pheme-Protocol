@@ -2,7 +2,11 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 
-export function SupportChat() {
+interface SupportChatProps {
+  className?: string;
+}
+
+export function SupportChat({ className = '' }: SupportChatProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([
     { role: 'assistant', content: 'Hi! I\'m PHEME Support. How can I help you today?' }
@@ -122,7 +126,7 @@ export function SupportChat() {
   }, [handleClose]);
 
   return (
-    <>
+    <div className={className}>
       {/* Accessible Blur Overlay */}
       {isOpen && (
         <div
@@ -130,7 +134,6 @@ export function SupportChat() {
           className="fixed inset-0 bg-black/5 backdrop-blur-sm transition-all duration-300 z-40"
           role="presentation"
           aria-hidden="true"
-          // Prevent screen readers from navigating to hidden content
           tabIndex={-1}
         />
       )}
@@ -155,7 +158,6 @@ export function SupportChat() {
         role="dialog"
         aria-label="Support chat window"
         aria-modal="true"
-        // Trap focus within the chat when open
         tabIndex={isOpen ? 0 : -1}
       >
         {/* Header */}
@@ -273,6 +275,6 @@ export function SupportChat() {
       >
         {isOpen ? 'Support chat opened' : 'Support chat closed'}
       </div>
-    </>
+    </div>
   );
 } 

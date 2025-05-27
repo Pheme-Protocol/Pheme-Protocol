@@ -112,6 +112,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== 'POST') {
+    console.log('Method not allowed:', req.method);
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
@@ -122,12 +123,15 @@ export default async function handler(
   }
 
   const { message } = req.body;
+  console.log('Received message:', message);
 
   if (!message || typeof message !== 'string') {
+    console.error('Invalid message format:', message);
     return res.status(400).json({ error: 'Invalid message' });
   }
 
   try {
+    console.log('Sending request to OpenAI API...');
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -145,6 +149,8 @@ export default async function handler(
     });
 
     const data = await response.json();
+    console.log('OpenAI API response status:', response.status);
+    console.log('OpenAI API response:', data);
 
     if (!response.ok) {
       console.error('OpenAI API error:', data.error);
@@ -156,12 +162,17 @@ export default async function handler(
 
     const reply = data.choices?.[0]?.message?.content;
     if (!reply) {
+      console.error('No reply in response:', data);
       return res.status(500).json({ error: 'No reply received from chat service' });
     }
 
+    console.log('Successfully generated reply');
     res.status(200).json({ reply });
   } catch (error) {
     console.error('Chat API error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ 
+      error: 'Internal server error',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
 }

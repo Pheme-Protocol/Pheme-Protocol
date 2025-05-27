@@ -8,10 +8,10 @@ export function Navigation() {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const navigation = [
-    { name: 'Docs', href: 'https://docs.pheme.app' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Whitepaper', href: 'https://pheme.app/whitepaper' },
-    { name: 'DAO Forum', href: 'https://forum.pheme.app' }
+    { name: 'Tokenomics', href: '#', isComingSoon: true },
+    { name: 'Roadmap', href: '#', isComingSoon: true },
+    { name: 'Whitepaper', href: '#', isComingSoon: true },
+    { name: 'DAO Forum', href: '#', isComingSoon: true }
   ];
 
   // Close dropdown when clicking outside
@@ -74,15 +74,17 @@ export function Navigation() {
       {/* Desktop Navigation */}
       <div className="hidden md:flex items-center gap-6">
         {navigation.map((item) => (
-          <a
+          <span
             key={item.name}
-            href={item.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors duration-200 text-sm font-medium"
+            className={`text-gray-600 dark:text-gray-300 text-sm font-medium ${
+              item.isComingSoon 
+                ? 'cursor-not-allowed opacity-60' 
+                : 'hover:text-gray-900 dark:hover:text-white transition-colors duration-200'
+            }`}
+            title={item.isComingSoon ? 'Coming Soon' : ''}
           >
             {item.name}
-          </a>
+          </span>
         ))}
         <ThemeToggle />
       </div>
@@ -113,19 +115,20 @@ export function Navigation() {
           aria-labelledby="mobile-menu-button"
         >
           <div className="py-1" role="none">
-            {navigation.map((item, index) => (
-              <a
+            {navigation.map((item) => (
+              <span
                 key={item.name}
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className={`block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 ${
+                  item.isComingSoon 
+                    ? 'cursor-not-allowed opacity-60' 
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors'
+                }`}
                 role="menuitem"
                 tabIndex={isOpen ? 0 : -1}
-                onClick={() => handleSelect(item.href)}
+                title={item.isComingSoon ? 'Coming Soon' : ''}
               >
                 {item.name}
-              </a>
+              </span>
             ))}
             <div className="px-4 py-2" role="none">
               <ThemeToggle />
