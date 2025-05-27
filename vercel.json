@@ -75,10 +75,10 @@
       "has": [
         {
           "type": "host",
-          "value": "www.aurabot.app"
+          "value": "www.pheme.app"
         }
       ],
-      "destination": "https://aurabot.app/:path*",
+      "destination": "https://pheme.app/:path*",
       "permanent": true
     },
     {
@@ -86,10 +86,10 @@
       "has": [
         {
           "type": "host",
-          "value": "aurabot.vercel.app"
+          "value": "pheme.vercel.app"
         }
       ],
-      "destination": "https://aurabot.app/:path*",
+      "destination": "https://pheme.app/:path*",
       "permanent": true
     },
     {
@@ -97,10 +97,10 @@
       "has": [
         {
           "type": "host",
-          "value": "aura-chat-aura-webs-projects.vercel.app"
+          "value": "pheme-chat-pheme-webs-projects.vercel.app"
         }
       ],
-      "destination": "https://aurabot.app/:path*",
+      "destination": "https://pheme.app/:path*",
       "permanent": true
     },
     {
@@ -108,10 +108,10 @@
       "has": [
         {
           "type": "host",
-          "value": "aura-chat-*.vercel.app"
+          "value": "pheme-chat-*.vercel.app"
         }
       ],
-      "destination": "https://aurabot.app/:path*",
+      "destination": "https://pheme.app/:path*",
       "permanent": true
     }
   ]

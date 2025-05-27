@@ -12,6 +12,43 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    color: var(--text-light);
+    background: var(--background-light);
+  }
+
+  .dark body {
+    color: var(--text-dark);
+    background: var(--background-dark);
+  }
+
+  /* Focus styles */
+  *:focus-visible {
+    outline: 3px solid var(--focus-ring-light);
+    outline-offset: 3px;
+    border-radius: 0.25rem;
+  }
+
+  .dark *:focus-visible {
+    outline-color: var(--focus-ring-dark);
+  }
+
+  /* Enhance button and link focus states */
+  button:focus-visible,
+  a:focus-visible {
+    outline-width: 3px;
+    outline-style: solid;
+    outline-offset: 4px;
+  }
+
+  /* High contrast selection colors */
+  ::selection {
+    background-color: var(--primary-light);
+    color: white;
+  }
+
+  .dark ::selection {
+    background-color: var(--primary-dark);
+    color: black;
   }
 }
 
@@ -27,12 +64,12 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #3b82f6;
+    background: #2563eb;
     border-radius: 5px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #2563eb;
+    background: #1d4ed8;
   }
 }
 
@@ -65,16 +102,36 @@
 }
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  /* Primary colors with WCAG AAA compliant contrast */
+  --primary-light: #1a4bbd; /* Darker blue for better contrast on light backgrounds */
+  --primary-dark: #82b4ff;  /* Lighter blue for dark backgrounds */
+  
+  /* Text colors with improved contrast ratios */
+  --text-light: #0a0f1d;    /* Darker for better contrast in light mode */
+  --text-dark: #ffffff;     /* Pure white for maximum contrast in dark mode */
+  
+  /* Background colors */
+  --background-light: #ffffff;
+  --background-dark: #0a0f1d; /* Darker background for better contrast */
+  
+  /* Interactive element colors */
+  --focus-ring-light: #1a4bbd;
+  --focus-ring-dark: #82b4ff;
+  
+  /* Error states with better contrast */
+  --error-light: #c41e1e;
+  --error-dark: #ff5c5c;
+  
+  /* Success states with better contrast */
+  --success-light: #047857;
+  --success-dark: #34d399;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-rgb: 248, 250, 252;  /* Lighter text for dark mode */
+    --background-start-rgb: 15, 23, 42;
+    --background-end-rgb: 15, 23, 42;
   }
 }
 
@@ -218,6 +275,29 @@ body {
   }
   
   .typing-indicator .dot {
+    animation: none;
+  }
+}
+
+@layer utilities {
+  .animate-fade {
+    animation: fade 0.5s ease-in-out;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade {
     animation: none;
   }
 }

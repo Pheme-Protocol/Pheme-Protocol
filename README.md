@@ -1,6 +1,6 @@
-# Aura Chat
+# Pheme Protocol
 
-This is a Next.js project bootstrapped with create-next-app.
+A Web3-enabled chat application with wallet integration that helps users earn trust onchain.
 
 ## ⚠️ Important Notice: AI Usage Restrictions
 

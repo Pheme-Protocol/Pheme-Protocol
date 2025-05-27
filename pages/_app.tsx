@@ -35,23 +35,33 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider>
       <Web3ModalProvider>
-        <main className={`${inter.variable} font-sans antialiased`}>
+        <div className={`${inter.variable} font-sans antialiased`}>
           <Head>
-            <title>AURA - Earn Trust Onchain</title>
-            <link rel="icon" href="/Aura_wave.svg" type="image/svg+xml" />
-            <link rel="icon" href="/favicon.ico" sizes="any" />
-            <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-            <link rel="shortcut icon" type="image/svg+xml" href="/Aura_wave.svg" />
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
-            <meta name="theme-color" content="#60A5FA" />
-            <meta name="description" content="AURA is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation." />
-            <meta property="og:title" content="AURA - Earn Trust Onchain" />
-            <meta property="og:description" content="AURA is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation." />
-            <meta property="og:image" content="/Aura_wave.svg" />
+            <title>PHEME - Earn Trust Onchain</title>
+            <meta name="description" content="Pheme is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation." />
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+            <link rel="icon" href="/Pheme_wave.svg" type="image/svg+xml" />
+            <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+            <link rel="shortcut icon" type="image/svg+xml" href="/Pheme_wave.svg" />
+            <meta property="og:title" content="PHEME - Earn Trust Onchain" />
+            <meta property="og:description" content="Pheme is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation." />
+            <meta property="og:type" content="website" />
+            <meta property="og:image" content="/Pheme_wave.svg" />
+            <meta name="theme-color" content="#60A5FA" media="(prefers-color-scheme: light)" />
+            <meta name="theme-color" content="#1a4bbd" media="(prefers-color-scheme: dark)" />
             <meta name="twitter:card" content="summary_large_image" />
+            <meta name="application-name" content="PHEME" />
+            <meta name="apple-mobile-web-app-title" content="PHEME" />
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+            <meta name="mobile-web-app-capable" content="yes" />
           </Head>
-          <Component {...pageProps} />
-        </main>
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-black">
+            Skip to main content
+          </a>
+          <main id="main-content" className="min-h-screen" role="main">
+            <Component {...pageProps} />
+          </main>
+        </div>
       </Web3ModalProvider>
     </ThemeProvider>
   );

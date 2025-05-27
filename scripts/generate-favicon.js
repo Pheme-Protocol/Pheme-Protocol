@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 async function generateFavicons() {
-  const inputSvg = path.join(__dirname, '../public/Aura_wave.svg');
+  const inputSvg = path.join(__dirname, '../public/Pheme_wave.svg');
   const publicDir = path.join(__dirname, '../public');
 
   // Generate favicon.ico (16x16, 32x32, 48x48)
