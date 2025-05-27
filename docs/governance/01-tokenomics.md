@@ -119,7 +119,7 @@ interface ValueFlows {
 - Inactive guild dissolution
 - Expired badge recycling
 
-> 💹 **Metrics**: Monitor burn rate on [Analytics Dashboard](https://analytics.aurabot.xyz).
+> 💹 **Metrics**: Monitor burn rate on [Analytics Dashboard](https://analytics.phemeai.xyz).
 
 ## Liquidity Management
 
