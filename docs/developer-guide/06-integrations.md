@@ -4,12 +4,12 @@
 
 ## Overview
 
-AURA Protocol provides multiple integration points for third-party applications, platforms, and services. This guide covers integration patterns, SDKs, and best practices.
+PHEME Protocol provides multiple integration points for third-party applications, platforms, and services. This guide covers integration patterns, SDKs, and best practices.
 
 ### Integration Types
 ```mermaid
 graph TD
-    A[AURA Protocol] --> B[Smart Contract Integration]
+    A[PHEME Protocol] --> B[Smart Contract Integration]
     A --> C[API Integration]
     A --> D[SDK Integration]
     A --> E[Webhook Integration]
@@ -20,22 +20,22 @@ graph TD
 
 ### JavaScript/TypeScript SDK
 ```typescript
-import { AuraSDK } from '@aura/sdk';
+import { PhemeSDK } from '@pheme/sdk';
 
-const aura = new AuraSDK({
+const aura = new PhemeSDK({
     apiKey: 'your-api-key',
     environment: 'production',
     network: 'base'
 });
 
 // Initialize wallet connection
-await aura.connect();
+await pheme.connect();
 
 // Get user's skill wallet
-const wallet = await aura.getSkillWallet(address);
+const wallet = await pheme.getSkillWallet(address);
 
 // Create task
-const task = await aura.createTask({
+const task = await pheme.createTask({
     title: 'Implement Feature',
     description: 'Add new functionality',
     reward: '100'
@@ -44,16 +44,16 @@ const task = await aura.createTask({
 
 ### Python SDK
 ```python
-from aura_sdk import AuraSDK
+from pheme_sdk import PhemeSDK
 
-aura = AuraSDK(
+aura = PhemeSDK(
     api_key='your-api-key',
     environment='production',
     network='base'
 )
 
 # Get user's reputation
-reputation = aura.get_reputation(address)
+reputation = pheme.get_reputation(address)
 
 # Join guild
 guild = aura.join_guild(guild_id)
@@ -99,14 +99,14 @@ contract GameIntegration {
 ### REST API Example
 ```typescript
 // Authentication
-const auth = await fetch('https://api.aurabot.xyz/auth/challenge', {
+const auth = await fetch('https://api.aphemeai.xyz/auth/challenge', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ address })
 });
 
 // Get user profile
-const profile = await fetch('https://api.aurabot.xyz/api/v1/users/me', {
+const profile = await fetch('https://api.phemeai.xyz/api/v1/users/me', {
     headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -114,7 +114,7 @@ const profile = await fetch('https://api.aurabot.xyz/api/v1/users/me', {
 });
 
 // Create task
-const task = await fetch('https://api.aurabot.xyz/api/v1/tasks', {
+const task = await fetch('https://api.phemeai.xyz/api/v1/tasks', {
     method: 'POST',
     headers: {
         'Authorization': `Bearer ${token}`,
@@ -172,7 +172,7 @@ interface WebhookConfig {
 }
 
 const config: WebhookConfig = {
-    url: 'https://your-app.com/webhooks/aura',
+    url: 'https://your-app.com/webhooks/pheme',
     secret: 'your-webhook-secret',
     events: [
         'task.completed',
@@ -191,7 +191,7 @@ import express from 'express';
 
 const app = express();
 
-app.post('/webhooks/aura', express.json(), (req, res) => {
+app.post('/webhooks/pheme', express.json(), (req, res) => {
     // Verify signature
     const signature = req.headers['x-aura-signature'];
     const isValid = verifySignature(req.body, signature, WEBHOOK_SECRET);
@@ -223,8 +223,8 @@ app.post('/webhooks/aura', express.json(), (req, res) => {
 
 ### OAuth Flow
 ```typescript
-// 1. Redirect to AURA OAuth
-const authUrl = `https://auth.aurabot.xyz/oauth/authorize?
+// 1. Redirect to PHEME OAuth
+const authUrl = `https://auth.phemeai.xyz/oauth/authorize?
     client_id=${CLIENT_ID}&
     redirect_uri=${REDIRECT_URI}&
     scope=profile,wallet,tasks&
@@ -235,7 +235,7 @@ app.get('/oauth/callback', async (req, res) => {
     const { code } = req.query;
     
     // Exchange code for tokens
-    const tokens = await fetch('https://auth.aurabot.xyz/oauth/token', {
+    const tokens = await fetch('https://auth.phemeai.xyz/oauth/token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -302,13 +302,13 @@ subscription OnTaskCompleted {
 ### Data Export
 ```typescript
 // Export user data
-const userData = await aura.exportUserData(address, {
+const userData = await pheme.exportUserData(address, {
     format: 'json',
     include: ['profile', 'tasks', 'badges']
 });
 
 // Export analytics
-const analytics = await aura.exportAnalytics({
+const analytics = await pheme.exportAnalytics({
     startDate: '2024-01-01',
     endDate: '2024-03-31',
     metrics: ['taskCompletion', 'reputationGrowth']
@@ -368,10 +368,10 @@ function verifySignature(payload: any, signature: string, secret: string): boole
 
 ### Integration Tests
 ```typescript
-describe('AURA Integration', () => {
+describe('PHEME Integration', () => {
     it('should integrate with skill wallet', async () => {
-        const aura = new AuraSDK(config);
-        const wallet = await aura.getSkillWallet(address);
+        const pheme = new PhemeSDK(config);
+        const wallet = await pheme.getSkillWallet(address);
         
         expect(wallet.level).toBeGreaterThan(0);
         expect(wallet.experience).toBeDefined();
@@ -394,13 +394,13 @@ describe('Webhook Handler', () => {
 ## Resources
 
 ### Documentation
-- [API Documentation](https://docs.aurabot.xyz/api)
-- [SDK Documentation](https://docs.aurabot.xyz/sdk)
-- [Integration Examples](https://github.com/aura-protocol/integration-examples)
+- [API Documentation](https://docs.phemeai.xyz/api)
+- [SDK Documentation](https://docs.phemeai.xyz/sdk)
+- [Integration Examples](https://github.com/pheme-protocol/integration-examples)
 
 ### Tools
-- [Integration Dashboard](https://dashboard.aurabot.xyz/integrations)
-- [Webhook Tester](https://webhook.aurabot.xyz)
-- [OAuth Playground](https://oauth.aurabot.xyz)
+- [Integration Dashboard](https://dashboard.phemeai.xyz/integrations)
+- [Webhook Tester](https://webhook.phemeai.xyz)
+- [OAuth Playground](https://oauth.phemeai.xyz)
 
 > 🔒 **Security**: Review our [Security Guidelines](../technical/05-security.md) for integration security best practices.
