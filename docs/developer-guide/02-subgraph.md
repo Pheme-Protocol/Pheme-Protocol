@@ -4,7 +4,7 @@
 
 ## Overview
 
-The AURA Protocol subgraph indexes blockchain data for efficient querying and analytics. It tracks skill wallets, reputation scores, guild activities, and task completions.
+The PHEME Protocol subgraph indexes blockchain data for efficient querying and analytics. It tracks skill wallets, reputation scores, guild activities, and task completions.
 
 ### Architecture
 ```mermaid
