@@ -42,7 +42,7 @@ Your voting power is determined by both your token holdings and reputation score
 
 ```typescript
 interface VotingPower {
-  baseTokens: number;      // AURA token holdings
+  baseTokens: number;      // PHEME token holdings
   reputation: number;      // Reputation score (0-100)
   multiplier: number;      // Reputation multiplier
   validatorStatus: boolean; // Active validator bonus
@@ -62,10 +62,10 @@ Tokens must be staked for at least 7 days before they count towards voting power
 
 | Action | Requirement | Quorum |
 |--------|-------------|--------|
-| Create Proposal | 10,000 AURA | N/A |
-| Basic Vote | 1,000 AURA | 10% |
-| Core Changes | 5,000 AURA | 30% |
-| Emergency Actions | 20,000 AURA | 50% |
+| Create Proposal | 10,000 PHEME | N/A |
+| Basic Vote | 1,000 PHEME | 10% |
+| Core Changes | 5,000 PHEME | 30% |
+| Emergency Actions | 20,000 PHEME | 50% |
 
 {% hint style="info" %}
 Thresholds are adjustable through governance proposals.
@@ -202,10 +202,10 @@ All treasury movements require multi-sig approval and community consensus.
 
 | Activity | Reward Range | Frequency |
 |----------|-------------|-----------|
-| Proposals | 100-1000 AURA | Per accepted proposal |
-| Validation | 50-200 AURA | Per validation |
-| Development | 500-5000 AURA | Per milestone |
-| Content | 100-500 AURA | Per piece |
+| Proposals | 100-1000 PHEME | Per accepted proposal |
+| Validation | 50-200 PHEME | Per validation |
+| Development | 500-5000 PHEME | Per milestone |
+| Content | 100-500 PHEME | Per piece |
 
 {% hint style="success" %}
 Rewards are distributed automatically through smart contracts.
@@ -226,7 +226,7 @@ Rewards are distributed automatically through smart contracts.
    * Monitoring systems
 
 2. **Stake Requirements**
-   * Minimum: 50,000 AURA
+   * Minimum: 50,000 PHEME
    * Lock period: 3 months
    * Slashing conditions
    * Performance bonds
@@ -358,12 +358,12 @@ Follow our [Code of Conduct](../../CODE_OF_CONDUCT.md) for all governance activi
 
 {% hint style="success" %}
 Ready to participate in governance?
-* [🗳️ View Active Proposals](https://governance.aura.protocol)
+* [🗳️ View Active Proposals](https://governance@phemeai.xyz)
 * [📝 Create a Proposal](./templates/proposal-template.md)
-* [💬 Join Governance Forum](https://forum.aura.protocol)
-* [📊 View Analytics](https://analytics.aura.protocol)
+* [💬 Join Governance Forum](https://forum@phemeai.xyz)
+* [📊 View Analytics](https://analytics@phemeai.xyz)
 {% endhint %}
 
 {% hint style="info" %}
-Need help with governance? Join our [Governance Working Group](https://discord.gg/aura-governance) on Discord!
+Need help with governance? Join our [Governance Working Group](https://discord.gg/pheme-governance) on Discord!
 {% endhint %} 
