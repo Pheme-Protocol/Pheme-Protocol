@@ -1,4 +1,4 @@
-root: ./
+meroot: ./
 
 structure:
   readme: README.md
@@ -22,7 +22,7 @@ plugins:
 
 pluginsConfig:
   edit-link:
-    base: https://github.com/aura-protocol/docs/edit/main
+    base: https://github.com/pheme-protocol/docs/edit/main
     label: Edit this page
   swagger:
     path: reference/api.yaml
