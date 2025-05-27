@@ -74,7 +74,7 @@ X-XSS-Protection: 1; mode=block
 ```yaml
 Deprecation: true
 Sunset: <ISO-8601-date>
-Link: <https://docs.aurabot.xyz/api/migration>; rel="deprecation"
+Link: <https://docs.phemeai.xyz/api/migration>; rel="deprecation"
 ```
 
 ***
@@ -244,4 +244,4 @@ paths:
 
 ***
 
-_Note: This guide prioritizes security and data protection while ensuring AURA's APIs remain stable, discoverable, and maintainable. All examples use placeholder values and follow security best practices._
+_Note: This guide prioritizes security and data protection while ensuring PHEME's APIs remain stable, discoverable, and maintainable. All examples use placeholder values and follow security best practices._
