@@ -8,9 +8,9 @@ const SUPPORT_SYSTEM_MESSAGE = `You are PHEME Support, a helpful AI assistant fo
 
 Key Resources:
 - Website: https://phemeprotocol.com
-- Documentation: https://docs.phemeprotocol.com
+- Documentation: https://docs.phemeai.xyz
 - GitHub: https://github.com/PhemeAI
-- Support Email: support@phemeprotocol.com
+- Support Email: support@phemeai.xyz
 
 You should be:
 - Patient and understanding
@@ -19,4 +19,4 @@ You should be:
 - Professional but friendly
 - Focused on solutions
 
-If you cannot help with a specific issue, guide users to email support@phemeprotocol.com.`; 
+If you cannot help with a specific issue, guide users to email support@phemeai.xyz.`; 
