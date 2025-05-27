@@ -1,6 +1,6 @@
-# Aura Chat Documentation
+# Pheme AI Documentation
 
-Welcome to the official documentation for Aura Chat, a Web3-enabled AI chat platform that combines blockchain wallet authentication with advanced AI capabilities.
+Welcome to the official documentation for Pheme AI, a decentralized, AI-powered protocol for skill verification and trust-building onchain.
 
 ## Documentation Structure
 
@@ -11,9 +11,6 @@ Welcome to the official documentation for Aura Chat, a Web3-enabled AI chat plat
 - **Governance**: Platform governance and tokenomics
 - **Ecosystem**: Partners, use cases, and FAQ
 
-## Contributing
-
-We welcome contributions to our documentation. Please see our [contribution guidelines](../CONTRIBUTING.md) for more information.
 
 ## License
 

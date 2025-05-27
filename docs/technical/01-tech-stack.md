@@ -1,69 +1,88 @@
-# Technology Stack
+# 🛠️ Technology Stack
 
-This document outlines the core technologies used in the Aura Chat platform.
+AURA's technology stack is carefully chosen to provide a robust, scalable, and secure foundation for decentralized skill verification and reputation building.
 
-## Frontend Technologies
+## Core Technology Stack
 
-### Core Framework
-- **Next.js**: React framework for production
-- **React**: UI library
-- **TypeScript**: Type-safe JavaScript
-- **TailwindCSS**: Utility-first CSS framework
+| Layer              | Technology & Tools                                           | Rationale                                              |
+| ------------------ | ------------------------------------------------------------ | ------------------------------------------------------ |
+| **Blockchain**     | Solidity, Hardhat, OpenZeppelin, Ethers.js                   | EVM compatibility, security-tested libraries, tooling  |
+| **Indexing**       | The Graph (Graph Protocol)                                   | Fast, reliable subgraph queries                        |
+| **Backend**        | Node.js, TypeScript, NestJS, Apollo GraphQL / REST (Express) | Scalable, modular, type-safe, enterprise patterns      |
+| **Database**       | PostgreSQL, Prisma ORM                                       | ACID compliance, complex queries, type-safe migrations |
+| **Cache & Queue**  | Redis (cache, rate-limiting), RabbitMQ / BullMQ (job queue)  | Low-latency data, async processing                     |
+| **Frontend**       | Next.js, React, TypeScript, Tailwind CSS                     | SSR/SSG, fast iteration, consistent styling            |
+| **AI Services**    | OpenAI API, LangChain                                        | Flexible LLM integration, prompt management            |
+| **Storage**        | IPFS (Pinata/Filebase), AWS S3 (fallback)                    | Decentralized asset storage + scalable fallback        |
+| **Auth & Wallet**  | Coinbase OnchainKit, WalletConnect, JWT                      | Secure wallet integration, session management          |
+| **CI/CD & DevOps** | GitHub Actions, Docker, Kubernetes (EKS/GKE)                 | Automated pipelines, container orchestration           |
+| **Logging & APM**  | Winston / Pino, Sentry, Prometheus, Grafana                  | Real-time tracing, error monitoring, metrics           |
+| **Security Tools** | Slither, MythX, Echidna, SonarQube                           | Static analysis, smart contract audits, code quality   |
 
-### Web3 Integration
-- **RainbowKit**: Wallet connection UI
-- **Wagmi**: Ethereum React Hooks
-- **WalletConnect**: Wallet connectivity protocol
-- **Viem**: TypeScript Ethereum API
+## Key Components
 
-### State Management & Data Fetching
-- **TanStack Query**: Server state management
-- **React Context**: Local state management
+### Smart Contract Layer
+- ERC-20 token implementation for $AURA
+- Soulbound NFT (ERC-721) for Skill Wallets
+- ERC-1155 for Badge System
+- Custom Reputation Oracle contracts
 
-## Backend Technologies
+### Backend Services
+- GraphQL API Gateway
+- Task Processing Engine
+- AI Validation Service
+- Reputation Calculator
+- Event Indexer
 
-### API Layer
-- **Next.js API Routes**: Backend API endpoints
-- **OpenAI API**: AI chat capabilities
+### Frontend Applications
+- Main dApp Interface
+- Wallet Integration
+- Analytics Dashboard
+- Community Portal
 
-### Authentication
-- **Web3 Authentication**: Wallet-based auth
-- **JWT**: Session management
+### Developer Tools
+- SDK & API Libraries
+- Smart Contract Templates
+- Testing Framework
+- Documentation Generator
 
-## Development & Build Tools
+## Version Control & Package Management
 
-### Development
-- **ESLint**: Code linting
-- **TypeScript**: Static type checking
-- **Prettier**: Code formatting
+### Git Workflow
+- Feature branching
+- Conventional commits
+- Pull request templates
+- Automated code review
 
-### Build & Deploy
-- **Vercel**: Hosting platform
-- **GitHub Actions**: CI/CD
+### Package Management
+- NPM/Yarn for JavaScript/TypeScript
+- Cargo for Rust components
+- Poetry for Python AI services
 
-## Testing Tools
+## Infrastructure
 
-- **Jest**: Unit testing
-- **React Testing Library**: Component testing
-- **Cypress**: End-to-end testing
+### Cloud Services
+- Kubernetes clusters
+- Load balancers
+- CDN integration
+- Database clusters
 
-## Security
+### Monitoring
+- Real-time metrics
+- Error tracking
+- Performance monitoring
+- Security alerts
 
-- **Rate Limiting**: API protection
-- **Environment Variables**: Secure configuration
-- **Content Security Policy**: XSS protection
+## Development Environment
 
-## Monitoring & Analytics
+### Required Tools
+- Node.js (v16+)
+- Docker
+- Hardhat
+- PostgreSQL
+- Redis
 
-- **Vercel Analytics**: Performance monitoring
-- **Error tracking**: Custom error reporting
-
-## Version Control
-
-- **Git**: Source control
-- **GitHub**: Repository hosting
-
-## Documentation
-
-- **Markdown**: Documentation format
-- **GitBook**: Documentation hosting 
+### Recommended IDEs
+- VSCode with Solidity extensions
+- WebStorm for TypeScript
+- Remix IDE for quick contract testing 
