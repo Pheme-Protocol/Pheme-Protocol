@@ -67,7 +67,7 @@ contract SkillWallet is ERC721, Pausable, AccessControl {
     
     mapping(uint256 => Skill) public skills;
     
-    constructor() ERC721("AURA Skill Wallet", "SKILL") {
+    constructor() ERC721("PHEME Skill Wallet", "SKILL") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
     
