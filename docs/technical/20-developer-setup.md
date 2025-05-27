@@ -1,26 +1,26 @@
-# 🚀 Developer Environment Setup
+# Development Environment
 
 ## Overview
 
-This document provides comprehensive setup instructions for the AURA Protocol development environment. It covers all necessary tools, configurations, and best practices for contributing to the codebase.
+This document provides comprehensive setup instructions for the PHEME Protocol development environment. It covers all necessary tools, configurations, and best practices for contributing to the codebase.
 
 ## Development Prerequisites
 
 ### Required Tools
 
-| Tool           | Version               | Purpose                                      |
-| -------------- | --------------------- | -------------------------------------------- |
-| Node.js & Yarn | >= 18.x, Yarn >= 1.22 | JavaScript runtime and package management    |
-| Docker         | >= 24.x               | Container runtime for local services         |
-| Git            | >= 2.30               | Version control                              |
-| PostgreSQL CLI | >= 13                 | Database management                          |
-| Redis CLI      | >= 6.x                | Cache and queue management                   |
-| Hardhat        | >= 2.x                | Ethereum development environment             |
-| Terraform      | >= 1.x                | Infrastructure as Code                       |
-| AWS CLI        | >= 2.x                | Cloud infrastructure management              |
-| kubectl        | >= 1.24               | Kubernetes cluster management                |
-| Helm           | >= 3.x                | Kubernetes package management                |
-| VS Code        | Latest                | Recommended IDE                              |
+| Tool           | Version               | Purpose                                   |
+| -------------- | --------------------- | ----------------------------------------- |
+| Node.js & Yarn | >= 18.x, Yarn >= 1.22 | JavaScript runtime and package management |
+| Docker         | >= 24.x               | Container runtime for local services      |
+| Git            | >= 2.30               | Version control                           |
+| PostgreSQL CLI | >= 13                 | Database management                       |
+| Redis CLI      | >= 6.x                | Cache and queue management                |
+| Hardhat        | >= 2.x                | Ethereum development environment          |
+| Terraform      | >= 1.x                | Infrastructure as Code                    |
+| AWS CLI        | >= 2.x                | Cloud infrastructure management           |
+| kubectl        | >= 1.24               | Kubernetes cluster management             |
+| Helm           | >= 3.x                | Kubernetes package management             |
+| VS Code        | Latest                | Recommended IDE                           |
 
 ### Installation Commands
 
@@ -64,8 +64,8 @@ aura-protocol/
 
 ```bash
 # Clone repository
-git clone https://github.com/aura-protocol/aura-monorepo.git
-cd aura-monorepo
+git clone https://github.com/pheme-protocol/pheme-monorepo.git
+cd pheme-monorepo
 
 # Install dependencies
 yarn install
@@ -149,11 +149,11 @@ graph TD
 
 ### Branch Naming Convention
 
-- `main`: Production-ready code
-- `develop`: Integration branch
-- `feature/*`: Feature development
-- `fix/*`: Bug fixes
-- `release/*`: Release preparation
+* `main`: Production-ready code
+* `develop`: Integration branch
+* `feature/*`: Feature development
+* `fix/*`: Bug fixes
+* `release/*`: Release preparation
 
 ### Commit Standards
 
@@ -242,88 +242,87 @@ yarn audit             # Dependencies audit
 
 ### Local Development URLs
 
-- Web App: `http://localhost:3000`
-- API Docs: `http://localhost:4000/docs`
-- GraphQL Playground: `http://localhost:4000/graphql`
-- Contract Deployment: `http://localhost:8545`
+* Web App: `http://localhost:3000`
+* API Docs: `http://localhost:4000/docs`
+* GraphQL Playground: `http://localhost:4000/graphql`
+* Contract Deployment: `http://localhost:8545`
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Database Connection**
-   ```bash
-   # Check database status
-   docker ps | grep postgres
-   # Reset database
-   yarn db:reset
-   ```
+1.  **Database Connection**
 
-2. **Smart Contract Deployment**
-   ```bash
-   # Clear cache and artifacts
-   yarn clean
-   # Redeploy contracts
-   yarn deploy:local
-   ```
+    ```bash
+    # Check database status
+    docker ps | grep postgres
+    # Reset database
+    yarn db:reset
+    ```
+2.  **Smart Contract Deployment**
 
-3. **Node.js Version**
-   ```bash
-   # Use nvm to manage Node versions
-   nvm use 18
-   # Clear node_modules
-   yarn clean:all && yarn install
-   ```
+    ```bash
+    # Clear cache and artifacts
+    yarn clean
+    # Redeploy contracts
+    yarn deploy:local
+    ```
+3.  **Node.js Version**
+
+    ```bash
+    # Use nvm to manage Node versions
+    nvm use 18
+    # Clear node_modules
+    yarn clean:all && yarn install
+    ```
 
 ## Getting Started Tasks
 
-1. **Initial Setup Verification**
-   ```bash
-   yarn verify:setup     # Runs setup verification
-   ```
+1.  **Initial Setup Verification**
 
-2. **First Contribution**
-   ```bash
-   git checkout -b feature/first-change
-   # Make changes
-   yarn test            # Ensure tests pass
-   git commit -m "feat: first contribution"
-   git push origin feature/first-change
-   ```
+    ```bash
+    yarn verify:setup     # Runs setup verification
+    ```
+2.  **First Contribution**
 
-3. **Local Development**
-   ```bash
-   yarn dev:all         # Starts all services
-   ```
+    ```bash
+    git checkout -b feature/first-change
+    # Make changes
+    yarn test            # Ensure tests pass
+    git commit -m "feat: first contribution"
+    git push origin feature/first-change
+    ```
+3.  **Local Development**
+
+    ```bash
+    yarn dev:all         # Starts all services
+    ```
 
 ## Support Resources
 
-- Internal Documentation: `/docs`
-- API Reference: `/docs/api`
-- Contract Documentation: `/docs/contracts`
-- Developer FAQ: `/docs/faq.md`
-- Support Channel: `#dev-support` on Discord 
+* Internal Documentation: `/docs`
+* API Reference: `/docs/api`
+* Contract Documentation: `/docs/contracts`
+* Developer FAQ: `/docs/faq.md`
+* Support Channel: `#dev-support` on Discord
 
 ## Security Best Practices
 
 ### Sensitive Data Handling
 
 1. **Environment Variables**
-   - Never commit `.env` files to version control
-   - Use different keys for development and production
-   - Rotate sensitive credentials regularly
-
+   * Never commit `.env` files to version control
+   * Use different keys for development and production
+   * Rotate sensitive credentials regularly
 2. **Private Keys**
-   - Use development-only wallet keys for local testing
-   - Never share or expose production keys
-   - Use hardware wallets for production deployments
-
+   * Use development-only wallet keys for local testing
+   * Never share or expose production keys
+   * Use hardware wallets for production deployments
 3. **API Keys**
-   - Use restricted API keys with minimum required permissions
-   - Set up proper key rotation policies
-   - Monitor API key usage for suspicious activity
-
+   * Use restricted API keys with minimum required permissions
+   * Set up proper key rotation policies
+   * Monitor API key usage for suspicious activity
 4. **Database Credentials**
-   - Use strong, unique passwords
-   - Restrict database access to necessary IP ranges
-   - Regular security audits of database access
+   * Use strong, unique passwords
+   * Restrict database access to necessary IP ranges
+   * Regular security audits of database access

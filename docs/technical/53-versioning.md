@@ -1,18 +1,18 @@
-# 📝 Version Management Guide
+# Version Management
 
-This document outlines the versioning strategy for all components of the AURA Protocol.
+This document outlines the versioning strategy for all components of the PHEME Protocol.
 
 ## Semantic Versioning
 
-AURA Protocol follows [Semantic Versioning 2.0.0](https://semver.org/) for all components:
+PHEME Protocol follows [Semantic Versioning 2.0.0](https://semver.org/) for all components:
 
 ```
 MAJOR.MINOR.PATCH
 ```
 
-- **MAJOR**: Incompatible API changes
-- **MINOR**: Backward-compatible new functionality
-- **PATCH**: Backward-compatible bug fixes
+* **MAJOR**: Incompatible API changes
+* **MINOR**: Backward-compatible new functionality
+* **PATCH**: Backward-compatible bug fixes
 
 ## Component Versioning
 
@@ -22,7 +22,7 @@ MAJOR.MINOR.PATCH
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.0;
 
-contract AuraProtocol {
+contract PhemeProtocol {
     string public constant VERSION = "1.0.0";
     
     event Upgraded(string version);
@@ -77,7 +77,7 @@ type UserV2 {
 ```typescript
 // package.json
 {
-  "name": "@aura/frontend",
+  "name": "@pheme/frontend",
   "version": "1.0.0",
   "dependencies": {
     "@aura/sdk": "^1.0.0"
@@ -93,10 +93,10 @@ const AppVersion: React.FC = () => {
 ### SDK Versioning
 
 ```typescript
-export class AuraSDK {
+export class PhemeSDK {
   public readonly version = '1.0.0';
   
-  constructor(config: AuraConfig) {
+  constructor(config: PhemeConfig) {
     this.validateVersion(config.minVersion);
   }
   
@@ -110,13 +110,13 @@ export class AuraSDK {
 
 ## Version Compatibility Matrix
 
-| Component          | Current Version | Minimum Compatible Version | Notes                    |
-|-------------------|-----------------|---------------------------|--------------------------|
-| Smart Contracts   | 1.0.0          | 1.0.0                     | No breaking changes yet  |
-| REST API          | 2.1.0          | 1.0.0                     | v1 maintained for legacy |
-| GraphQL API       | 1.5.0          | 1.0.0                     | Backward compatible      |
-| Frontend          | 3.0.0          | 2.0.0                     | Major UI refresh         |
-| SDK               | 2.0.0          | 1.5.0                     | New features added       |
+| Component       | Current Version | Minimum Compatible Version | Notes                    |
+| --------------- | --------------- | -------------------------- | ------------------------ |
+| Smart Contracts | 1.0.0           | 1.0.0                      | No breaking changes yet  |
+| REST API        | 2.1.0           | 1.0.0                      | v1 maintained for legacy |
+| GraphQL API     | 1.5.0           | 1.0.0                      | Backward compatible      |
+| Frontend        | 3.0.0           | 2.0.0                      | Major UI refresh         |
+| SDK             | 2.0.0           | 1.5.0                      | New features added       |
 
 ## Version Lifecycle
 
@@ -285,4 +285,4 @@ interface VersionMetrics {
 async function trackVersionUsage(version: string): Promise<void> {
   await metrics.increment(`version.${version}.usage`);
 }
-``` 
+```

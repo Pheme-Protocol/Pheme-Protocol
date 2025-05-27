@@ -1,30 +1,33 @@
-# 🌐 Multichain Deployment Guide
+# Blockchain Integration
 
 ## Overview
 
-AURA Protocol is designed to operate across multiple EVM-compatible chains, with Base as the primary network. This guide covers deployment, management, and integration across different chains.
+PHEME Protocol is designed to operate across multiple EVM-compatible chains, with Base as the primary network. This guide covers deployment, management, and integration across different chains.
 
 ## Supported Networks
 
 ### Primary Network
-- **Base**
-  - Mainnet: `8453`
-  - Testnet: `84531`
+
+* **Base**
+  * Mainnet: `8453`
+  * Testnet: `84531`
 
 ### Secondary Networks
-- **Ethereum**
-  - Mainnet: `1`
-  - Goerli: `5`
-- **Arbitrum**
-  - Mainnet: `42161`
-  - Testnet: `421613`
-- **Polygon**
-  - Mainnet: `137`
-  - Mumbai: `80001`
+
+* **Ethereum**
+  * Mainnet: `1`
+  * Goerli: `5`
+* **Arbitrum**
+  * Mainnet: `42161`
+  * Testnet: `421613`
+* **Polygon**
+  * Mainnet: `137`
+  * Mumbai: `80001`
 
 ## Smart Contract Configuration
 
 ### Network Configuration
+
 ```typescript
 // hardhat.config.ts
 import { HardhatUserConfig } from "hardhat/config";
@@ -86,6 +89,7 @@ export default config;
 ```
 
 ### Deployment Script
+
 ```typescript
 // scripts/deploy.ts
 import { ethers } from "hardhat";
@@ -122,6 +126,7 @@ main()
 ## Network-Specific Configuration
 
 ### Chain Configuration
+
 ```typescript
 // config/networks.ts
 export interface NetworkConfig {
@@ -140,7 +145,7 @@ export const networkConfigs: Record<string, NetworkConfig> = {
       // Base-specific parameters
     },
     verify: true,
-    subgraph: "aura-protocol/aura-base"
+    subgraph: "pheme-protocol/pheme-base"
   },
   arbitrum: {
     rpcUrl: "https://arb1.arbitrum.io/rpc",
@@ -149,13 +154,14 @@ export const networkConfigs: Record<string, NetworkConfig> = {
       // Arbitrum-specific parameters
     },
     verify: true,
-    subgraph: "aura-protocol/aura-arbitrum"
+    subgraph: "pheme-protocol/pheme-arbitrum"
   }
   // Add other networks...
 };
 ```
 
 ### Environment Variables
+
 ```bash
 # .env.example
 # ⚠️ IMPORTANT: Never commit actual values to version control
@@ -191,35 +197,33 @@ PRIVATE_KEY=<your-deployment-key>
 ### Private Key Management
 
 1. **Development vs Production**
-   - Use separate keys for development and production
-   - Never use production keys in development environment
-   - Consider using hardware wallets for production deployments
-
+   * Use separate keys for development and production
+   * Never use production keys in development environment
+   * Consider using hardware wallets for production deployments
 2. **Key Storage**
-   - Store private keys in secure environment variables
-   - Never commit private keys to version control
-   - Use key management services in production
-
+   * Store private keys in secure environment variables
+   * Never commit private keys to version control
+   * Use key management services in production
 3. **Access Control**
-   - Implement multi-sig for critical operations
-   - Regular key rotation
-   - Audit logs for deployment activities
+   * Implement multi-sig for critical operations
+   * Regular key rotation
+   * Audit logs for deployment activities
 
 ### API Key Security
 
 1. **Key Management**
-   - Use separate API keys for each environment
-   - Regular rotation of API keys
-   - Restrict API key permissions to minimum required
-
+   * Use separate API keys for each environment
+   * Regular rotation of API keys
+   * Restrict API key permissions to minimum required
 2. **Storage**
-   - Store API keys in environment variables
-   - Use secrets management in production
-   - Never expose keys in client-side code
+   * Store API keys in environment variables
+   * Use secrets management in production
+   * Never expose keys in client-side code
 
 ## Subgraph Deployment
 
 ### Subgraph Manifest
+
 ```yaml
 # subgraph.yaml
 specVersion: 0.0.4
@@ -250,6 +254,7 @@ dataSources:
 ```
 
 ### Deployment Script
+
 ```typescript
 // scripts/deploy-subgraph.ts
 import { exec } from "child_process";
@@ -278,6 +283,7 @@ async function deploySubgraph(network: string) {
 ## Frontend Integration
 
 ### Chain Configuration
+
 ```typescript
 // config/chains.ts
 import { Chain } from 'wagmi';
@@ -303,6 +309,7 @@ export const supportedChains = [baseChain, /* other chains */];
 ```
 
 ### Wallet Configuration
+
 ```typescript
 // config/wagmi.ts
 import { configureChains, createConfig } from 'wagmi';
@@ -321,6 +328,7 @@ export const wagmiConfig = createConfig({
 ```
 
 ### Network Switching
+
 ```typescript
 // hooks/useNetwork.ts
 import { useNetwork, useSwitchNetwork } from 'wagmi';
@@ -344,6 +352,7 @@ export function useChainSwitch() {
 ## Backend Integration
 
 ### Chain-Specific Services
+
 ```typescript
 // services/ChainService.ts
 import { ethers } from 'ethers';
@@ -374,6 +383,7 @@ export class ChainService {
 ```
 
 ### GraphQL Integration
+
 ```typescript
 // services/SubgraphService.ts
 import { GraphQLClient } from 'graphql-request';
@@ -412,6 +422,7 @@ export class SubgraphService {
 ## Monitoring & Analytics
 
 ### Chain-Specific Metrics
+
 ```typescript
 // monitoring/metrics.ts
 import { Prometheus } from 'prom-client';
@@ -432,6 +443,7 @@ export const chainMetrics = {
 ```
 
 ### Network Health Checks
+
 ```typescript
 // monitoring/health.ts
 import { networkConfigs } from '../config';
@@ -465,6 +477,7 @@ export async function checkNetworkHealth() {
 ## Error Handling
 
 ### Chain-Specific Errors
+
 ```typescript
 // errors/ChainError.ts
 export class ChainError extends Error {
@@ -489,6 +502,7 @@ export function handleChainError(error: any, network: string) {
 ## Documentation
 
 ### Chain-Specific Documentation
+
 ```markdown
 # Network Integration Guide
 
@@ -511,3 +525,4 @@ export function handleChainError(error: any, network: string) {
 
 ## Other Networks
 [Similar documentation for each supported network]
+```

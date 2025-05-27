@@ -1,13 +1,13 @@
-# 📁 Project Structure
+# Project Structure
 
 ## Overview
 
-The AURA Protocol codebase follows a monorepo structure, organizing code by functionality and maintaining clear separation of concerns.
+The PHEME Protocol codebase follows a monorepo structure, organizing code by functionality and maintaining clear separation of concerns.
 
 ## Root Structure
 
 ```
-aura-chat/
+pheme-chat/
 ├── apps/                  # Application frontends
 ├── packages/             # Shared packages and contracts
 ├── services/            # Backend services
@@ -183,6 +183,7 @@ config/
 ## Module Organization
 
 ### Components
+
 ```
 components/
 ├── common/           # Shared components
@@ -200,6 +201,7 @@ components/
 ```
 
 ### API Modules
+
 ```
 modules/
 ├── users/
@@ -260,26 +262,22 @@ scripts/
 ## Best Practices
 
 1. **Module Organization**
-   - Group related files together
-   - Use clear, descriptive names
-   - Maintain consistent structure
-
+   * Group related files together
+   * Use clear, descriptive names
+   * Maintain consistent structure
 2. **File Naming**
-   - Use kebab-case for files
-   - Use PascalCase for components
-   - Use camelCase for utilities
-
+   * Use kebab-case for files
+   * Use PascalCase for components
+   * Use camelCase for utilities
 3. **Import Organization**
-   - Group imports by type
-   - Use absolute imports
-   - Maintain consistent order
-
+   * Group imports by type
+   * Use absolute imports
+   * Maintain consistent order
 4. **Code Organization**
-   - Follow single responsibility
-   - Use appropriate abstractions
-   - Maintain clean architecture
-
+   * Follow single responsibility
+   * Use appropriate abstractions
+   * Maintain clean architecture
 5. **Testing Organization**
-   - Mirror source structure
-   - Group by test type
-   - Use meaningful names
+   * Mirror source structure
+   * Group by test type
+   * Use meaningful names

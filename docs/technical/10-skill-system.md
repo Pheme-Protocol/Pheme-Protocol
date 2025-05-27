@@ -1,14 +1,15 @@
-# AURA Skill System Architecture
+# Skill System
 
 ## Overview
 
-The AURA Skill System is a comprehensive framework that combines AI-powered assessment, blockchain-based verification, and gamified progression to create a trustless proof-of-skill ecosystem.
+The PHEME Skill System is a comprehensive framework that combines AI-powered assessment, blockchain-based verification, and gamified progression to create a trustless proof-of-skill ecosystem.
 
 ## Core Components
 
 ### 1. Skill Wallet (Soulbound NFT Profile)
 
 #### Technical Implementation
+
 ```solidity
 contract SkillWallet is ERC721Soulbound {
     struct Skill {
@@ -32,6 +33,7 @@ contract SkillWallet is ERC721Soulbound {
 ```
 
 #### Metadata Storage
+
 ```typescript
 interface SkillMetadata {
     skillLevels: {
@@ -49,6 +51,7 @@ interface SkillMetadata {
 ### 2. Task Engine (Learn-to-Earn + Micro-bounties)
 
 #### Task Types
+
 ```typescript
 interface Task {
     type: 'LESSON' | 'BOUNTY' | 'QUEST';
@@ -71,6 +74,7 @@ interface ValidationCriteria {
 ### 3. AI Mentor System
 
 #### Integration Points
+
 ```typescript
 interface AIMentor {
     // Learning assistance
@@ -90,6 +94,7 @@ interface AIMentor {
 ### 4. Reputation Oracle
 
 #### Scoring System
+
 ```typescript
 interface ReputationScore {
     overall: number;               // 0-100 score
@@ -110,6 +115,7 @@ interface ReputationScore {
 ### 5. Guild System
 
 #### Guild Structure
+
 ```typescript
 interface Guild {
     id: string;
@@ -126,6 +132,7 @@ interface Guild {
 ### 6. Token Utility ($AURA)
 
 #### Token Mechanics
+
 ```typescript
 interface TokenUtility {
     // Boost mechanics
@@ -146,6 +153,7 @@ interface TokenUtility {
 ### 7. Security & Trust
 
 #### Verification System
+
 ```typescript
 interface TrustSystem {
     // Sybil resistance
@@ -165,6 +173,7 @@ interface TrustSystem {
 ### 8. Integration API
 
 #### External Access
+
 ```typescript
 interface AuraAPI {
     // Skill verification
@@ -183,22 +192,20 @@ interface AuraAPI {
 ## Security Considerations
 
 1. Sybil Resistance
-   - Wallet activity thresholds
-   - Multi-factor verification
-   - AI-based behavior analysis
-   - Task fingerprinting
-   - Duplicate submission detection
-
+   * Wallet activity thresholds
+   * Multi-factor verification
+   * AI-based behavior analysis
+   * Task fingerprinting
+   * Duplicate submission detection
 2. Skill Verification
-   - Multi-source validation
-   - Time-locked progressions
-   - Peer review requirements
-   - ZK attestations
-   - Timestamp verification
-
+   * Multi-source validation
+   * Time-locked progressions
+   * Peer review requirements
+   * ZK attestations
+   * Timestamp verification
 3. Data Privacy
-   - Encrypted skill data
-   - Selective disclosure
-   - User consent management
-   - Zero-knowledge proofs
-   - Decentralized storage 
+   * Encrypted skill data
+   * Selective disclosure
+   * User consent management
+   * Zero-knowledge proofs
+   * Decentralized storage

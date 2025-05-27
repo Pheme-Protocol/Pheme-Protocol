@@ -1,8 +1,8 @@
-# 🗳️ DAO Governance Architecture
+# Technical Governance
 
 ## Overview
 
-AURA's governance architecture implements a merit-based voting system that combines token holdings with reputation scores to determine voting power. This document outlines the technical implementation of the governance system.
+PHEME's governance architecture implements a merit-based voting system that combines token holdings with reputation scores to determine voting power. This document outlines the technical implementation of the governance system.
 
 ## Core Components
 
@@ -12,7 +12,7 @@ AURA's governance architecture implements a merit-based voting system that combi
 // Core governance contracts
 contracts/
 ├── governance/
-│   ├── AuraGovernor.sol        // Main governance contract
+│   ├── PhemeGovernor.sol        // Main governance contract
 │   ├── MeritMultiplier.sol     // Reputation-based vote weight
 │   ├── TimelockController.sol  // Execution delay enforcer
 │   └── TreasuryVault.sol       // DAO treasury management
@@ -20,13 +20,13 @@ contracts/
 
 ### Governance Parameters
 
-| Parameter            | Default Value       | Solidity Implementation                    |
-| -------------------- | ------------------- | ------------------------------------------ |
-| `votingDelay`        | 1 block (≈13s)      | `uint256 public constant VOTING_DELAY = 1` |
-| `votingPeriod`       | 40320 blocks (~7d)  | `uint256 public constant VOTING_PERIOD = 40320` |
+| Parameter            | Default Value       | Solidity Implementation                             |
+| -------------------- | ------------------- | --------------------------------------------------- |
+| `votingDelay`        | 1 block (≈13s)      | `uint256 public constant VOTING_DELAY = 1`          |
+| `votingPeriod`       | 40320 blocks (\~7d) | `uint256 public constant VOTING_PERIOD = 40320`     |
 | `proposalThreshold`  | 0.1% of supply      | `uint256 public constant PROPOSAL_THRESHOLD = 1000` |
-| `quorumThreshold`    | 4% of votePower     | `uint256 public constant QUORUM_THRESHOLD = 400` |
-| `timelockDelay`      | 172800s (48h)       | `uint256 public constant TIMELOCK_DELAY = 172800` |
+| `quorumThreshold`    | 4% of votePower     | `uint256 public constant QUORUM_THRESHOLD = 400`    |
+| `timelockDelay`      | 172800s (48h)       | `uint256 public constant TIMELOCK_DELAY = 172800`   |
 | `meritMultiplierMax` | 0.5                 | `uint256 public constant MERIT_MULTIPLIER_MAX = 50` |
 
 ## Technical Implementation
@@ -63,8 +63,8 @@ contract MeritMultiplier {
 ### Proposal Lifecycle
 
 ```solidity
-// AuraGovernor.sol
-contract AuraGovernor is Governor, GovernorSettings, GovernorTimelockControl {
+// PhemeGovernor.sol
+contract PhemeGovernor is Governor, GovernorSettings, GovernorTimelockControl {
     enum ProposalState {
         Pending,
         Active,
@@ -138,7 +138,7 @@ interface IReputationOracle {
     function getReputation(address user) external view returns (uint256);
 }
 
-contract AuraGovernor {
+contract PhemeGovernor {
     IReputationOracle public reputationOracle;
     
     function getVotes(address account, uint256 blockNumber)
@@ -180,53 +180,61 @@ type Vote @entity {
 ## Security Considerations
 
 ### Access Control
-- Timelocked execution for all governance actions
-- Role-based access control for treasury operations
-- Emergency pause functionality for critical functions
+
+* Timelocked execution for all governance actions
+* Role-based access control for treasury operations
+* Emergency pause functionality for critical functions
 
 ### Vote Manipulation Prevention
-- Snapshot voting power at proposal creation
-- Minimum proposal threshold
-- Quorum requirements
-- Timelock delay for execution
+
+* Snapshot voting power at proposal creation
+* Minimum proposal threshold
+* Quorum requirements
+* Timelock delay for execution
 
 ### Audit Requirements
-- Quarterly security audits of governance contracts
-- Continuous monitoring of proposal activities
-- Regular review of access control roles
+
+* Quarterly security audits of governance contracts
+* Continuous monitoring of proposal activities
+* Regular review of access control roles
 
 ## Monitoring & Analytics
 
 ### Key Metrics
-- Proposal creation rate
-- Voter participation
-- Vote distribution
-- Treasury transaction volume
-- Reputation score distribution
+
+* Proposal creation rate
+* Voter participation
+* Vote distribution
+* Treasury transaction volume
+* Reputation score distribution
 
 ### Dashboards
-- Governance activity monitoring
-- Treasury balance tracking
-- Voter participation analytics
-- Reputation score impact analysis
+
+* Governance activity monitoring
+* Treasury balance tracking
+* Voter participation analytics
+* Reputation score impact analysis
 
 ## Development Guidelines
 
 ### Contract Upgrades
+
 1. Deploy new implementation
 2. Submit upgrade proposal
 3. Pass governance vote
 4. Execute through timelock
 
 ### Testing Requirements
-- Unit tests for vote calculation
-- Integration tests for proposal lifecycle
-- Stress testing for edge cases
-- Gas optimization verification
+
+* Unit tests for vote calculation
+* Integration tests for proposal lifecycle
+* Stress testing for edge cases
+* Gas optimization verification
 
 ## API Integration
 
 ### GraphQL Endpoints
+
 ```graphql
 query GetProposal($id: ID!) {
   proposal(id: $id) {
@@ -246,6 +254,7 @@ query GetProposal($id: ID!) {
 ```
 
 ### REST Endpoints
+
 ```typescript
 interface ProposalResponse {
   id: string;
@@ -260,4 +269,4 @@ interface ProposalResponse {
     reached: boolean;
   };
 }
-``` 
+```

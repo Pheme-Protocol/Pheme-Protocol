@@ -1,10 +1,10 @@
-# 🚀 Deployment Guide
+# Deployment Guide
 
-This document outlines the deployment process for the AURA Protocol platform.
+This document outlines the deployment process for the PHEME Protocol platform.
 
 ## Overview
 
-AURA Protocol uses a containerized microservices architecture deployed on Kubernetes, with automated CI/CD pipelines for consistent and reliable deployments.
+PHEME Protocol uses a containerized microservices architecture deployed on Kubernetes, with automated CI/CD pipelines for consistent and reliable deployments.
 
 ## Infrastructure
 
@@ -87,7 +87,7 @@ jobs:
       - name: Security scan
         run: |
           yarn audit
-          docker scan aura/api:$TAG
+          docker scan pheme/api:$TAG
 ```
 
 ### 3. Deploy Phase
@@ -120,7 +120,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: aura/api:latest
+          image: pheme/api:latest
           ports:
             - containerPort: 3000
           env:
@@ -145,7 +145,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: aura/frontend:latest
+          image: pheme/frontend:latest
           ports:
             - containerPort: 80
 ```
@@ -163,7 +163,7 @@ spec:
     spec:
       containers:
         - name: migration
-          image: aura/api:latest
+          image: pheme/api:latest
           command: ['yarn', 'migrate:deploy']
 ```
 
@@ -179,7 +179,7 @@ metadata:
   name: app-config
 data:
   NODE_ENV: "production"
-  API_URL: "https://api.aura.protocol"
+  API_URL: "https://api.pheme.protocol"
   REDIS_HOST: "redis-master"
 ```
 
@@ -264,24 +264,27 @@ spec:
 ## Deployment Checklist
 
 ### Pre-deployment
-- [ ] Run all tests
-- [ ] Perform security scan
-- [ ] Check resource requirements
-- [ ] Update documentation
-- [ ] Prepare rollback plan
+
+* [ ] Run all tests
+* [ ] Perform security scan
+* [ ] Check resource requirements
+* [ ] Update documentation
+* [ ] Prepare rollback plan
 
 ### Deployment
-- [ ] Apply database migrations
-- [ ] Deploy API services
-- [ ] Deploy frontend applications
-- [ ] Update DNS records
-- [ ] Configure monitoring
+
+* [ ] Apply database migrations
+* [ ] Deploy API services
+* [ ] Deploy frontend applications
+* [ ] Update DNS records
+* [ ] Configure monitoring
 
 ### Post-deployment
-- [ ] Verify all services
-- [ ] Check monitoring metrics
-- [ ] Test critical paths
-- [ ] Monitor error rates
+
+* [ ] Verify all services
+* [ ] Check monitoring metrics
+* [ ] Test critical paths
+* [ ] Monitor error rates
 
 ## Rollback Procedures
 
@@ -320,6 +323,7 @@ async function rollbackMigration(version: string) {
 ### Common Issues
 
 1. Pod Startup Failures
+
 ```bash
 # Check pod status
 kubectl describe pod <pod-name>
@@ -329,6 +333,7 @@ kubectl logs <pod-name>
 ```
 
 2. Database Connection Issues
+
 ```bash
 # Verify secrets
 kubectl get secret db-secrets -o yaml
@@ -338,6 +343,7 @@ kubectl exec -it <pod-name> -- nc -zv <db-host> 5432
 ```
 
 3. Resource Issues
+
 ```bash
 # Check resource usage
 kubectl top pods
@@ -394,6 +400,7 @@ spec:
 ### Regular Tasks
 
 1. Certificate Rotation
+
 ```bash
 # Update TLS certificates
 kubectl create secret tls tls-secret \
@@ -403,6 +410,7 @@ kubectl create secret tls tls-secret \
 ```
 
 2. Secret Rotation
+
 ```bash
 # Update secrets
 kubectl create secret generic app-secrets \
@@ -411,6 +419,7 @@ kubectl create secret generic app-secrets \
 ```
 
 3. Resource Optimization
+
 ```bash
 # Analyze resource usage
 kubectl describe nodes | grep -A 5 "Resource usage"
@@ -433,4 +442,4 @@ aws s3 cp backup_$TIMESTAMP.sql s3://backups/
 ```bash
 # Backup Kubernetes resources
 kubectl get all -A -o yaml > cluster_backup_$(date +%Y%m%d).yaml
-``` 
+```

@@ -2,17 +2,18 @@
 
 ## Overview
 
-The AI Validator Network is a decentralized system of AI nodes that evaluate user contributions, ensuring fair and transparent skill assessment across the AURA ecosystem.
+The AI Validator Network is a decentralized system of AI nodes that evaluate user contributions, ensuring fair and transparent skill assessment across the PHEME ecosystem.
 
 ## Architecture
 
 ### Validator Node Structure
+
 ```typescript
 interface ValidatorNode {
     id: string;
     models: AIModel[];
     status: 'ACTIVE' | 'PENDING' | 'SUSPENDED';
-    stake: number;         // $AURA tokens staked
+    stake: number;         // $PHEME tokens staked
     performance: {
         accuracy: number;
         uptime: number;
@@ -22,6 +23,7 @@ interface ValidatorNode {
 ```
 
 ### Validation Process
+
 ```typescript
 interface ValidationRequest {
     taskId: string;
@@ -43,6 +45,7 @@ interface ValidationResult {
 ## Governance
 
 ### Model Management
+
 ```typescript
 interface AIModel {
     id: string;
@@ -58,6 +61,7 @@ interface AIModel {
 ```
 
 ### Scoring Rules
+
 ```typescript
 interface ScoringRules {
     weights: {
@@ -75,32 +79,36 @@ interface ScoringRules {
 ## Validation Types
 
 ### Code Review
-- Syntax analysis
-- Best practices check
-- Security assessment
-- Performance evaluation
-- Documentation quality
+
+* Syntax analysis
+* Best practices check
+* Security assessment
+* Performance evaluation
+* Documentation quality
 
 ### Design Assessment
-- Visual consistency
-- UX principles
-- Accessibility compliance
-- Technical implementation
-- Innovation scoring
+
+* Visual consistency
+* UX principles
+* Accessibility compliance
+* Technical implementation
+* Innovation scoring
 
 ### Content Evaluation
-- Grammar and style
-- Technical accuracy
-- Originality check
-- Structure analysis
-- Engagement metrics
+
+* Grammar and style
+* Technical accuracy
+* Originality check
+* Structure analysis
+* Engagement metrics
 
 ## Security Measures
 
 ### Validator Requirements
+
 ```typescript
 interface ValidatorRequirements {
-    minimumStake: number;     // Required $AURA tokens
+    minimumStake: number;     // Required $PHEME tokens
     reputationThreshold: number;
     uptime: number;           // Minimum availability
     responseTime: number;     // Maximum latency
@@ -109,6 +117,7 @@ interface ValidatorRequirements {
 ```
 
 ### Dispute Resolution
+
 ```typescript
 interface DisputeSystem {
     // Initiate dispute
@@ -125,6 +134,7 @@ interface DisputeSystem {
 ## Integration
 
 ### API Endpoints
+
 ```typescript
 interface ValidatorAPI {
     // Submit for validation
@@ -146,6 +156,7 @@ interface ValidatorAPI {
 ```
 
 ### Event System
+
 ```typescript
 interface ValidatorEvents {
     // Validation events
@@ -163,6 +174,7 @@ interface ValidatorEvents {
 ## Performance Monitoring
 
 ### Metrics
+
 ```typescript
 interface ValidatorMetrics {
     // Performance metrics
@@ -184,6 +196,7 @@ interface ValidatorMetrics {
 ```
 
 ### Quality Assurance
+
 1. Regular performance reviews
 2. Cross-validation checks
 3. Peer assessment system
@@ -193,6 +206,7 @@ interface ValidatorMetrics {
 ## Best Practices
 
 ### For Validators
+
 1. Maintain high uptime
 2. Regular model updates
 3. Quick response times
@@ -200,8 +214,9 @@ interface ValidatorMetrics {
 5. Active governance participation
 
 ### For Integration
+
 1. Proper error handling
 2. Validation request batching
 3. Result caching strategies
 4. Fallback mechanisms
-5. Rate limiting implementation 
+5. Rate limiting implementation

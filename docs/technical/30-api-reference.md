@@ -1,8 +1,8 @@
-# 📡 AURA API Lifecycle & Versioning Guide
+# API Reference
 
-**Purpose:** Define a secure and consistent approach for designing, versioning, deprecating, and evolving AURA's APIs (REST and GraphQL) while maintaining security best practices and data protection.
+**Purpose:** Define a secure and consistent approach for designing, versioning, deprecating, and evolving PHEME's APIs (REST and GraphQL) while maintaining security best practices and data protection.
 
----
+***
 
 ## 1. Versioning Strategy
 
@@ -19,7 +19,7 @@
 * **GraphQL**: Version exposed via schema `Query` type and `X-API-Version` header
 * **Security Headers**: Include required security headers in all responses
 
----
+***
 
 ## 2. Security & Authentication
 
@@ -41,7 +41,7 @@ X-Frame-Options: DENY
 X-XSS-Protection: 1; mode=block
 ```
 
----
+***
 
 ## 3. Namespace & Routing
 
@@ -59,15 +59,15 @@ X-XSS-Protection: 1; mode=block
 * Version header: `X-API-Version: v1`
 * Authentication: `Authorization: Bearer <token>`
 
----
+***
 
 ## 4. Deprecation Policy
 
-| Stage        | Duration         | Actions                                           |
-| ------------ | ---------------- | ------------------------------------------------- |
-| **Announce** | 30 days min     | Publish deprecation notice                        |
-| **Support**  | 90 days         | Maintain both versions                            |
-| **Remove**   | Post-support    | Remove deprecated version                         |
+| Stage        | Duration     | Actions                    |
+| ------------ | ------------ | -------------------------- |
+| **Announce** | 30 days min  | Publish deprecation notice |
+| **Support**  | 90 days      | Maintain both versions     |
+| **Remove**   | Post-support | Remove deprecated version  |
 
 ### 4.1 Deprecation Headers
 
@@ -77,7 +77,7 @@ Sunset: <ISO-8601-date>
 Link: <https://docs.aurabot.xyz/api/migration>; rel="deprecation"
 ```
 
----
+***
 
 ## 5. Documentation Standards
 
@@ -86,7 +86,7 @@ Link: <https://docs.aurabot.xyz/api/migration>; rel="deprecation"
 ```yaml
 openapi: 3.0.3
 info:
-  title: AURA API
+  title: PHEME API
   version: v1
   security:
     - bearerAuth: []
@@ -115,7 +115,7 @@ type Query {
 }
 ```
 
----
+***
 
 ## 6. Error Handling
 
@@ -140,7 +140,7 @@ type Query {
 * 5xx - Server Errors
 * Custom error codes for specific scenarios
 
----
+***
 
 ## 7. Rate Limiting & Protection
 
@@ -160,7 +160,7 @@ X-RateLimit-Reset: 1640995200
 * XSS prevention
 * CSRF protection
 
----
+***
 
 ## 8. API Monitoring
 
@@ -179,7 +179,7 @@ X-RateLimit-Reset: 1640995200
 * Security header violations
 * Input validation failures
 
----
+***
 
 ## 9. Example Endpoints
 
@@ -223,7 +223,7 @@ paths:
           description: Forbidden
 ```
 
----
+***
 
 ## 10. Testing Requirements
 
@@ -242,6 +242,6 @@ paths:
 * Migration path validation
 * Security regression testing
 
----
+***
 
-*Note: This guide prioritizes security and data protection while ensuring AURA's APIs remain stable, discoverable, and maintainable. All examples use placeholder values and follow security best practices.* 
+_Note: This guide prioritizes security and data protection while ensuring AURA's APIs remain stable, discoverable, and maintainable. All examples use placeholder values and follow security best practices._
