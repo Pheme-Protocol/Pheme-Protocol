@@ -1,7 +1,7 @@
 # 💻 Coding Standards
 
 {% hint style="info" %}
-This guide outlines the coding standards and best practices for contributing to the AURA Protocol. Following these standards ensures code quality, maintainability, and consistency across the codebase.
+This guide outlines the coding standards and best practices for contributing to the PHEME Protocol. Following these standards ensures code quality, maintainability, and consistency across the codebase.
 {% endhint %}
 
 ## Code Organization
@@ -238,7 +238,7 @@ async function validateUserSkill(
 
 ```solidity
 /// @title Skill Validation Contract
-/// @author AURA Protocol Team
+/// @author PHEME Protocol Team
 /// @notice Handles the validation of user skills
 /// @dev Implements ISkillValidator interface
 contract SkillValidator is ISkillValidator {
@@ -566,9 +566,9 @@ Implement caching strategies and optimize database queries.
 Ready to contribute?
 * [🔍 Review Pull Request Guidelines](./21-contribution-workflow.md)
 * [📚 Read Development Setup](../get-started/01-quickstart.md)
-* [💬 Join Developer Discord](https://discord.gg/aura-dev)
+* [💬 Join Developer Discord](https://discord.gg/pheme-dev)
 {% endhint %}
 
 {% hint style="info" %}
-Need help with coding standards? Check our [Developer Forum](https://forum.aura.protocol/dev) or ask in Discord!
+Need help with coding standards? Check our [Developer Forum](https://forum.phemeai.xyz/dev) or ask in Discord!
 {% endhint %}
