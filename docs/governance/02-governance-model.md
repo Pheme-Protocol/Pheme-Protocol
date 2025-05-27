@@ -172,9 +172,9 @@ interface MeritMultiplier {
 
 ### Official Channels
 
-* [Snapshot Space](https://snapshot.org/#/aurabot.eth)
-* [Forum](https://discourse.aurabot.xyz/c/governance)
-* [Github](https://github.com/autonomous-aura/governance)
+* [Snapshot Space](https://snapshot.org/#/phemeai.eth)
+* [Forum](https://discourse.phemeai.xyz/c/governance)
+* [Github](https://github.com/PhemeAI)
 
 ### Documentation
 
