@@ -4,7 +4,7 @@
 
 ## Overview
 
-The AURA Protocol AI Worker system validates task completions, assesses skill levels, and provides intelligent task recommendations using advanced language models and specialized validation networks.
+The PHEME Protocol AI Worker system validates task completions, assesses skill levels, and provides intelligent task recommendations using advanced language models and specialized validation networks.
 
 ### Architecture
 ```mermaid
@@ -36,7 +36,7 @@ graph TD
 ### Setup
 ```bash
 # Install dependencies
-yarn add @aura/ai-worker @openai/api redis bull
+yarn add @pheme/ai-worker @openai/api redis bull
 
 # Setup environment
 cp .env.example .env
@@ -57,13 +57,13 @@ DEFAULT_MODEL=gpt-4
 
 # Queue Configuration
 REDIS_URL=redis://localhost:6379
-QUEUE_PREFIX=aura:worker
+QUEUE_PREFIX=pheme:worker
 
 # Database
-DATABASE_URL=postgresql://user:pass@localhost:5432/aura
+DATABASE_URL=postgresql://user:pass@localhost:5432/pheme
 
 # Validation Network
-VALIDATOR_ENDPOINT=https://validator.aurabot.xyz
+VALIDATOR_ENDPOINT=https://validator.phemeai.xyz
 VALIDATOR_KEY=...
 ```
 
@@ -93,7 +93,7 @@ validation:
 ### Task Queue Setup
 ```typescript
 import Queue from 'bull';
-import { TaskProcessor } from '@aura/ai-worker';
+import { TaskProcessor } from '@pheme/ai-worker';
 
 const taskQueue = new Queue('task-validation', REDIS_URL);
 
@@ -360,7 +360,7 @@ CMD ["yarn", "start:worker"]
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: aura-ai-worker
+  name: pheme-ai-worker
 spec:
   replicas: 3
   template:
@@ -372,7 +372,7 @@ spec:
             - name: REDIS_URL
               valueFrom:
                 secretKeyRef:
-                  name: aura-secrets
+                  name: pheme-secrets
                   key: redis-url
 ```
 
@@ -384,8 +384,8 @@ spec:
 - [Validation Protocol Spec](../technical/30-validation.md)
 
 ### Tools
-- [Model Playground](https://playground.aurabot.xyz)
-- [Validator Dashboard](https://validator.aurabot.xyz/dashboard)
-- [Metrics Dashboard](https://metrics.aurabot.xyz)
+- [Model Playground](https://playground.phemeai.xyz)
+- [Validator Dashboard](https://validator.phemeai.xyz/dashboard)
+- [Metrics Dashboard](https://metrics.phemeai.xyz)
 
 > 🔒 **Security**: Review our [Security Guidelines](../technical/05-security.md) for AI worker security best practices.
