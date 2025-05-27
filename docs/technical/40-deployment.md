@@ -39,7 +39,7 @@ module "rds" {
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 metadata:
-  name: aura-cluster
+  name: pheme-cluster
   region: us-east-1
 nodeGroups:
   - name: ng-1
@@ -67,8 +67,8 @@ jobs:
       
       - name: Build Docker images
         run: |
-          docker build -t aura/api:$TAG ./services/api
-          docker build -t aura/frontend:$TAG ./apps/web
+          docker build -t pheme/api:$TAG ./services/api
+          docker build -t pheme/frontend:$TAG ./apps/web
 ```
 
 ### 2. Test Phase
