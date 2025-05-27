@@ -2,13 +2,14 @@
 
 ## Overview
 
-AURA's gamification system is designed to make skill development and verification engaging and rewarding. The system combines traditional gaming mechanics with blockchain-based achievements and real-world utility.
+PHEME's gamification system is designed to make skill development and verification engaging and rewarding. The system combines traditional gaming mechanics with blockchain-based achievements and real-world utility.
 
 ## Core Gamification Layers
 
 ### 1. Experience & Leveling
 
 #### XP System
+
 ```typescript
 interface XPSystem {
     baseXP: number;              // Base experience points
@@ -26,14 +27,16 @@ interface XPSystem {
 ```
 
 #### Level Progression
-- Experience thresholds increase with each level
-- Visual NFT enhancements at milestone levels
-- Unlock new AI mentor personalities
-- Access to exclusive tasks and challenges
+
+* Experience thresholds increase with each level
+* Visual NFT enhancements at milestone levels
+* Unlock new AI mentor personalities
+* Access to exclusive tasks and challenges
 
 ### 2. Achievement System
 
 #### Badge Types
+
 ```typescript
 interface Badge {
     type: 'SKILL' | 'ACHIEVEMENT' | 'SPECIAL' | 'GUILD';
@@ -49,15 +52,17 @@ interface Badge {
 ```
 
 #### Unlock Conditions
-- Skill level thresholds
-- Task completion streaks
-- Community contributions
-- Special events participation
-- Guild achievements
+
+* Skill level thresholds
+* Task completion streaks
+* Community contributions
+* Special events participation
+* Guild achievements
 
 ### 3. Guild Competition
 
 #### Seasonal Rankings
+
 ```typescript
 interface Season {
     id: string;
@@ -73,14 +78,16 @@ interface Season {
 ```
 
 #### Guild Wars
-- Weekly guild vs guild challenges
-- Territory control mechanics
-- Resource gathering competitions
-- Skill-based tournaments
+
+* Weekly guild vs guild challenges
+* Territory control mechanics
+* Resource gathering competitions
+* Skill-based tournaments
 
 ### 4. Quest Chains
 
 #### Progressive Challenges
+
 ```typescript
 interface QuestChain {
     steps: Quest[];
@@ -94,14 +101,16 @@ interface QuestChain {
 ```
 
 #### Quest Types
-- Learning modules
-- Skill applications
-- Community challenges
-- Cross-guild missions
+
+* Learning modules
+* Skill applications
+* Community challenges
+* Cross-guild missions
 
 ### 5. Reward Mechanics
 
 #### Token Rewards ($AURA)
+
 ```typescript
 interface Rewards {
     // Direct earnings
@@ -117,14 +126,16 @@ interface Rewards {
 ```
 
 #### Special Rewards
-- Limited edition badges
-- Custom AI personality traits
-- Guild power-ups
-- Exclusive task access
+
+* Limited edition badges
+* Custom AI personality traits
+* Guild power-ups
+* Exclusive task access
 
 ### 6. Social Features
 
 #### Social Interactions
+
 ```typescript
 interface SocialSystem {
     // Endorsements
@@ -144,38 +155,40 @@ interface SocialSystem {
 ## Integration with Core Systems
 
 ### 1. Skill Wallet Integration
-- Visual progression reflects achievements
-- Badge display in wallet interface
-- Experience tracking and level display
+
+* Visual progression reflects achievements
+* Badge display in wallet interface
+* Experience tracking and level display
 
 ### 2. Task Engine Connection
-- Dynamic difficulty scaling
-- Reward calculation based on user level
-- Special event task generation
+
+* Dynamic difficulty scaling
+* Reward calculation based on user level
+* Special event task generation
 
 ### 3. AI Mentor Evolution
-- Personality unlocks through achievements
-- Special interaction modes for guild events
-- Customized guidance based on progress
+
+* Personality unlocks through achievements
+* Special interaction modes for guild events
+* Customized guidance based on progress
 
 ### 4. Reputation Impact
-- Achievement weight in reputation score
-- Guild standing influence
-- Season performance tracking
+
+* Achievement weight in reputation score
+* Guild standing influence
+* Season performance tracking
 
 ## Best Practices
 
 1. Balance & Fairness
-   - Regular reward scaling review
-   - Anti-farming mechanisms
-   - Skill-appropriate challenges
-
+   * Regular reward scaling review
+   * Anti-farming mechanisms
+   * Skill-appropriate challenges
 2. Engagement Optimization
-   - Daily/weekly reward cycles
-   - Progressive difficulty curves
-   - Social interaction incentives
-
+   * Daily/weekly reward cycles
+   * Progressive difficulty curves
+   * Social interaction incentives
 3. Technical Implementation
-   - Efficient on-chain storage
-   - Gas-optimized reward distribution
-   - Scalable achievement tracking 
+   * Efficient on-chain storage
+   * Gas-optimized reward distribution
+   * Scalable achievement tracking
