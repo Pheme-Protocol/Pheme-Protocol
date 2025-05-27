@@ -584,7 +584,7 @@ EOF
 
 - **Technical Discussion**: GitHub Discussions
 - **Development Chat**: Discord `#dev` channel
-- **Governance**: Forum at `forum.aurabot.xyz`
+- **Governance**: Forum at `forum@phemeai.xyz`
 - **Support**: Discord `#support` channel
 
 ### Issue Response Times
