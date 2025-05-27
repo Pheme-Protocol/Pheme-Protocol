@@ -484,7 +484,7 @@ Check our [Troubleshooting Guide](../technical/90-troubleshooting.md) for more s
    * Examples
 
 {% hint style="info" %}
-Join our [Developer Discord](https://discord.gg/aura-dev) for real-time support.
+Join our [Developer Discord](https://discord.gg/pheme-dev) for real-time support.
 {% endhint %}
 {% endtab %}
 
@@ -517,7 +517,7 @@ Always check CI/CD logs for detailed error information.
 Ready to contribute?
 * [🔍 Browse Open Issues](https://github.com/PhemeAI/Pheme-Protocol/issues)
 * [📚 Read Coding Standards](./04-coding-standards.md)
-* [💬 Join Developer Chat](https://discord.gg/aura-dev)
+* [💬 Join Developer Chat](https://discord.gg/pheme-dev)
 {% endhint %}
 
 {% hint style="info" %}
