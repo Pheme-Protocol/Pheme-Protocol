@@ -367,7 +367,7 @@ spec:
     spec:
       containers:
         - name: worker
-          image: aura/ai-worker:latest
+          image: pheme/ai-worker:latest
           env:
             - name: REDIS_URL
               valueFrom:
