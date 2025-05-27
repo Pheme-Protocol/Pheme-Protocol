@@ -1,7 +1,7 @@
 # 🏛️ Governance Model
 
 {% hint style="info" %}
-The AURA Protocol governance model empowers community members to participate in decision-making and protocol evolution through a reputation-weighted voting system.
+The PHEME Protocol governance model empowers community members to participate in decision-making and protocol evolution through a reputation-weighted voting system.
 {% endhint %}
 
 ## Governance Overview
@@ -10,7 +10,7 @@ The AURA Protocol governance model empowers community members to participate in 
 {% tab title="🔑 Key Components" %}
 ```mermaid
 graph TB
-    A[AURA Governance] --> B[Token Holders]
+    A[PHEME Governance] --> B[Token Holders]
     A --> C[Reputation Holders]
     A --> D[Validators]
     
