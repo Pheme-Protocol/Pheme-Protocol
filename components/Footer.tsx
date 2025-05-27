@@ -7,7 +7,7 @@ export function Footer({ className = '' }: FooterProps) {
     build: {
       title: 'Build with PHEME',
       links: [
-        { name: 'Developer Docs', href: '#', isComingSoon: true },
+        { name: 'Developer Docs', href: 'https://docs.phemeai.xyz', isComingSoon: false },
         { name: 'Integration Guide', href: '#', isComingSoon: true },
         { name: 'SDK (Coming Soon)', href: '#', isComingSoon: true },
         { name: 'GitHub', href: 'https://github.com/PhemeAI' }

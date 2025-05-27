@@ -75,10 +75,10 @@
       "has": [
         {
           "type": "host",
-          "value": "www.pheme.app"
+          "value": "www.phemeai.xyz"
         }
       ],
-      "destination": "https://pheme.app/:path*",
+      "destination": "https://phemeai.xyz/:path*",
       "permanent": true
     },
     {
@@ -86,10 +86,10 @@
       "has": [
         {
           "type": "host",
-          "value": "pheme.vercel.app"
+          "value": "pheme-protocol.vercel.app"
         }
       ],
-      "destination": "https://pheme.app/:path*",
+      "destination": "https://phemeai.xyz/:path*",
       "permanent": true
     },
     {
@@ -97,10 +97,10 @@
       "has": [
         {
           "type": "host",
-          "value": "pheme-chat-pheme-webs-projects.vercel.app"
+          "value": "pheme-protocol-pheme-webs-projects.vercel.app"
         }
       ],
-      "destination": "https://pheme.app/:path*",
+      "destination": "https://phemeai.xyz/:path*",
       "permanent": true
     },
     {
@@ -108,10 +108,10 @@
       "has": [
         {
           "type": "host",
-          "value": "pheme-chat-*.vercel.app"
+          "value": "pheme-protocol-*.vercel.app"
         }
       ],
-      "destination": "https://pheme.app/:path*",
+      "destination": "https://phemeai.xyz/:path*",
       "permanent": true
     }
   ]

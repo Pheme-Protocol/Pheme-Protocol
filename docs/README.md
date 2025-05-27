@@ -1,17 +1,84 @@
-# Pheme AI Documentation
+# Pheme Protocol Documentation
 
-Welcome to the official documentation for Pheme AI, a decentralized, AI-powered protocol for skill verification and trust-building onchain.
+Welcome to the official documentation for **Pheme**, a decentralized, AI-powered protocol for skill verification and onchain reputation.
+
+---
+
+## Overview
+
+Pheme Protocol is a decentralized skill verification platform that enables users to prove their abilities and build verifiable reputation using AI validation and Web3 infrastructure.
+
+---
 
 ## Documentation Structure
 
-- **Overview**: Introduction, key concepts, and community guides
-- **Get Started**: Quick installation and setup guides
-- **Technical**: Detailed technical documentation and architecture
-- **Developer Guide**: Implementation details and integration guides
-- **Governance**: Platform governance and tokenomics
-- **Ecosystem**: Partners, use cases, and FAQ
+- **Overview**: Introduction, key concepts, and community guides  
+- **Get Started**: Installation and environment setup  
+- **Technical Details**: Smart contracts, frontend/backend architecture  
+- **Developer Guide**: Integration guides and implementation  
+- **Governance**: Token-based decision making and platform control  
+- **Ecosystem**: Use cases, partners, and FAQs  
 
+---
 
-## License
+## Core Components
 
-This documentation is licensed under GNU AGPLv3. See the [LICENSE](../LICENSE) file for details. 
+### 1. Skill Wallet
+- Soulbound NFT (SBT) representing verifiable skills  
+- Immutable, onchain skill attestations  
+- Owned by the user, non-transferable by design  
+
+### 2. Reputation Oracle
+- AI-powered validation engine  
+- Transparent contribution scoring  
+- Publicly queryable onchain reputation  
+
+### 3. Community Governance
+- Token-based proposal and voting mechanism  
+- Decentralized protocol updates and decision making  
+- Transparent and auditable governance process  
+
+---
+
+## Technical Architecture
+
+### Smart Contracts
+- Skill Badge NFTs (SBTs)  
+- Contribution tracking and scoring  
+- Governance logic and parameter control  
+
+### Frontend
+- React + Next.js application  
+- Web3 wallet integration (e.g. MetaMask)  
+- Real-time chat interface with AI validation  
+
+### Backend
+- AI validation engine  
+- API endpoints for chat, wallet, and verification  
+- Data persistence and audit logs  
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Node.js 18+  
+- Git  
+- Web3 wallet (MetaMask recommended)  
+
+### Installation
+1. Clone the repository  
+2. Install dependencies  
+3. Configure environment variables  
+4. Run the development server  
+
+📖 See the [Environment Setup Guide](../README.md#environment-setup) for full details.
+
+---
+
+## Development
+
+### Local Development
+```bash
+npm install
+npm run dev
