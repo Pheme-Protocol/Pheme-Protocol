@@ -13,17 +13,53 @@ module.exports = {
       },
       colors: {
         primary: {
-          light: '#60A5FA',
-          dark: '#3B82F6',
+          light: '#1a4bbd',
+          dark: '#82b4ff',
+          hover: {
+            light: '#153c97',
+            dark: '#a3c7ff',
+          }
         },
         background: {
-          light: '#FFFFFF',
-          dark: '#111827',
+          light: '#ffffff',
+          dark: '#0a0f1d',
         },
         surface: {
-          light: '#F3F4F6',
-          dark: '#1e293b',
+          light: '#f8fafc',
+          dark: '#141e33',
         },
+        text: {
+          light: '#0a0f1d',
+          dark: '#ffffff',
+          muted: {
+            light: '#1f2937',
+            dark: '#e2e8f0',
+          },
+          placeholder: {
+            light: '#4b5563',
+            dark: '#9ca3af',
+          }
+        },
+        error: {
+          light: '#b91c1c',
+          dark: '#fca5a5',
+          text: {
+            light: '#991b1b',
+            dark: '#fee2e2',
+          }
+        },
+        success: {
+          light: '#047857',
+          dark: '#6ee7b7',
+          text: {
+            light: '#065f46',
+            dark: '#d1fae5',
+          }
+        },
+        border: {
+          light: '#e5e7eb',
+          dark: '#1f2937',
+        }
       },
       animation: {
         'gradient': 'gradient 8s linear infinite',

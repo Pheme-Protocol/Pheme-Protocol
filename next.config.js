@@ -89,7 +89,7 @@ const nextConfig = {
       return [
         {
           source: '/api/:path*',
-          destination: 'https://aurabot.app/api/:path*'
+          destination: 'https://pheme.app/api/:path*'
         }
       ];
     }
@@ -102,10 +102,10 @@ const nextConfig = {
         has: [
           {
             type: 'host',
-            value: 'www.aurabot.app'
+            value: 'www.pheme.app'
           }
         ],
-        destination: 'https://aurabot.app/:path*',
+        destination: 'https://pheme.app/:path*',
         permanent: true
       }
     ];
