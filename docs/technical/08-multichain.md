@@ -429,13 +429,13 @@ import { Prometheus } from 'prom-client';
 
 export const chainMetrics = {
   transactionCount: new Prometheus.Counter({
-    name: 'aura_transactions_total',
+    name: 'pheme_transactions_total',
     help: 'Total number of transactions',
     labelNames: ['network', 'status']
   }),
   
   gasUsed: new Prometheus.Histogram({
-    name: 'aura_gas_used',
+    name: 'pheme_gas_used',
     help: 'Gas used by transactions',
     labelNames: ['network', 'operation']
   })
