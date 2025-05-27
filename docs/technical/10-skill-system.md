@@ -129,7 +129,7 @@ interface Guild {
 }
 ```
 
-### 6. Token Utility ($AURA)
+### 6. Token Utility ($PHEME)
 
 #### Token Mechanics
 
@@ -175,7 +175,7 @@ interface TrustSystem {
 #### External Access
 
 ```typescript
-interface AuraAPI {
+interface PhemeAPI {
     // Skill verification
     async verifySkills(address: string, requirements: SkillRequirement[]): Promise<boolean>;
     

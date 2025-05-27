@@ -1,8 +1,8 @@
-# 🔄 CI/CD Pipeline
+# CI/CD Pipeline
 
 ## Overview
 
-AURA's CI/CD pipeline ensures reliable, automated deployment of all system components while maintaining high quality and security standards.
+PHEME's CI/CD pipeline ensures reliable, automated deployment of all system components while maintaining high quality and security standards.
 
 ## Pipeline Architecture
 
@@ -16,8 +16,9 @@ AURA's CI/CD pipeline ensures reliable, automated deployment of all system compo
 ## GitHub Actions Workflow
 
 ### Main Pipeline
+
 ```yaml
-name: AURA CI/CD Pipeline
+name: PHEME CI/CD Pipeline
 
 on:
   push:
@@ -99,6 +100,7 @@ jobs:
 ```
 
 ### Smart Contract Deployment
+
 ```yaml
 name: Smart Contract Deployment
 
@@ -150,24 +152,25 @@ jobs:
 ## Deployment Configuration
 
 ### Kubernetes Deployment
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: aura-api
+  name: pheme-api
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: aura-api
+      app: pheme-api
   template:
     metadata:
       labels:
-        app: aura-api
+        app: pheme-api
     spec:
       containers:
-      - name: aura-api
-        image: aura/api:latest
+      - name: pheme-api
+        image: pheme/api:latest
         ports:
         - containerPort: 3000
         env:
@@ -177,17 +180,18 @@ spec:
           valueFrom:
             secretKeyRef:
               # ⚠️ Use Kubernetes Secrets for sensitive data
-              name: aura-secrets
+              name: pheme-secrets
               key: database-url
 ```
 
 ### Helm Chart
+
 ```yaml
 # values.yaml
 replicaCount: 3
 
 image:
-  repository: aura/api
+  repository: pheme/api
   tag: latest
   pullPolicy: Always
 
@@ -200,7 +204,7 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
   hosts:
-    - host: api.aurabot.xyz
+    - host: api.phemeai.xyz
       paths: ["/"]
 
 resources:
@@ -215,10 +219,11 @@ resources:
 ## Infrastructure as Code
 
 ### Terraform Configuration
+
 ```hcl
 # AWS EKS Cluster
 resource "aws_eks_cluster" "aura" {
-  name     = "aura-cluster"
+  name     = "pheme-cluster"
   role_arn = aws_iam_role.eks_cluster.arn
 
   vpc_config {
@@ -228,7 +233,7 @@ resource "aws_eks_cluster" "aura" {
 
 # RDS Database
 resource "aws_db_instance" "aura" {
-  identifier        = "aura-db"
+  identifier        = "pheme-db"
   engine            = "postgres"
   engine_version    = "13.7"
   instance_class    = "db.t3.medium"
@@ -238,12 +243,12 @@ resource "aws_db_instance" "aura" {
   multi_az               = true
   
   vpc_security_group_ids = [aws_security_group.db.id]
-  db_subnet_group_name   = aws_db_subnet_group.aura.name
+  db_subnet_group_name   = aws_db_subnet_group.pheme.name
 }
 
 # Redis Cache
 resource "aws_elasticache_cluster" "aura" {
-  cluster_id           = "aura-cache"
+  cluster_id           = "pheme-cache"
   engine              = "redis"
   node_type           = "cache.t3.micro"
   num_cache_nodes     = 1
@@ -254,26 +259,28 @@ resource "aws_elasticache_cluster" "aura" {
 ## Monitoring & Alerts
 
 ### Prometheus Configuration
+
 ```yaml
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'aura-api'
+  - job_name: 'pheme-api'
     static_configs:
-      - targets: ['aura-api:3000']
+      - targets: ['pheme-api:3000']
   
-  - job_name: 'aura-frontend'
+  - job_name: 'pheme-frontend'
     static_configs:
-      - targets: ['aura-frontend:80']
+      - targets: ['pheme-frontend:80']
 ```
 
 ### Grafana Dashboard
+
 ```json
 {
   "dashboard": {
-    "title": "AURA System Metrics",
+    "title": "PHEME System Metrics",
     "panels": [
       {
         "title": "API Response Time",
@@ -303,6 +310,7 @@ scrape_configs:
 ## Deployment Strategies
 
 ### Blue-Green Deployment
+
 ```bash
 #!/bin/bash
 
@@ -310,16 +318,17 @@ scrape_configs:
 kubectl apply -f kubernetes/green-deployment.yaml
 
 # Wait for new version to be ready
-kubectl rollout status deployment/aura-green
+kubectl rollout status deployment/pheme-green
 
 # Switch traffic to new version
 kubectl patch service aura-service -p '{"spec":{"selector":{"version":"green"}}}'
 
 # Remove old version
-kubectl delete deployment aura-blue
+kubectl delete deployment pheme-blue
 ```
 
 ### Canary Deployment
+
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -330,14 +339,14 @@ metadata:
     nginx.ingress.kubernetes.io/canary-weight: "20"
 spec:
   rules:
-  - host: api.aurabot.xyz
+  - host: api.phemeai.xyz
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: aura-canary
+            name: pheme-canary
             port:
               number: 80
 ```
@@ -345,39 +354,41 @@ spec:
 ## Backup & Recovery
 
 ### Database Backup
+
 ```bash
 #!/bin/bash
 
 # Backup PostgreSQL database
-pg_dump -h $DB_HOST -U $DB_USER -d aura > backup.sql
+pg_dump -h $DB_HOST -U $DB_USER -d pheme > backup.sql
 
 # Upload to S3
-aws s3 cp backup.sql s3://aura-backups/$(date +%Y-%m-%d)/
+aws s3 cp backup.sql s3://pheme-backups/$(date +%Y-%m-%d)/
 
 # Cleanup
 rm backup.sql
 ```
 
 ### Recovery Plan
-1. **Service Disruption**
-   - Switch to backup region
-   - Restore from latest backup
-   - Update DNS records
 
+1. **Service Disruption**
+   * Switch to backup region
+   * Restore from latest backup
+   * Update DNS records
 2. **Data Corruption**
-   - Stop affected services
-   - Restore from last known good backup
-   - Verify data integrity
-   - Resume services
+   * Stop affected services
+   * Restore from last known good backup
+   * Verify data integrity
+   * Resume services
 
 ## Security Measures
 
 ### Secret Management
+
 ```yaml
 apiVersion: v1
 kind: Secret
 metadata:
-  name: aura-secrets
+  name: pheme-secrets
 type: Opaque
 data:
   database-url: BASE64_ENCODED_URL
@@ -385,6 +396,7 @@ data:
 ```
 
 ### Network Policies
+
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -393,7 +405,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: aura-api
+      app: pheme-api
   policyTypes:
   - Ingress
   - Egress
@@ -410,6 +422,7 @@ spec:
 ## Rollback Procedures
 
 ### Smart Contract Rollback
+
 ```typescript
 // Proxy upgrade rollback
 async function rollbackContract() {
@@ -421,22 +434,24 @@ async function rollbackContract() {
 ```
 
 ### Application Rollback
+
 ```bash
 #!/bin/bash
 
 # Rollback to previous version
-kubectl rollout undo deployment/aura-api
+kubectl rollout undo deployment/pheme-api
 
 # Verify rollback
-kubectl rollout status deployment/aura-api
+kubectl rollout status deployment/pheme-api
 
 # Monitor for issues
-kubectl logs -l app=aura-api --tail=100
+kubectl logs -l app=pheme-api --tail=100
 ```
 
 ## Documentation
 
 ### Release Notes Template
+
 ```markdown
 # Release v1.0.0
 
@@ -459,6 +474,7 @@ kubectl logs -l app=aura-api --tail=100
 ```
 
 ### Deployment Checklist
+
 ```markdown
 ## Pre-Deployment
 - [ ] All tests passing
@@ -484,45 +500,42 @@ kubectl logs -l app=aura-api --tail=100
 ### Secrets Management
 
 1. **GitHub Secrets**
-   - Store all sensitive values in GitHub Secrets
-   - Use environment-specific secrets
-   - Regular rotation of credentials
-   - Limit access to secret management
+   * Store all sensitive values in GitHub Secrets
+   * Use environment-specific secrets
+   * Regular rotation of credentials
+   * Limit access to secret management
+2.  **Kubernetes Secrets**
 
-2. **Kubernetes Secrets**
-   ```yaml
-   # ⚠️ Example structure only - never commit actual secrets
-   apiVersion: v1
-   kind: Secret
-   metadata:
-     name: aura-secrets
-   type: Opaque
-   data:
-     # Values should be base64 encoded
-     database-url: <base64-encoded-url>
-     api-key: <base64-encoded-key>
-   ```
-
+    ```yaml
+    # ⚠️ Example structure only - never commit actual secrets
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: pheme-secrets
+    type: Opaque
+    data:
+      # Values should be base64 encoded
+      database-url: <base64-encoded-url>
+      api-key: <base64-encoded-key>
+    ```
 3. **AWS Secrets**
-   - Use AWS Secrets Manager for production credentials
-   - Implement proper IAM roles and policies
-   - Enable audit logging for secret access
-   - Regular rotation of access keys
-
+   * Use AWS Secrets Manager for production credentials
+   * Implement proper IAM roles and policies
+   * Enable audit logging for secret access
+   * Regular rotation of access keys
 4. **Contract Deployment**
-   - Use different deployment keys for testnet/mainnet
-   - Hardware wallet integration for production deployments
-   - Multi-sig requirements for critical operations
+   * Use different deployment keys for testnet/mainnet
+   * Hardware wallet integration for production deployments
+   * Multi-sig requirements for critical operations
 
 ### Access Control
 
 1. **CI/CD Pipeline**
-   - Restrict workflow permissions
-   - Use environment protection rules
-   - Implement approval processes for production deployments
-
+   * Restrict workflow permissions
+   * Use environment protection rules
+   * Implement approval processes for production deployments
 2. **Infrastructure**
-   - Network segmentation
-   - Least privilege access
-   - Regular security audits
-   - Monitoring and alerting
+   * Network segmentation
+   * Least privilege access
+   * Regular security audits
+   * Monitoring and alerting
