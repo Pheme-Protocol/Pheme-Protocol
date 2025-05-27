@@ -1,6 +1,6 @@
 # 🚨 Error Code Reference
 
-This document provides a comprehensive list of error codes used throughout the AURA Protocol system.
+This document provides a comprehensive list of error codes used throughout the PHEME Protocol system.
 
 ## Error Code Format
 
