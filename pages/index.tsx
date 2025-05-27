@@ -9,6 +9,7 @@ import PhemeLogo from '../components/PhemeLogo';
 import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
 import { SupportChat } from '../components/SupportChat';
+import Head from 'next/head';
 
 export default function Home() {
   const { isConnected, address } = useAccount();
@@ -310,165 +311,177 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background-light dark:bg-background-dark text-gray-900 dark:text-white transition-colors">
-      {/* Header with Navigation */}
-      <header className={`container mx-auto px-4 py-6 flex justify-between items-center ${
-        isMobile && isConnected ? 'hidden' : ''
-      }`}>
-        <div className="flex items-center gap-3">
-          <Image 
-            src="/Pheme_wave.svg" 
-            alt="PHEME Logo" 
-            width={38} 
-            height={38}
-            priority
-            quality={100}
-            className="flex-shrink-0"
-            style={{
-              transform: 'translateZ(0)'
-            }}
-          />
-          <h1 className="text-4xl font-bold text-primary-light dark:text-primary-dark">PHEME</h1>
-        </div>
-        <Navigation />
-      </header>
+    <>
+      <Head>
+        <title>PHEME - Earn Trust Onchain</title>
+        <link rel="icon" href="/Pheme_wave.svg" type="image/svg+xml" />
+        <link rel="shortcut icon" type="image/svg+xml" href="/Pheme_wave.svg" />
+        <meta name="description" content="PHEME is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation." />
+        <meta property="og:title" content="PHEME - Earn Trust Onchain" />
+        <meta property="og:description" content="PHEME is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation." />
+        <meta property="og:image" content="/Pheme_wave.svg" />
+      </Head>
 
-      {/* Main Content */}
-      <main className="flex-grow">
-        <div className="container mx-auto px-4 py-8 md:py-16">
-          {/* Top section with main content and iPhone */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-            {/* Left side: Main content */}
-            <div className="max-w-2xl mx-auto lg:mx-0">
-              {(!isMobile || !isConnected) && <MainContent />}
-            </div>
-            {/* Right side: iPhone interface */}
-            <div>
-              <IPhoneInterface />
-            </div>
+      <div className="min-h-screen flex flex-col bg-background-light dark:bg-background-dark text-gray-900 dark:text-white transition-colors">
+        {/* Header with Navigation */}
+        <header className={`container mx-auto px-4 py-6 flex justify-between items-center ${
+          isMobile && isConnected ? 'hidden' : ''
+        }`}>
+          <div className="flex items-center gap-3">
+            <Image 
+              src="/Pheme_wave.svg" 
+              alt="PHEME Logo" 
+              width={38} 
+              height={38}
+              priority
+              quality={100}
+              className="flex-shrink-0"
+              style={{
+                transform: 'translateZ(0)'
+              }}
+            />
+            <h1 className="text-4xl font-bold text-primary-light dark:text-primary-dark">PHEME</h1>
           </div>
+          <Navigation />
+        </header>
 
-          {/* Features section */}
-          {(!isMobile || !isConnected) && (
-            <div className="mt-32 lg:mt-48 -mx-4 px-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto">
-                {/* Skill Wallet */}
-                <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left space-y-4 sm:space-y-0 sm:space-x-6 group">
-                  <div className="bg-gradient-to-br from-primary-light/20 to-primary-dark/20 dark:from-primary-light/10 dark:to-primary-dark/10 rounded-xl p-4 transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg group-hover:from-primary-light/30 group-hover:to-primary-dark/30">
-                    <Wallet className="h-12 w-12 transition-transform duration-300 group-hover:scale-110" strokeWidth={1.5} />
-                  </div>
-                  <div>
-                    <p className="text-xl font-semibold mb-2 transition-colors duration-300 group-hover:text-primary-light dark:group-hover:text-primary-dark">Skill Wallet</p>
-                    <p className="text-base text-gray-700 dark:text-gray-300">
-                      Immutable, non-transferable proof of skill stored onchain.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Reputation Oracle */}
-                <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left space-y-4 sm:space-y-0 sm:space-x-6 group">
-                  <div className="bg-gradient-to-br from-primary-light/20 to-primary-dark/20 dark:from-primary-light/10 dark:to-primary-dark/10 rounded-xl p-4 transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg group-hover:from-primary-light/30 group-hover:to-primary-dark/30">
-                    <UserCheck className="h-12 w-12 transition-transform duration-300 group-hover:scale-110" strokeWidth={1.5} />
-                  </div>
-                  <div>
-                    <p className="text-xl font-semibold mb-2 transition-colors duration-300 group-hover:text-primary-light dark:group-hover:text-primary-dark">Reputation Oracle</p>
-                    <p className="text-base text-gray-700 dark:text-gray-300">
-                      AI-reviewed scores to filter real contributors.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Community Governance */}
-                <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left space-y-4 sm:space-y-0 sm:space-x-6 group">
-                  <div className="bg-gradient-to-br from-primary-light/20 to-primary-dark/20 dark:from-primary-light/10 dark:to-primary-dark/10 rounded-xl p-4 transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg group-hover:from-primary-light/30 group-hover:to-primary-dark/30">
-                    <Users className="h-12 w-12 transition-transform duration-300 group-hover:scale-110" strokeWidth={1.5} />
-                  </div>
-                  <div>
-                    <p className="text-xl font-semibold mb-2 transition-colors duration-300 group-hover:text-primary-light dark:group-hover:text-primary-dark">Community Governance</p>
-                    <p className="text-base text-gray-700 dark:text-gray-300">
-                      Decisions made by token holders in full transparency.
-                    </p>
-                  </div>
-                </div>
+        {/* Main Content */}
+        <main className="flex-grow">
+          <div className="container mx-auto px-4 py-8 md:py-16">
+            {/* Top section with main content and iPhone */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+              {/* Left side: Main content */}
+              <div className="max-w-2xl mx-auto lg:mx-0">
+                {(!isMobile || !isConnected) && <MainContent />}
+              </div>
+              {/* Right side: iPhone interface */}
+              <div>
+                <IPhoneInterface />
               </div>
             </div>
-          )}
-        </div>
-      </main>
 
-      {/* Footer */}
-      <Footer className={isMobile && isConnected ? 'hidden' : ''} />
-
-      {/* Support Chat */}
-      <SupportChat className={isMobile && isConnected ? 'hidden' : ''} />
-
-      {/* Waitlist Modal */}
-      {showWaitlistModal && (
-        <div className="fixed inset-0 bg-black/75 dark:bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 sm:p-8 max-w-md w-full mx-4 sm:mx-auto">
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4">Join the Waitlist</h3>
-            <form onSubmit={handleWaitlist} className="space-y-4">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full border-2 rounded-lg p-2.5 sm:p-3 text-gray-900 dark:text-white bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark focus:border-transparent"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Wallet Address
-                </label>
-                {address ? (
-                  <div className="w-full border-2 rounded-lg p-2.5 sm:p-3 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 break-all">
-                    {address}
+            {/* Features section */}
+            {(!isMobile || !isConnected) && (
+              <div className="mt-32 lg:mt-48 -mx-4 px-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto">
+                  {/* Skill Wallet */}
+                  <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left space-y-4 sm:space-y-0 sm:space-x-6 group">
+                    <div className="bg-gradient-to-br from-primary-light/20 to-primary-dark/20 dark:from-primary-light/10 dark:to-primary-dark/10 rounded-xl p-4 transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg group-hover:from-primary-light/30 group-hover:to-primary-dark/30">
+                      <Wallet className="h-12 w-12 transition-transform duration-300 group-hover:scale-110" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <p className="text-xl font-semibold mb-2 transition-colors duration-300 group-hover:text-primary-light dark:group-hover:text-primary-dark">Skill Wallet</p>
+                      <p className="text-base text-gray-700 dark:text-gray-300">
+                        Immutable, non-transferable proof of skill stored onchain.
+                      </p>
+                    </div>
                   </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={openConnectModal}
-                    className="w-full border-2 border-blue-500 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg p-2.5 sm:p-3 font-medium transition-colors"
-                  >
-                    Connect Wallet
-                  </button>
+
+                  {/* Reputation Oracle */}
+                  <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left space-y-4 sm:space-y-0 sm:space-x-6 group">
+                    <div className="bg-gradient-to-br from-primary-light/20 to-primary-dark/20 dark:from-primary-light/10 dark:to-primary-dark/10 rounded-xl p-4 transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg group-hover:from-primary-light/30 group-hover:to-primary-dark/30">
+                      <UserCheck className="h-12 w-12 transition-transform duration-300 group-hover:scale-110" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <p className="text-xl font-semibold mb-2 transition-colors duration-300 group-hover:text-primary-light dark:group-hover:text-primary-dark">Reputation Oracle</p>
+                      <p className="text-base text-gray-700 dark:text-gray-300">
+                        AI-reviewed scores to filter real contributors.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Community Governance */}
+                  <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left space-y-4 sm:space-y-0 sm:space-x-6 group">
+                    <div className="bg-gradient-to-br from-primary-light/20 to-primary-dark/20 dark:from-primary-light/10 dark:to-primary-dark/10 rounded-xl p-4 transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg group-hover:from-primary-light/30 group-hover:to-primary-dark/30">
+                      <Users className="h-12 w-12 transition-transform duration-300 group-hover:scale-110" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <p className="text-xl font-semibold mb-2 transition-colors duration-300 group-hover:text-primary-light dark:group-hover:text-primary-dark">Community Governance</p>
+                      <p className="text-base text-gray-700 dark:text-gray-300">
+                        Decisions made by token holders in full transparency.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </main>
+
+        {/* Footer */}
+        <Footer className={isMobile && isConnected ? 'hidden' : ''} />
+
+        {/* Support Chat */}
+        <SupportChat className={isMobile && isConnected ? 'hidden' : ''} />
+
+        {/* Waitlist Modal */}
+        {showWaitlistModal && (
+          <div className="fixed inset-0 bg-black/75 dark:bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 sm:p-8 max-w-md w-full mx-4 sm:mx-auto">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4">Join the Waitlist</h3>
+              <form onSubmit={handleWaitlist} className="space-y-4">
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Email Address
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    className="w-full border-2 rounded-lg p-2.5 sm:p-3 text-gray-900 dark:text-white bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark focus:border-transparent"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Wallet Address
+                  </label>
+                  {address ? (
+                    <div className="w-full border-2 rounded-lg p-2.5 sm:p-3 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 break-all">
+                      {address}
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={openConnectModal}
+                      className="w-full border-2 border-blue-500 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg p-2.5 sm:p-3 font-medium transition-colors"
+                    >
+                      Connect Wallet
+                    </button>
+                  )}
+                </div>
+
+                {errorMessage && (
+                  <div className="text-red-500 dark:text-red-400 text-sm">
+                    {errorMessage}
+                  </div>
                 )}
-              </div>
 
-              {errorMessage && (
-                <div className="text-red-500 dark:text-red-400 text-sm">
-                  {errorMessage}
-                </div>
-              )}
-
+                <button
+                  type="submit"
+                  disabled={waitlistStatus === 'loading'}
+                  className={`w-full bg-primary-light dark:bg-primary-dark text-white rounded-lg p-2.5 sm:p-3 font-semibold ${
+                    waitlistStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-dark dark:hover:bg-primary-light'
+                  } transition-colors`}
+                >
+                  {waitlistStatus === 'loading' ? 'Joining...' : 
+                   waitlistStatus === 'success' ? 'Joined!' : 
+                   'Join Waitlist'}
+                </button>
+              </form>
               <button
-                type="submit"
-                disabled={waitlistStatus === 'loading'}
-                className={`w-full bg-primary-light dark:bg-primary-dark text-white rounded-lg p-2.5 sm:p-3 font-semibold ${
-                  waitlistStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-dark dark:hover:bg-primary-light'
-                } transition-colors`}
+                onClick={() => setShowWaitlistModal(false)}
+                className="mt-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 font-medium text-sm sm:text-base"
               >
-                {waitlistStatus === 'loading' ? 'Joining...' : 
-                 waitlistStatus === 'success' ? 'Joined!' : 
-                 'Join Waitlist'}
+                Close
               </button>
-            </form>
-            <button
-              onClick={() => setShowWaitlistModal(false)}
-              className="mt-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 font-medium text-sm sm:text-base"
-            >
-              Close
-            </button>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 } 

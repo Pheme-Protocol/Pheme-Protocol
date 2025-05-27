@@ -1,6 +1,6 @@
 /**
- * Aura Chat - A Web3-enabled chat application with wallet integration
- * Copyright (C) 2024 Aura Chat
+ * Pheme Protocol - A Web3-enabled chat application with wallet integration
+ * Copyright (C) 2024 Pheme Protocol
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by

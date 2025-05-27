@@ -92,7 +92,7 @@ export function SupportChat({ className = '' }: SupportChatProps) {
       console.error('Chat error:', error);
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: 'Sorry, I encountered an error. Please try again or email support@pheme.app if the issue persists.' 
+        content: 'Sorry, I encountered an error. Please try again or email support@phemeai.xyz if the issue persists.' 
       }]);
     } finally {
       setIsLoading(false);
