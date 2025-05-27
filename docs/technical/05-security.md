@@ -9,7 +9,7 @@
 // Use OpenZeppelin's AccessControl
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract AuraProtocol is AccessControl {
+contract PhemeProtocol is AccessControl {
     bytes32 public constant VALIDATOR_ROLE = keccak256("VALIDATOR_ROLE");
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     
@@ -201,12 +201,12 @@ https.createServer(httpsOptions, app).listen(443);
 ```bash
 # Example AWS Security Group
 aws ec2 create-security-group \
-  --group-name AuraProtocol \
-  --description "AURA Protocol Security Group"
+  --group-name PhemeProtocol \
+  --description "PHEME Protocol Security Group"
 
 # Allow specific inbound traffic
 aws ec2 authorize-security-group-ingress \
-  --group-name AuraProtocol \
+  --group-name PhemeProtocol \
   --protocol tcp \
   --port 443 \
   --cidr 0.0.0.0/0
@@ -221,7 +221,7 @@ resource "aws_vpc" "main" {
   enable_dns_support = true
   
   tags = {
-    Name = "aura-vpc"
+    Name = "pheme-vpc"
   }
 }
 ```
@@ -246,7 +246,7 @@ const logger = winston.createLogger({
 ```yaml
 # Prometheus Alert Rules
 groups:
-- name: aura-alerts
+- name: pheme-alerts
   rules:
   - alert: HighErrorRate
     expr: rate(http_requests_total{status=~"5.."}[5m]) > 1
