@@ -7,8 +7,8 @@
 AURA Protocol provides both REST and GraphQL APIs for interacting with the platform. The APIs enable skill wallet management, task validation, guild operations, and analytics.
 
 ### Base URLs
-- **Production**: `https://api.aurabot.xyz`
-- **Staging**: `https://api.staging.aurabot.xyz`
+- **Production**: `https://api.phemeai.xyz`
+- **Staging**: `https://api.staging.phemeai.xyz`
 - **Development**: `http://localhost:4000`
 
 ## Authentication
@@ -325,7 +325,7 @@ interface APIError {
 ```http
 Deprecation: true
 Sunset: Sat, 31 Dec 2024 23:59:59 GMT
-Link: <https://api.aurabot.xyz/v2/resource>; rel="successor-version"
+Link: <https://api.phemeai.xyz/v2/resource>; rel="successor-version"
 ```
 
 ## Development Tools
@@ -368,9 +368,9 @@ Content-Security-Policy: default-src 'self'
 ## Resources
 
 ### Documentation
-- [API Reference](https://docs.aurabot.xyz/api)
-- [GraphQL Playground](https://api.aurabot.xyz/graphql)
-- [WebSocket Guide](https://docs.aurabot.xyz/websocket)
+- [API Reference](https://docs.phemeai.xyz/api)
+- [GraphQL Playground](https://api.phemeai.xyz/graphql)
+- [WebSocket Guide](https://docs.phemeai.xyz/websocket)
 
 ### Tools
 - [Postman Collection](https://www.postman.com/aurabot/workspace)
