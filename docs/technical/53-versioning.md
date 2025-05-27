@@ -80,7 +80,7 @@ type UserV2 {
   "name": "@pheme/frontend",
   "version": "1.0.0",
   "dependencies": {
-    "@aura/sdk": "^1.0.0"
+    "@pheme/sdk": "^1.0.0"
   }
 }
 
