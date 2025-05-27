@@ -270,7 +270,7 @@ export const options = {
 };
 
 export default function() {
-  const res = http.get('https://api.aurabot.xyz/users');
+  const res = http.get('https://api.phemeai.xyz/users');
   
   check(res, {
     'status is 200': (r) => r.status === 200,
