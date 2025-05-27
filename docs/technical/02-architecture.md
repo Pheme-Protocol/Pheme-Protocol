@@ -2,7 +2,7 @@
 
 ## Overview
 
-AURA's architecture is designed to be scalable, secure, and maintainable while supporting decentralized skill verification and reputation building.
+PHEME's architecture is designed to be scalable, secure, and maintainable while supporting decentralized skill verification and reputation building.
 
 ```plaintext
     +----------------+       +--------------------+       +---------------+

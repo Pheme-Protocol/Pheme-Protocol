@@ -41,7 +41,7 @@ npm install -g hardhat
 ## Repository Structure
 
 ```plaintext
-aura-protocol/
+pheme-protocol/
 ├── apps/                  # Frontend applications
 │   ├── web/              # Main dApp
 │   └── admin/            # Admin dashboard
