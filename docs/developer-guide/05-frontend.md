@@ -1,15 +1,15 @@
 # Frontend Development Guide
 
-This guide covers the frontend architecture and development practices for Aura Chat.
+This guide covers the frontend architecture and development practices for Pheme Chat.
 
 ## Component Architecture
 
 ### Core Components
 
-- `AuraChat.tsx`: Main chat interface
+- `PhemeChat.tsx`: Main chat interface
 - `ConnectButton.tsx`: Wallet connection component
 - `Web3ModalProvider.tsx`: Web3 context provider
-- `AuraLogo.tsx`: Brand assets
+- `PhemeLogo.tsx`: Brand assets
 
 ### Component Guidelines
 
@@ -87,11 +87,11 @@ module.exports = {
 ### Component Testing
 ```typescript
 import { render, screen } from '@testing-library/react';
-import { AuraChat } from './AuraChat';
+import { PhemeChat } from './PhemeChat';
 
-describe('AuraChat', () => {
+describe('PhemeChat', () => {
   it('renders chat interface', () => {
-    render(<AuraChat />);
+    render(<PhemeChat />);
     expect(screen.getByRole('textbox')).toBeInTheDocument();
   });
 });
