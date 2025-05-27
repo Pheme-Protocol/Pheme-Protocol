@@ -1,7 +1,7 @@
 # 🔧 Troubleshooting Guide
 
 {% hint style="info" %}
-This guide helps you diagnose and resolve common issues encountered while working with the AURA Protocol. If you can't find a solution here, please reach out to our developer support team.
+This guide helps you diagnose and resolve common issues encountered while working with the PHEME Protocol. If you can't find a solution here, please reach out to our developer support team.
 {% endhint %}
 
 ## Common Issues
@@ -313,7 +313,7 @@ graph TB
    * Authentication issues
 
 {% hint style="danger" %}
-Report security issues privately to security@aura.protocol
+Report security issues privately to security@pheme.protocol
 {% endhint %}
 {% endtab %}
 {% endtabs %}
@@ -429,7 +429,7 @@ Monitor API performance using tools like New Relic.
    * Follow templates
 
 {% hint style="tip" %}
-Join our [Developer Discord](https://discord.gg/aura-dev) for real-time help.
+Join our [Developer Discord](https://discord.gg/pheme-dev) for real-time help.
 {% endhint %}
 {% endtab %}
 
@@ -447,7 +447,7 @@ Join our [Developer Discord](https://discord.gg/aura-dev) for real-time help.
    * Advanced Topics
 
 {% hint style="info" %}
-Check our [Documentation Portal](https://docs.aura.protocol) for guides.
+Check our [Documentation Portal](https://docs.phemeai.xyz) for guides.
 {% endhint %}
 {% endtab %}
 
@@ -465,7 +465,7 @@ Check our [Documentation Portal](https://docs.aura.protocol) for guides.
    * Expert support
 
 {% hint style="warning" %}
-For urgent issues, contact support@aura.protocol
+For urgent issues, contact support@phemeai.xyz
 {% endhint %}
 {% endtab %}
 {% endtabs %}
@@ -474,11 +474,11 @@ For urgent issues, contact support@aura.protocol
 
 {% hint style="success" %}
 Still need help?
-* [💬 Join Developer Chat](https://discord.gg/aura-dev)
-* [📝 Submit Issue](https://github.com/aura-protocol/aura/issues/new)
+* [💬 Join Developer Chat](https://discord.gg/pheme-dev)
+* [📝 Submit Issue](https://github.com/pheme-protocol/pheme/issues/new)
 * [📚 Read FAQs](./91-faqs.md)
 {% endhint %}
 
 {% hint style="info" %}
-Remember to check our [GitHub Discussions](https://github.com/aura-protocol/aura/discussions) for community solutions!
+Remember to check our [GitHub Discussions](https://github.com/pheme-protocol/pheme/discussions) for community solutions!
 {% endhint %} 
