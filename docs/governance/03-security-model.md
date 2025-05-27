@@ -110,7 +110,7 @@ interface VotingSecurity {
 * Security events
 * Validator health
 
-> 🔍 **Monitoring**: View system status on [Status Page](https://status.aurabot.xyz).
+> 🔍 **Monitoring**: View system status on [Status Page](https://status.phemeai.xyz).
 
 ## Risk Management
 
@@ -222,7 +222,7 @@ interface RiskMitigation {
 * Incident reports
 * Audit findings
 
-> 📋 **Records**: Access [Audit Reports](https://github.com/autonomous-aura/audits).
+> 📋 **Records**: Access [Audit Reports](https://github.com/autonomous-pheme/audits).
 
 ## Community Security
 
@@ -247,7 +247,7 @@ interface RiskMitigation {
 * Status reports
 * Educational content
 
-> 🤝 **Support**: Join [Security Channel](https://discord.gg/aurabot-security).
+> 🤝 **Support**: Join [Security Channel](https://discord.gg/pheme-security).
 
 ## Tools & Resources
 
