@@ -85,30 +85,60 @@ const nextConfig = {
     ];
   },
   async rewrites() {
-    if (process.env.NODE_ENV === 'development') {
-      return [
-        {
-          source: '/api/:path*',
-          destination: 'https://pheme.app/api/:path*'
-        }
-      ];
-    }
-    return [];
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://phemeprotocol.com/api/:path*'
+      }
+    ]
   },
   async redirects() {
     return [
       {
-        source: '/:path*',
+        source: '/',
         has: [
           {
             type: 'host',
-            value: 'www.pheme.app'
+            value: 'www.phemeprotocol.com'
           }
         ],
-        destination: 'https://pheme.app/:path*',
+        destination: 'https://phemeprotocol.com/:path*',
+        permanent: true
+      },
+      {
+        source: '/',
+        has: [
+          {
+            type: 'host',
+            value: 'pheme-protocol.vercel.app'
+          }
+        ],
+        destination: 'https://phemeprotocol.com/:path*',
+        permanent: true
+      },
+      {
+        source: '/',
+        has: [
+          {
+            type: 'host',
+            value: 'pheme-protocol-pheme-webs-projects.vercel.app'
+          }
+        ],
+        destination: 'https://phemeprotocol.com/:path*',
+        permanent: true
+      },
+      {
+        source: '/',
+        has: [
+          {
+            type: 'host',
+            value: 'pheme-protocol-*.vercel.app'
+          }
+        ],
+        destination: 'https://phemeprotocol.com/:path*',
         permanent: true
       }
-    ];
+    ]
   }
 };
 
