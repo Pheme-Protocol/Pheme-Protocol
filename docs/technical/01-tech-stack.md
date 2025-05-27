@@ -1,6 +1,6 @@
 # 🛠️ Technology Stack
 
-AURA's technology stack is carefully chosen to provide a robust, scalable, and secure foundation for decentralized skill verification and reputation building.
+PHEME's technology stack is carefully chosen to provide a robust, scalable, and secure foundation for decentralized skill verification and reputation building.
 
 ## Core Technology Stack
 
@@ -22,7 +22,7 @@ AURA's technology stack is carefully chosen to provide a robust, scalable, and s
 ## Key Components
 
 ### Smart Contract Layer
-- ERC-20 token implementation for $AURA
+- ERC-20 token implementation for $PHEME
 - Soulbound NFT (ERC-721) for Skill Wallets
 - ERC-1155 for Badge System
 - Custom Reputation Oracle contracts
