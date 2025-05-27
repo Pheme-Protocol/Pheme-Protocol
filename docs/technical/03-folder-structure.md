@@ -51,9 +51,9 @@ packages/contracts/
 │   ├── core/           # Core protocol contracts
 │   │   ├── SkillWallet.sol
 │   │   ├── ReputationOracle.sol
-│   │   └── AuraToken.sol
+│   │   └── PhemeToken.sol
 │   ├── governance/     # Governance contracts
-│   │   ├── AuraGovernor.sol
+│   │   ├── PhemeGovernor.sol
 │   │   ├── MeritMultiplier.sol
 │   │   ├── TimelockController.sol
 │   │   └── TreasuryVault.sol
