@@ -4,7 +4,7 @@
 
 ## API Overview
 
-AURA Protocol provides both REST and GraphQL APIs for interacting with the platform. The APIs enable skill wallet management, task validation, guild operations, and analytics.
+PHEME Protocol provides both REST and GraphQL APIs for interacting with the platform. The APIs enable skill wallet management, task validation, guild operations, and analytics.
 
 ### Base URLs
 - **Production**: `https://api.phemeai.xyz`
@@ -246,7 +246,7 @@ interface WebSocketEvents {
 
 ### Connection Example
 ```typescript
-const ws = new WebSocket('wss://api.aurabot.xyz/ws');
+const ws = new WebSocket('wss://api.phemeai.xyz/ws');
 
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
@@ -319,7 +319,7 @@ interface APIError {
 
 ### Version Format
 - URL Path: `/api/v1/...`
-- Header: `Accept: application/vnd.aura.v1+json`
+- Header: `Accept: application/vnd.pheme.v1+json`
 
 ### Deprecation
 ```http
@@ -373,8 +373,8 @@ Content-Security-Policy: default-src 'self'
 - [WebSocket Guide](https://docs.phemeai.xyz/websocket)
 
 ### Tools
-- [Postman Collection](https://www.postman.com/aurabot/workspace)
-- [OpenAPI Spec](https://api.aurabot.xyz/swagger.json)
-- [GraphQL Schema](https://api.aurabot.xyz/schema.graphql)
+- [Postman Collection](https://www.postman.com/phemebot/workspace)
+- [OpenAPI Spec](https://api.phemeai.xyz/swagger.json)
+- [GraphQL Schema](https://api.phemeai.xyz/schema.graphql)
 
 > 🔒 **Security**: Review our [Security Guidelines](../technical/05-security.md) for API security best practices.
