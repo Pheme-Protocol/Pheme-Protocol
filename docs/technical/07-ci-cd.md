@@ -222,7 +222,7 @@ resources:
 
 ```hcl
 # AWS EKS Cluster
-resource "aws_eks_cluster" "aura" {
+resource "aws_eks_cluster" "pheme" {
   name     = "pheme-cluster"
   role_arn = aws_iam_role.eks_cluster.arn
 
@@ -232,7 +232,7 @@ resource "aws_eks_cluster" "aura" {
 }
 
 # RDS Database
-resource "aws_db_instance" "aura" {
+resource "aws_db_instance" "pheme" {
   identifier        = "pheme-db"
   engine            = "postgres"
   engine_version    = "13.7"
@@ -247,7 +247,7 @@ resource "aws_db_instance" "aura" {
 }
 
 # Redis Cache
-resource "aws_elasticache_cluster" "aura" {
+resource "aws_elasticache_cluster" "pheme" {
   cluster_id           = "pheme-cache"
   engine              = "redis"
   node_type           = "cache.t3.micro"
@@ -321,7 +321,7 @@ kubectl apply -f kubernetes/green-deployment.yaml
 kubectl rollout status deployment/pheme-green
 
 # Switch traffic to new version
-kubectl patch service aura-service -p '{"spec":{"selector":{"version":"green"}}}'
+kubectl patch service pheme-service -p '{"spec":{"selector":{"version":"green"}}}'
 
 # Remove old version
 kubectl delete deployment pheme-blue
@@ -333,7 +333,7 @@ kubectl delete deployment pheme-blue
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: aura-ingress
+  name: pheme-ingress
   annotations:
     nginx.ingress.kubernetes.io/canary: "true"
     nginx.ingress.kubernetes.io/canary-weight: "20"
