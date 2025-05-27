@@ -1,10 +1,10 @@
 # 🌍 Internationalization (i18n) Guide
 
-This guide covers how to implement, manage, and contribute to the internationalization of the AURA Protocol platform.
+This guide covers how to implement, manage, and contribute to the internationalization of the PHEME Protocol platform.
 
 ## Overview
 
-AURA Protocol supports multiple languages to make the platform accessible to a global audience. This guide explains our i18n architecture, workflow, and best practices.
+PHEME Protocol supports multiple languages to make the platform accessible to a global audience. This guide explains our i18n architecture, workflow, and best practices.
 
 ## Supported Languages
 
