@@ -109,7 +109,7 @@ interface QuestChain {
 
 ### 5. Reward Mechanics
 
-#### Token Rewards ($AURA)
+#### Token Rewards ($PHEME)
 
 ```typescript
 interface Rewards {
