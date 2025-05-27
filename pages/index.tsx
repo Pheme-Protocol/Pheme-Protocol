@@ -205,17 +205,17 @@ export default function Home() {
             <PhemeChat messages={messages} setMessages={setMessages} />
           </div>
         ) : (
-          <div key={key} className="bg-white dark:bg-gray-900 rounded-[40px] text-gray-900 dark:text-white p-3 shadow-2xl border-8 border-gray-900 dark:border-black relative overflow-hidden">
+          <div key={key} className="bg-white dark:bg-gray-900 rounded-[40px] text-gray-900 dark:text-white p-3 shadow-[0_0_60px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_0_60px_-15px_rgba(255,255,255,0.1)] border-[12px] border-gray-900 dark:border-gray-950 relative overflow-hidden ring-2 ring-gray-900/30 dark:ring-white/20">
             {/* Device Frame Details */}
             <div 
-              className="absolute inset-0 bg-gradient-to-b from-gray-800/5 to-transparent pointer-events-none" 
+              className="absolute inset-0 bg-gradient-to-b from-gray-800/20 to-transparent pointer-events-none" 
               aria-hidden="true"
               tabIndex={-1}
             ></div>
-            <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-gray-200/20 to-transparent"></div>
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-gray-200/40 to-transparent"></div>
             
             {/* iPhone Notch */}
-            <div className="bg-black h-6 w-40 rounded-b-2xl mx-auto mb-2 relative shadow-lg">
+            <div className="bg-gray-950 h-6 w-40 rounded-b-2xl mx-auto mb-2 relative shadow-xl">
               <div className="absolute left-1/2 transform -translate-x-1/2 top-1 w-16 h-3 bg-black rounded-full flex items-center justify-center">
                 <div className="w-2 h-2 bg-gray-800 rounded-full absolute left-3"></div>
                 <div className="w-1.5 h-1.5 bg-gray-700 rounded-full absolute right-3"></div>

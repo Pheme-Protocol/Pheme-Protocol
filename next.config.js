@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   reactStrictMode: true,
+  images: {
+    domains: ['localhost'],
+    unoptimized: true,
+  },
   transpilePackages: ['@reown/appkit', '@reown/appkit-adapter-wagmi', 'wagmi', 'viem'],
   webpack: (config) => {
     config.module.rules.push({

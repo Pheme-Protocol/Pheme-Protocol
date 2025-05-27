@@ -112,7 +112,7 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-2 p-4 border-b">
+      <div className="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md">
         <Image
           src="/Pheme_wave.svg"
           alt="PHEME Logo"
@@ -123,25 +123,25 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
         <h3 className="font-bold text-lg">PHEME Chat</h3>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-800">
         {messages.length === 0 ? (
-          <div className="text-center">
+          <div className="text-center p-6 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
             <p className="text-lg font-medium mb-2">Welcome to PHEME Chat!</p>
-            <p className="text-sm">Ask me to verify your skills or learn more about the PHEME protocol.</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Ask me to verify your skills or learn more about the PHEME protocol.</p>
           </div>
         ) : (
           messages.map((msg) => (
             <div
               key={msg.id}
-              className={`mb-4 ${
-                msg.sender === 'You' ? 'text-right' : 'text-left'
-              }`}
+              className={`flex ${msg.sender === 'You' ? 'justify-end' : 'justify-start'}`}
+              role="article"
+              aria-label={`Message from ${msg.sender === 'You' ? 'you' : 'PHEME Support'}`}
             >
               <div
-                className={`inline-block p-3 rounded-lg ${
+                className={`max-w-[80%] p-3 rounded-2xl shadow-md border ${
                   msg.sender === 'You'
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-100 dark:bg-gray-800'
+                    ? 'bg-primary-light dark:bg-primary-dark text-white rounded-tr-sm border-primary-light/50 dark:border-primary-dark/50'
+                    : 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-tl-sm border-gray-200 dark:border-gray-700'
                 }`}
               >
                 {msg.text}
@@ -163,7 +163,12 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
         )}
       </div>
 
-      <form onSubmit={handleSend} className="p-4 border-t">
+      <form 
+        onSubmit={handleSend} 
+        className="p-4 border-t dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg"
+        role="form"
+        aria-label="Chat message input"
+      >
         <div className="flex gap-2">
           <input
             type="text"
