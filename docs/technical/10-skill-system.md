@@ -40,7 +40,7 @@ interface SkillMetadata {
         [category: string]: number;  // e.g., Dev: 34%, Design: 12%
     };
     visualTier: {
-        auraRing: string;           // Visual NFT enhancement
+        phemeRing: string;           // Visual NFT enhancement
         level: number;              // Current tier
     };
     credentials: Badge[];           // Earned badges
@@ -185,7 +185,7 @@ interface PhemeAPI {
     
     // Profile integration
     async getSkillWallet(address: string): Promise<SkillWallet>;
-    async authenticateViaAura(signature: Signature): Promise<AuthToken>;
+    async authenticateViaPheme(signature: Signature): Promise<AuthToken>;
 }
 ```
 
