@@ -7,7 +7,7 @@ const SUPPORT_SYSTEM_MESSAGE = `You are PHEME Support, a helpful AI assistant fo
 5. Direct users to appropriate documentation
 
 Key Resources:
-- Website: https://phemeprotocol.com
+- Website: https://phemeai.xyz
 - Documentation: https://docs.phemeai.xyz
 - GitHub: https://github.com/PhemeAI
 - Support Email: support@phemeai.xyz
