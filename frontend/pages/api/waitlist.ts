@@ -37,8 +37,53 @@ export default async function handler(
   const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
   const timestamp = Date.now();
 
-  // Validate email
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  // Validate email using a simpler, non-backtracking approach
+  function isValidEmail(email: string): boolean {
+    // Basic length check
+    if (!email || email.length > 254) return false;
+
+    // Split into local and domain parts
+    const parts = email.split('@');
+    if (parts.length !== 2) return false;
+
+    const [local, domain] = parts;
+
+    // Check lengths
+    if (local.length === 0 || local.length > 64) return false;
+    if (domain.length === 0 || domain.length > 255) return false;
+
+    // Check basic characters (no regex backtracking)
+    const validLocalChars = local.split('').every(char => 
+      (char >= 'a' && char <= 'z') ||
+      (char >= 'A' && char <= 'Z') ||
+      (char >= '0' && char <= '9') ||
+      "!#$%&'*+-/=?^_`{|}~.".includes(char)
+    );
+
+    const validDomainChars = domain.split('').every(char =>
+      (char >= 'a' && char <= 'z') ||
+      (char >= 'A' && char <= 'Z') ||
+      (char >= '0' && char <= '9') ||
+      char === '.' ||
+      char === '-'
+    );
+
+    if (!validLocalChars || !validDomainChars) return false;
+
+    // Check for consecutive dots
+    if (local.includes('..') || domain.includes('..')) return false;
+
+    // Check domain has at least one dot and doesn't start/end with dot or hyphen
+    const domainParts = domain.split('.');
+    if (domainParts.length < 2) return false;
+    if (domain.startsWith('.') || domain.endsWith('.')) return false;
+    if (domain.startsWith('-') || domain.endsWith('-')) return false;
+
+    return true;
+  }
+
+  // Use the new validation function
+  if (!isValidEmail(email)) {
     return res.status(400).json({ message: 'Invalid email address' });
   }
 
