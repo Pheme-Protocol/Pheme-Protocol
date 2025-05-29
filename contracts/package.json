@@ -1,0 +1,20 @@
+{
+  "name": "@pheme-protocol/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PHEME - Smart Contracts",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy": "hardhat deploy",
+    "verify": "hardhat verify"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "hardhat": "^2.19.4",
+    "typescript": "^5.3.3",
+    "@types/node": "^20.11.0"
+  }
+} 

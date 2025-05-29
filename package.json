@@ -2,13 +2,18 @@
   "name": "pheme-protocol",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "contracts",
+    "subgraph"
+  ],
   "description": "PHEME - Web3 Skill Verification Platform",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "generate-favicon": "node scripts/generate-favicon.js"
+    "dev": "yarn workspace @pheme-protocol/frontend dev",
+    "build": "yarn workspace @pheme-protocol/frontend build",
+    "start": "yarn workspace @pheme-protocol/frontend start",
+    "lint": "yarn workspace @pheme-protocol/frontend lint"
   },
   "dependencies": {
     "@rainbow-me/rainbowkit": "^2.2.5",

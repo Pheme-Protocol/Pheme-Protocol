@@ -30,4 +30,29 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts 
+next-env.d.ts
+
+# git
+.git
+
+# env
+.env
+.env.*
+
+# README
+README.md
+
+# gitignore
+.gitignore
+
+# backend
+backend
+
+# contracts
+contracts
+
+# subgraph
+subgraph
+
+# docs
+docs 
