@@ -10,11 +10,15 @@
     "verify": "hardhat verify"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
-    "@nomicfoundation/hardhat-verify": "^2.0.0",
-    "@openzeppelin/contracts": "^5.0.0",
-    "hardhat": "^2.19.4",
-    "typescript": "^5.3.3",
-    "@types/node": "^20.11.0"
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.3",
+    "@openzeppelin/contracts": "4.9.6",
+    "@types/node": "^20.11.0",
+    "hardhat": "^2.20.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "cookie": "0.7.0"
   }
-} 
+}
