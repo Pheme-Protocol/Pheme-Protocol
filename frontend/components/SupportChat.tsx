@@ -2,66 +2,87 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
+}
+
 interface SupportChatProps {
   className?: string;
 }
 
 export function SupportChat({ className = '' }: SupportChatProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([
-    { role: 'assistant', content: 'Hi! I\'m PHEME Support. How can I help you today?' }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
 
-  // Auto-scroll to bottom when new messages arrive
+  // Load messages from localStorage on mount
+  useEffect(() => {
+    const savedMessages = localStorage.getItem('pheme-support-chat-history');
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
+    } else {
+      setMessages([{
+        role: 'assistant',
+        content: "Hi! I'm PHEME Support. How can I help you today?",
+        timestamp: new Date().toISOString()
+      }]);
+    }
+  }, []);
+
+  // Save messages to localStorage when they change
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem('pheme-support-chat-history', JSON.stringify(messages));
+    }
+  }, [messages]);
+
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Store the previously focused element when opening chat
   useEffect(() => {
     if (isOpen) {
       previousActiveElement.current = document.activeElement as HTMLElement;
       inputRef.current?.focus();
     } else {
-      // Restore focus when closing
       previousActiveElement.current?.focus();
     }
   }, [isOpen]);
 
-  // Handle keyboard navigation
   useEffect(() => {
     if (!isOpen) return;
-
     const handleTabKey = (e: KeyboardEvent) => {
       if (!document.getElementById('support-chat-dialog')?.contains(document.activeElement)) {
         e.preventDefault();
         inputRef.current?.focus();
       }
     };
-
     document.addEventListener('keydown', handleTabKey);
     return () => document.removeEventListener('keydown', handleTabKey);
   }, [isOpen]);
 
   const handleClose = useCallback(() => {
-    if (messages.length > 1) {
-      const confirmClose = window.confirm('Closing the chat will clear your conversation history. Are you sure?');
-      if (confirmClose) {
-        setIsOpen(false);
-        // Reset messages to initial state after closing
-        setTimeout(() => {
-          setMessages([{ role: 'assistant', content: 'Hi! I\'m PHEME Support. How can I help you today?' }]);
-        }, 300);
-      }
-    } else {
-      setIsOpen(false);
-    }
-  }, [messages]);
+    setIsOpen(false);
+    // Clear chat history
+    setMessages([{
+      role: 'assistant',
+      content: "Hi! I'm PHEME Support. How can I help you today?",
+      timestamp: new Date().toISOString()
+    }]);
+    localStorage.removeItem('pheme-support-chat-history');
+  }, []);
+
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,11 +91,14 @@ export function SupportChat({ className = '' }: SupportChatProps) {
     const userMessage = input.trim();
     setInput('');
     setIsLoading(true);
-
-    // Add user message immediately
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    setMessages(prev => [...prev, {
+      role: 'user',
+      content: userMessage,
+      timestamp: new Date().toISOString()
+    }]);
 
     try {
+      setIsTyping(true);
       const response = await fetch('/api/support-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -87,39 +111,43 @@ export function SupportChat({ className = '' }: SupportChatProps) {
       }
 
       const data = await response.json();
-      setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+      
+      // Add artificial delay (between 1-2 seconds)
+      await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 1000));
+      
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: data.reply,
+        timestamp: new Date().toISOString()
+      }]);
     } catch (error) {
       console.error('Chat error:', error);
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: 'Sorry, I encountered an error. Please try again or email support@phemeai.xyz if the issue persists.' 
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again or email support@phemeai.xyz if the issue persists.',
+        timestamp: new Date().toISOString()
       }]);
     } finally {
+      setIsTyping(false);
       setIsLoading(false);
     }
   };
 
-  // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      // Close chat on Escape
       if (e.key === 'Escape' && isOpen) {
         handleClose();
       }
-      // Open chat on Ctrl+/ or Cmd+/
       if ((e.ctrlKey || e.metaKey) && e.key === '/') {
         e.preventDefault();
         setIsOpen(true);
       }
     };
-
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [isOpen, handleClose]);
 
-  // Add overlay click handler
   const handleOverlayClick = useCallback((e: React.MouseEvent) => {
-    // Only close if clicking the overlay itself, not its children
     if (e.target === e.currentTarget) {
       handleClose();
     }
@@ -127,7 +155,6 @@ export function SupportChat({ className = '' }: SupportChatProps) {
 
   return (
     <div className={className}>
-      {/* Accessible Blur Overlay */}
       {isOpen && (
         <div
           onClick={handleOverlayClick}
@@ -138,7 +165,6 @@ export function SupportChat({ className = '' }: SupportChatProps) {
         />
       )}
 
-      {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
         className={`fixed bottom-6 right-6 bg-primary-light dark:bg-primary-dark text-white p-4 rounded-full shadow-lg hover:scale-110 transition-all duration-300 z-50 group ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
@@ -149,8 +175,7 @@ export function SupportChat({ className = '' }: SupportChatProps) {
         <MessageCircle className="w-6 h-6 transition-transform duration-300 group-hover:rotate-12" aria-hidden="true" />
       </button>
 
-      {/* Chat Interface */}
-      <div 
+      <div
         id="support-chat-dialog"
         className={`fixed bottom-6 right-6 w-96 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl transition-all duration-300 transform z-50 ${
           isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
@@ -160,17 +185,13 @@ export function SupportChat({ className = '' }: SupportChatProps) {
         aria-modal="true"
         tabIndex={isOpen ? 0 : -1}
       >
-        {/* Header */}
-        <div 
-          className="flex items-center justify-between p-4 border-b dark:border-gray-700"
-          role="banner"
-        >
+        <div className="flex items-center justify-between p-4 border-b dark:border-gray-700" role="banner">
           <div className="flex items-center gap-3">
             <div className="rounded-full bg-primary-light dark:bg-primary-dark p-1">
-              <Image 
-                src="/Pheme_wave.svg" 
-                alt="PHEME Logo" 
-                width={20} 
+              <Image
+                src="/Pheme_wave.svg"
+                alt="PHEME Logo"
+                width={20}
                 height={20}
                 className="w-5 h-5"
               />
@@ -189,52 +210,53 @@ export function SupportChat({ className = '' }: SupportChatProps) {
           </button>
         </div>
 
-        {/* Messages */}
-        <div 
-          className="p-4 h-96 overflow-y-auto space-y-4"
-          role="log"
-          aria-live="polite"
-          aria-label="Chat messages"
-        >
+        <div className="p-4 h-96 overflow-y-auto space-y-4" role="log" aria-live="polite" aria-label="Chat messages">
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${message.role === 'user' ? 'justify-start' : 'justify-end'}`}
               role="article"
               aria-label={`Message from ${message.role === 'user' ? 'you' : 'PHEME Support'}`}
             >
-              <div
-                className={`max-w-[80%] p-3 rounded-2xl ${
-                  message.role === 'user'
-                    ? 'bg-primary-light dark:bg-primary-dark text-white rounded-tr-sm'
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-tl-sm'
-                }`}
-              >
-                {message.content}
+              <div className="flex flex-col gap-1">
+                <div
+                  className={`max-w-[80%] p-3 rounded-2xl ${
+                    message.role === 'user'
+                      ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-tl-sm'
+                      : 'bg-primary-light dark:bg-primary-dark text-white rounded-tr-sm'
+                  }`}
+                >
+                  {message.content}
+                </div>
+                <span className={`text-xs text-gray-500 ${message.role === 'user' ? 'text-left' : 'text-right'}`}>
+                  {formatTimestamp(message.timestamp)}
+                </span>
               </div>
             </div>
           ))}
-          {isLoading && (
-            <div 
-              className="flex justify-start"
-              role="status"
-              aria-label="Loading response"
-            >
-              <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-sm max-w-[80%]">
-                <Loader2 className="w-5 h-5 animate-spin text-gray-500 dark:text-gray-400" aria-hidden="true" />
+          {isTyping && (
+            <div className="flex justify-end" role="status" aria-label="PHEME Support is typing">
+              <div className="bg-primary-light dark:bg-primary-dark p-3 rounded-2xl rounded-tr-sm max-w-[80%] flex items-center gap-2">
+                <span className="text-white text-sm">PHEME Support is typing</span>
+                <div className="flex gap-1">
+                  <div className="w-2 h-2 bg-white rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                  <div className="w-2 h-2 bg-white rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                  <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
+                </div>
+              </div>
+            </div>
+          )}
+          {isLoading && !isTyping && (
+            <div className="flex justify-end" role="status" aria-label="Loading response">
+              <div className="bg-primary-light dark:bg-primary-dark p-3 rounded-2xl rounded-tr-sm max-w-[80%]">
+                <Loader2 className="w-5 h-5 animate-spin text-white" aria-hidden="true" />
               </div>
             </div>
           )}
           <div ref={chatEndRef} />
         </div>
 
-        {/* Input Form */}
-        <form 
-          onSubmit={handleSubmit} 
-          className="p-4 border-t dark:border-gray-700"
-          role="form"
-          aria-label="Chat message input"
-        >
+        <form onSubmit={handleSubmit} className="p-4 border-t dark:border-gray-700" role="form" aria-label="Chat message input">
           <div className="flex gap-2">
             <label htmlFor="support-chat-input" className="sr-only">
               Type your message
@@ -267,14 +289,9 @@ export function SupportChat({ className = '' }: SupportChatProps) {
         </form>
       </div>
 
-      {/* Accessibility announcement for screen readers */}
-      <div 
-        role="status" 
-        aria-live="polite" 
-        className="sr-only"
-      >
+      <div role="status" aria-live="polite" className="sr-only">
         {isOpen ? 'Support chat opened' : 'Support chat closed'}
       </div>
     </div>
   );
-} 
+}

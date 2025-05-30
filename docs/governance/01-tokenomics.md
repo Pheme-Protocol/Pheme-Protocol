@@ -23,7 +23,7 @@
 | Public Sale | 35% | 350M | Unlocked at TGE |
 | Team & Founders | 15% | 150M | 1-month cliff + 24-month linear |
 | DAO Treasury | 15% | 150M | Proposal-based release |
-| Liquidity | 10% | 100M | Locked 12 months |
+| Liquidity | 10% | 100M | Locked 1 month |
 | Community Rewards | 10% | 100M | Released over 36 months |
 | Marketing | 10% | 100M | Fully unlocked at launch |
 | Airdrops | 5% | 50M | Fully unlocked at launch |
