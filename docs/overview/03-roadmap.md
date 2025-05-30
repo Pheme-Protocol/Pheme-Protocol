@@ -28,7 +28,7 @@ Pheme AI aims to revolutionize how skills are verified, tracked, and valued in t
 
 ## Roadmap
 
-### Q3 2025: Alpha Launch
+### Q2 2025: Alpha Launch
 #### Technical
 - [ ] $PHEME token launch
 - [ ] Deploy core smart contracts
