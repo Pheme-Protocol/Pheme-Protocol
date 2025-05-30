@@ -4,6 +4,23 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import path from 'path';
 import fs from 'fs';
 
+// Function to sanitize response and enforce formatting rules
+function sanitizeResponse(text: string): string {
+  return text
+    // Remove any markdown headings
+    .replace(/^#+\s+/gm, '')
+    // Convert numbered lists to dashed lists
+    .replace(/^\d+\.\s+/gm, '- ')
+    // Remove any asterisks while preserving the text
+    .replace(/\*\*?(.*?)\*\*?/g, '$1')
+    // Remove any hash symbols
+    .replace(/#/g, '')
+    // Remove any indentation hierarchy
+    .replace(/^\s{2,}/gm, '')
+    // Ensure dashed lists use single dash
+    .replace(/^[−–—]\s/gm, '- ');
+}
+
 // Function to read specific markdown files
 function readSpecificFiles(): string {
   const criticalFiles = [
@@ -130,7 +147,7 @@ export default async function handler(
           { role: "system", content: SYSTEM_MESSAGE },
           { role: "user", content: message }
         ],
-        temperature: 0.7,
+        temperature: 0.3,  // Lower temperature for more consistent formatting
         max_tokens: 1000,
       }),
     });
@@ -157,7 +174,10 @@ export default async function handler(
       return res.status(500).json({ error: 'No reply received from chat service' });
     }
 
-    res.status(200).json({ reply });
+    // Sanitize the response before sending it back
+    const sanitizedReply = sanitizeResponse(reply);
+    res.status(200).json({ reply: sanitizedReply });
+
   } catch (error) {
     console.error('Chat API error:', error);
     res.status(500).json({ 
