@@ -65,7 +65,8 @@ module.exports = {
         'gradient': 'gradient 8s linear infinite',
         'fadeIn': 'fadeIn 0.2s ease-out',
         'message-in': 'message-fade-in 0.5s ease forwards',
-        'fade-in': 'fade-in 0.3s ease-in-out'
+        'fade-in': 'fade-in 0.3s ease-in-out',
+        'bounce': 'bounce 1s infinite',
       },
       keyframes: {
         gradient: {
@@ -76,6 +77,14 @@ module.exports = {
           '50%': {
             'background-size': '200% 200%',
             'background-position': 'right center',
+          },
+        },
+        bounce: {
+          '0%, 100%': {
+            transform: 'translateY(0)',
+          },
+          '50%': {
+            transform: 'translateY(-25%)',
           },
         },
         fadeIn: {
@@ -91,11 +100,56 @@ module.exports = {
             opacity: '1',
             transform: 'translateY(0)'
           }
+        },
+        typing: {
+          '0%': { opacity: '0.2' },
+          '50%': { opacity: '1' },
+          '100%': { opacity: '0.2' },
         }
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            'max-width': 'none',
+            color: 'inherit',
+            p: {
+              marginTop: '1em',
+              marginBottom: '1em',
+            },
+            'ul > li': {
+              paddingLeft: '1.5em',
+              position: 'relative',
+            },
+            'ul > li::before': {
+              content: '""',
+              width: '0.5em',
+              height: '0.5em',
+              borderRadius: '50%',
+              position: 'absolute',
+              left: 0,
+              top: '0.5em',
+              backgroundColor: 'currentColor',
+            },
+            strong: {
+              color: 'inherit',
+              fontWeight: '600',
+            },
+            hr: {
+              borderColor: 'inherit',
+              opacity: '0.3',
+            },
+            code: {
+              color: 'inherit',
+              fontWeight: '500',
+            },
+          },
+        },
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
   future: {
     hoverOnlyWhenSupported: true,
   },
