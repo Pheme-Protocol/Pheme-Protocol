@@ -177,13 +177,15 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
                           <ul className="list-disc list-inside space-y-2 ml-2">
                             {paragraph.split('\n').map((item, i) => (
                               <li key={i} className="text-base">
-                                {item.replace('- ', '')}
+                                <span dangerouslySetInnerHTML={{ 
+                                  __html: item.replace('- ', '')
+                                }} />
                               </li>
                             ))}
                           </ul>
                         ) : (
                           <p className="text-base leading-relaxed">
-                            {paragraph}
+                            <span dangerouslySetInnerHTML={{ __html: paragraph }} />
                           </p>
                         )}
                       </div>
