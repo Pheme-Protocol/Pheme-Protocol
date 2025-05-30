@@ -19,9 +19,7 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [waitlistStatus, setWaitlistStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
-  const [key, setKey] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [input, setInput] = useState('');
   const [isMobile, setIsMobile] = useState(false);
   const [messages, setMessages] = useState<{ sender: string; text: string; id: string }[]>([]);
 
@@ -39,14 +37,6 @@ export default function Home() {
 
     // Cleanup
     return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setKey(prev => prev + 1);
-    }, 10000);
-
-    return () => clearInterval(interval);
   }, []);
 
   const handleWaitlist = async (e: React.FormEvent) => {
@@ -201,7 +191,7 @@ export default function Home() {
             <PhemeChat messages={messages} setMessages={setMessages} />
           </div>
         ) : (
-          <div key={key} className="bg-white dark:bg-gray-900 rounded-[40px] text-gray-900 dark:text-white p-3 shadow-[0_0_60px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_0_60px_-15px_rgba(255,255,255,0.1)] border-[12px] border-gray-900 dark:border-gray-950 relative overflow-hidden ring-2 ring-gray-900/30 dark:ring-white/20">
+          <div className="bg-white dark:bg-gray-900 rounded-[40px] text-gray-900 dark:text-white p-3 shadow-[0_0_60px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_0_60px_-15px_rgba(255,255,255,0.1)] border-[12px] border-gray-900 dark:border-gray-950 relative overflow-hidden ring-2 ring-gray-900/30 dark:ring-white/20">
             {/* Device Frame Details */}
             <div 
               className="absolute inset-0 bg-gradient-to-b from-gray-800/20 to-transparent pointer-events-none" 
@@ -224,57 +214,67 @@ export default function Home() {
               <h3 className="font-bold text-center text-xl mb-6">Talk to PHEME</h3>
               <div className="space-y-4" role="log" aria-live="polite">
                 <div className="animate-fade-in-1">
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm">
-                    <div className="typing-indicator mb-2" aria-hidden="true">
-                      <span className="dot"></span>
-                      <span className="dot"></span>
-                      <span className="dot"></span>
+                  <div className="flex justify-start">
+                    <div className="bg-blue-500 text-white p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm">
+                      <div className="typing-indicator mb-2" aria-hidden="true">
+                        <span className="dot"></span>
+                        <span className="dot"></span>
+                        <span className="dot"></span>
+                      </div>
+                      <span className="block">Hi! I'd like to verify my smart contract development skills.</span>
                     </div>
-                    <span className="block text-gray-900 dark:text-gray-50">Hi! I'd like to verify my smart contract development skills.</span>
                   </div>
                 </div>
                 
                 <div className="animate-fade-in-2">
-                  <div className="bg-blue-700 text-white p-3 rounded-2xl rounded-tr-sm max-w-[80%] ml-auto shadow-sm">
-                    <div className="typing-indicator mb-2" aria-hidden="true">
-                      <span className="dot"></span>
-                      <span className="dot"></span>
-                      <span className="dot"></span>
+                  <div className="flex justify-end">
+                    <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-3 rounded-2xl rounded-tr-sm max-w-[80%] shadow-sm border border-gray-200 dark:border-gray-700">
+                      <div className="typing-indicator mb-2" aria-hidden="true">
+                        <span className="dot"></span>
+                        <span className="dot"></span>
+                        <span className="dot"></span>
+                      </div>
+                      <span className="block">I can help with that! Please share your GitHub profile or project repositories.</span>
                     </div>
-                    <span className="block">I can help with that! Please share your GitHub profile or project repositories.</span>
                   </div>
                 </div>
 
                 <div className="animate-fade-in-3">
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm">
-                    <div className="typing-indicator mb-2" aria-hidden="true">
-                      <span className="dot"></span>
-                      <span className="dot"></span>
-                      <span className="dot"></span>
+                  <div className="flex justify-start">
+                    <div className="bg-blue-500 text-white p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm">
+                      <div className="typing-indicator mb-2" aria-hidden="true">
+                        <span className="dot"></span>
+                        <span className="dot"></span>
+                        <span className="dot"></span>
+                      </div>
+                      <span className="block">Here's my GitHub: https://github.com/user/project</span>
                     </div>
-                    <span className="block text-gray-900 dark:text-gray-50">https://github.com/user/project</span>
                   </div>
                 </div>
 
                 <div className="animate-fade-in-4">
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm">
-                    <div className="typing-indicator mb-2" aria-hidden="true">
-                      <span className="dot"></span>
-                      <span className="dot"></span>
-                      <span className="dot"></span>
+                  <div className="flex justify-start">
+                    <div className="bg-blue-500 text-white p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm">
+                      <div className="typing-indicator mb-2" aria-hidden="true">
+                        <span className="dot"></span>
+                        <span className="dot"></span>
+                        <span className="dot"></span>
+                      </div>
+                      <span className="block">https://github.com/user/project-2</span>
                     </div>
-                    <span className="block text-gray-900 dark:text-gray-50">https://github.com/user/project-2</span>
                   </div>
                 </div>
 
                 <div className="animate-fade-in-5">
-                  <div className="bg-blue-700 text-white p-3 rounded-2xl rounded-tr-sm max-w-[80%] ml-auto shadow-sm">
-                    <div className="typing-indicator mb-2" aria-hidden="true">
-                      <span className="dot"></span>
-                      <span className="dot"></span>
-                      <span className="dot"></span>
+                  <div className="flex justify-end">
+                    <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-3 rounded-2xl rounded-tr-sm max-w-[80%] shadow-sm border border-gray-200 dark:border-gray-700">
+                      <div className="typing-indicator mb-2" aria-hidden="true">
+                        <span className="dot"></span>
+                        <span className="dot"></span>
+                        <span className="dot"></span>
+                      </div>
+                      <span className="block">Your skills look promising! Let's connect your wallet to start the verification process.</span>
                     </div>
-                    <span className="block">Your skills look promising! Let's connect your wallet to start the verification process.</span>
                   </div>
                 </div>
               </div>

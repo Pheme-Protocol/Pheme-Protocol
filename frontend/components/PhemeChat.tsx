@@ -20,6 +20,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAccount } from 'wagmi';
 import Image from 'next/image';
+import TypingAnimation from './TypingAnimation';
 
 interface Message {
   sender: string;
@@ -34,7 +35,7 @@ interface PhemeChatProps {
 
 export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
   const { isConnected } = useAccount();
-  const [input, setInput] = useState('');
+  const [localInput, setLocalInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -58,7 +59,7 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
       // Submit on Ctrl/Cmd + Enter
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         e.preventDefault();
-        if (input.trim() && !isLoading) {
+        if (localInput.trim() && !isLoading) {
           handleSend(e as unknown as React.FormEvent);
         }
       }
@@ -66,7 +67,7 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [input, isLoading]);
+  }, [localInput, isLoading]);
 
   // Generate unique ID for messages
   const generateMessageId = () => `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -75,36 +76,58 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
     e.preventDefault();
     setError(null);
 
-    if (!input.trim()) return;
+    const messageText = localInput.trim();
+    if (!messageText) return;
+
+    // Clear input field and save to localStorage
+    setLocalInput('');
+    localStorage.setItem('pheme-chat-input', '');
 
     setIsLoading(true);
     const userMessageId = generateMessageId();
-    setMessages((prev) => [...prev, { sender: 'You', text: input, id: userMessageId }]);
+    const typingIndicatorId = generateMessageId();
 
     try {
-      console.log('Sending chat request...');
+      // Add message to UI first
+      setMessages((prev) => [...prev, { 
+        sender: 'You', 
+        text: messageText, 
+        id: userMessageId 
+      }]);
+
+      // Add typing indicator message
+      setMessages((prev) => [...prev, {
+        sender: 'PHEME',
+        text: '<typing>',
+        id: typingIndicatorId
+      }]);
+
+      // Make API request
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ message: messageText }),
       });
 
-      console.log('Response status:', res.status);
       const data = await res.json();
-      console.log('Response data:', data);
       
       if (!res.ok) {
         throw new Error(data.error || data.details || 'Failed to get response');
       }
 
-      setMessages((prev) => [...prev, { sender: 'PHEME', text: data.reply, id: generateMessageId() }]);
-      setInput('');
+      // Remove typing indicator and add bot response
+      setMessages((prev) => prev.filter(msg => msg.id !== typingIndicatorId).concat({
+        sender: 'PHEME',
+        text: data.reply,
+        id: generateMessageId()
+      }));
+
     } catch (err) {
       console.error('Chat error:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to send message. Please try again.';
       setError(errorMessage);
-      // Remove the user's message if it failed
-      setMessages((prev) => prev.filter(msg => msg.id !== userMessageId));
+      // Remove both the user's message and typing indicator
+      setMessages((prev) => prev.filter(msg => msg.id !== userMessageId && msg.id !== typingIndicatorId));
     } finally {
       setIsLoading(false);
     }
@@ -127,13 +150,13 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
         {messages.length === 0 ? (
           <div className="text-center p-6 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
             <p className="text-lg font-medium mb-2">Welcome to PHEME Chat!</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Ask me to verify your skills or learn more about the PHEME protocol.</p>
+            <p className="text-base text-gray-600 dark:text-gray-400">Ask me to verify your skills or learn more about the PHEME protocol.</p>
           </div>
         ) : (
           messages.map((msg) => (
             <div
               key={msg.id}
-              className={`flex ${msg.sender === 'You' ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${msg.sender === 'You' ? 'justify-start' : 'justify-end'} mb-4`}
               role="article"
               aria-label={`Message from ${msg.sender === 'You' ? 'you' : 'PHEME Support'}`}
             >
@@ -144,7 +167,29 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
                     : 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-tl-sm border-gray-200 dark:border-gray-700'
                 }`}
               >
-                {msg.text}
+                {msg.text === '<typing>' ? (
+                  <TypingAnimation />
+                ) : (
+                  <div className="prose prose-sm dark:prose-invert max-w-none">
+                    {msg.text.split('\n\n').map((paragraph, index) => (
+                      <div key={index} className={`${index > 0 ? 'mt-4' : ''}`}>
+                        {paragraph.startsWith('- ') ? (
+                          <ul className="list-disc list-inside space-y-2 ml-2">
+                            {paragraph.split('\n').map((item, i) => (
+                              <li key={i} className="text-base">
+                                {item.replace('- ', '')}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-base leading-relaxed">
+                            {paragraph}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           ))
@@ -159,8 +204,17 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
           </div>
         )}
         {isLoading && (
-          <div className="animate-pulse text-gray-400 dark:text-gray-500">PHEME is typing...</div>
+          <div 
+            className="flex justify-end mb-4"
+            role="status" 
+            aria-label="PHEME is processing your request"
+          >
+            <div className="bg-white dark:bg-gray-900 p-3 rounded-2xl rounded-tr-sm border border-gray-200 dark:border-gray-700 shadow-md max-w-[80%]">
+              <TypingAnimation />
+            </div>
+          </div>
         )}
+        <div ref={messagesEndRef} />
       </div>
 
       <form 
@@ -172,16 +226,21 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
         <div className="flex gap-2">
           <input
             type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
+            value={localInput}
+            onChange={(e) => {
+              setLocalInput(e.target.value);
+              localStorage.setItem('pheme-chat-input', e.target.value);
+            }}
             placeholder="Talk to PHEME..."
-            className="flex-1 p-2 border rounded-lg dark:bg-gray-800"
+            disabled={isLoading}
+            className="flex-1 px-4 py-3 text-base rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            disabled={isLoading || !localInput.trim()}
+            className="px-4 py-2 bg-primary-light hover:bg-primary-light/90 dark:bg-primary-dark dark:hover:bg-primary-dark/90 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Send
+            {isLoading ? 'Sending...' : 'Send'}
           </button>
         </div>
       </form>
