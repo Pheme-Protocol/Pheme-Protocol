@@ -42,7 +42,7 @@ function readSpecificFiles(): string {
         content += `\n- ${path.basename(file, '.md')}\n${fileContent}\n`;
       }
     } catch (error) {
-      console.warn(`Warning: Could not read file ${file}:`, error);
+      // Silently handle file read errors
     }
   }
   return content;
@@ -52,9 +52,8 @@ function readSpecificFiles(): string {
 let DOCS_CONTENT = '';
 try {
   DOCS_CONTENT = readSpecificFiles();
-  console.log('Successfully loaded core documentation content');
 } catch (error) {
-  console.warn('Warning: Could not load documentation content:', error);
+  // Silently handle documentation loading errors
 }
 
 // System message to define PHEME's identity and behavior
@@ -158,14 +157,13 @@ export default async function handler(
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('OpenAI API error response:', errorText);
       
       let errorMessage = 'Failed to get response from chat service';
       try {
         const errorJson = JSON.parse(errorText);
         errorMessage = errorJson.error?.message || errorText;
       } catch (e) {
-        console.error('Failed to parse error response as JSON:', e);
+        // Silently handle JSON parse errors
       }
       
       return res.status(response.status).json({ error: errorMessage });
@@ -183,7 +181,6 @@ export default async function handler(
     res.status(200).json({ reply: sanitizedReply });
 
   } catch (error) {
-    console.error('Chat API error:', error);
     res.status(500).json({ 
       error: error instanceof Error ? error.message : 'Internal server error'
     });

@@ -129,7 +129,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
     }, sequenceTiming.identityMesh);
 
     // Show each tagline only once, then finish splash
-    let taglineTimeouts: NodeJS.Timeout[] = [];
+    const taglineTimeouts: NodeJS.Timeout[] = [];
     if (currentSequence === 3) {
       setCurrentTagline(0);
       for (let i = 1; i < taglines.length; i++) {

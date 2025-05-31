@@ -64,11 +64,6 @@ export function Navigation() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen]);
 
-  const handleSelect = (href: string) => {
-    window.open(href, '_blank', 'noopener,noreferrer');
-    setIsOpen(false);
-  };
-
   return (
     <nav className="flex items-center gap-4" role="navigation">
       {/* Desktop Navigation */}

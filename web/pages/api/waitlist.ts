@@ -132,7 +132,6 @@ export default async function handler(
       message: 'Successfully joined the waitlist' 
     });
   } catch (error) {
-    console.error('Waitlist submission error:', error);
     return res.status(500).json({ 
       message: 'Failed to join waitlist. Please try again later.' 
     });

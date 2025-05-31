@@ -96,7 +96,7 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [localInput, isLoading]);
+  }, [localInput, isLoading, handleSend]);
 
   // Generate unique ID for messages
   const generateMessageId = () => `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;

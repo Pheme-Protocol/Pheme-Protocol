@@ -22,22 +22,7 @@ export function SupportChat({ className = '' }: SupportChatProps) {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const lastMessageRef = useRef<HTMLDivElement>(null);
-
-  // Handle mobile keyboard visibility
-  useEffect(() => {
-    const handleResize = () => {
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      if (isMobile) {
-        const heightDiff = window.outerHeight - window.innerHeight;
-        setIsKeyboardVisible(heightDiff > 100);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   // Scroll to message function with delay
   const scrollToMessage = (element: HTMLDivElement | null) => {
