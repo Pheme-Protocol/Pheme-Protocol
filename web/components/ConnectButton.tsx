@@ -28,7 +28,6 @@ export function ConnectButton() {
     <RainbowConnectButton.Custom>
       {({
         account,
-        chain,
         openConnectModal,
         mounted,
       }) => {

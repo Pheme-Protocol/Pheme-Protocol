@@ -20,15 +20,13 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [waitlistStatus, setWaitlistStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [messages, setMessages] = useState<{ sender: string; text: string; id: string }[]>([]);
   const [showSplash, setShowSplash] = useState(true);
-  const [isMounted, setIsMounted] = useState(false);
   const hasDisconnected = useRef(false);
 
   useEffect(() => {
-    setIsMounted(true);
     // Only disconnect once, on first mount, if connected
     if (
       typeof window !== 'undefined' &&
@@ -38,9 +36,7 @@ export default function Home() {
       disconnect();
       hasDisconnected.current = true;
     }
-    // Only run on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isConnected, disconnect]);
 
   useEffect(() => {
     // Check if device is mobile
@@ -119,28 +115,28 @@ export default function Home() {
 
       {/* Blockchain Logos */}
       <div className="flex flex-wrap justify-center sm:justify-start gap-6 sm:gap-8 items-center opacity-90 dark:opacity-100">
-        <img 
+        <Image 
           src="/logos/base.svg" 
           alt="base" 
           width={32} 
           height={32} 
           className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
         />
-        <img 
+        <Image 
           src="/logos/polygon.svg" 
           alt="polygon" 
           width={32} 
           height={32} 
           className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
         />
-        <img 
+        <Image 
           src="/logos/ethereum.svg" 
           alt="ethereum" 
           width={32} 
           height={32} 
           className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
         />
-        <img 
+        <Image 
           src="/logos/optimism.png"
           alt="Optimism" 
           width={32}
@@ -152,7 +148,7 @@ export default function Home() {
             imageRendering: 'crisp-edges'
           }}
         />
-        <img 
+        <Image 
           src="/logos/binance.svg" 
           alt="BNB Chain" 
           width={32} 

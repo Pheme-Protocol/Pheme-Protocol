@@ -24,7 +24,6 @@ function readMarkdownFiles(dir: string): string {
 
     return content;
   } catch (error) {
-    console.log('Documentation not found, using default content');
     return '';
   }
 }
@@ -34,9 +33,8 @@ let DOCS_CONTENT = '';
 try {
   const docsDir = path.join(process.cwd(), '../../docs');
   DOCS_CONTENT = readMarkdownFiles(docsDir);
-  console.log('Successfully loaded core documentation content');
 } catch (error) {
-  console.log('Using default documentation content');
+  // Silently handle documentation loading errors
 }
 
 const SUPPORT_SYSTEM_MESSAGE = `You are PHEME Support, a helpful AI assistant for the PHEME protocol. Your role is to:
@@ -80,7 +78,6 @@ export default async function handler(
 
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    console.error('OpenAI API key not configured');
     return res.status(500).json({ error: 'Support chat service not configured' });
   }
 
@@ -110,7 +107,6 @@ export default async function handler(
     const data = await response.json();
 
     if (!response.ok) {
-      console.error('OpenAI API error:', data.error);
       return res.status(response.status).json({ 
         error: 'Failed to get response from support service',
         details: data.error?.message 
@@ -124,7 +120,6 @@ export default async function handler(
 
     res.status(200).json({ reply });
   } catch (error) {
-    console.error('Support chat API error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 } 
