@@ -17,8 +17,7 @@
  */
 
 // components/PhemeChat.tsx
-import { useState, useEffect, useRef } from 'react';
-import { useAccount } from 'wagmi';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import TypingAnimation from './TypingAnimation';
 
@@ -34,11 +33,9 @@ interface PhemeChatProps {
 }
 
 export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
-  const { isConnected } = useAccount();
   const [localInput, setLocalInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
@@ -82,26 +79,10 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
     }
   }, [isLoading]);
 
-  // Handle keyboard shortcuts
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      // Submit on Ctrl/Cmd + Enter
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        e.preventDefault();
-        if (localInput.trim() && !isLoading) {
-          handleSend(e as unknown as React.FormEvent);
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [localInput, isLoading, handleSend]);
-
   // Generate unique ID for messages
   const generateMessageId = () => `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-  const handleSend = async (e: React.FormEvent) => {
+  const handleSend = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
@@ -152,7 +133,6 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
       }));
 
     } catch (err) {
-      console.error('Chat error:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to send message. Please try again.';
       setError(errorMessage);
       // Remove both the user's message and typing indicator
@@ -160,7 +140,23 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [localInput, setMessages]);
+
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Submit on Ctrl/Cmd + Enter
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (localInput.trim() && !isLoading) {
+          handleSend(e as unknown as React.FormEvent);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [localInput, isLoading, handleSend]);
 
   return (
     <div className="flex flex-col h-full">

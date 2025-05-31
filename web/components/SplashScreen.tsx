@@ -3,7 +3,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 interface SplashScreenProps {
@@ -44,7 +43,6 @@ const verificationMessages = [
 ];
 
 export default function SplashScreen({ onComplete }: SplashScreenProps) {
-  const router = useRouter();
   const [currentSequence, setCurrentSequence] = useState(0);
   const [currentTagline, setCurrentTagline] = useState(0);
   const [showLogo, setShowLogo] = useState(false);
