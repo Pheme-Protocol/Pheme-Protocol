@@ -7,47 +7,47 @@ export function Footer({ className = '' }: FooterProps) {
     build: {
       title: 'Build with PHEME',
       links: [
-        { name: 'Developer Docs', href: 'https://docs.phemeai.xyz', isComingSoon: false },
-        { name: 'Integration Guide', href: '#', isComingSoon: true },
-        { name: 'SDK (Coming Soon)', href: '#', isComingSoon: true },
-        { name: 'GitHub', href: 'https://github.com/PhemeAI' }
+        { name: 'Docs', href: '', isComingSoon: false, isUnclickable: true },
+        { name: 'Integration Guide', href: '#', isComingSoon: true, isUnclickable: false },
+        { name: 'SDK (Coming Soon)', href: '#', isComingSoon: true, isUnclickable: false },
+        { name: 'GitHub', href: 'https://github.com/PhemeAI', isComingSoon: false, isUnclickable: false }
       ]
     },
     community: {
       title: 'Community',
       links: [
-        { name: 'Join Discord', href: '#', isComingSoon: true },
-        { name: 'Community Forum', href: '#', isComingSoon: true },
-        { name: 'Twitter', href: 'https://x.com/phemeai' },
-        { name: 'Telegram', href: 'https://t.me/phemeai' },
-        { name: 'Feature Requests', href: '#', isComingSoon: true },
-        { name: 'Contact Admin', href: 'mailto:admin@phemeai.xyz' }
+        { name: 'Join Discord', href: '#', isComingSoon: true, isUnclickable: false },
+        { name: 'Community Forum', href: '#', isComingSoon: true, isUnclickable: false },
+        { name: 'Twitter', href: 'https://x.com/phemeai', isComingSoon: false, isUnclickable: false },
+        { name: 'Telegram', href: 'https://t.me/phemeai', isComingSoon: false, isUnclickable: false },
+        { name: 'Feature Requests', href: '#', isComingSoon: true, isUnclickable: false },
+        { name: 'Contact Admin', href: 'mailto:admin@phemeai.xyz', isComingSoon: false, isUnclickable: false }
       ]
     },
     governance: {
       title: 'Governance',
       links: [
-        { name: 'Active Proposals', href: '#', isComingSoon: true },
-        { name: 'Vote on Chain', href: '#', isComingSoon: true },
-        { name: 'Token Transparency', href: '#', isComingSoon: true },
-        { name: 'Delegate Votes', href: '#', isComingSoon: true }
+        { name: 'Active Proposals', href: '#', isComingSoon: true, isUnclickable: false },
+        { name: 'Vote on Chain', href: '#', isComingSoon: true, isUnclickable: false },
+        { name: 'Token Transparency', href: '#', isComingSoon: true, isUnclickable: false },
+        { name: 'Delegate Votes', href: '#', isComingSoon: true, isUnclickable: false }
       ]
     },
     trust: {
       title: 'Trust & Transparency',
       links: [
-        { name: 'Audit Reports', href: '#', isComingSoon: true },
-        { name: 'Chain Status', href: '#', isComingSoon: true },
-        { name: 'Open Source Licenses', href: '#', isComingSoon: true },
-        { name: 'Security Disclosure', href: '#', isComingSoon: true }
+        { name: 'Audit Reports', href: '#', isComingSoon: true, isUnclickable: false },
+        { name: 'Chain Status', href: '#', isComingSoon: true, isUnclickable: false },
+        { name: 'Open Source Licenses', href: '#', isComingSoon: true, isUnclickable: false },
+        { name: 'Security Disclosure', href: '#', isComingSoon: true, isUnclickable: false }
       ]
     },
     legal: {
       title: 'Legal',
       links: [
-        { name: 'Terms of Use', href: '#', isComingSoon: true },
-        { name: 'Privacy Policy', href: '#', isComingSoon: true },
-        { name: 'Cookie Preferences', href: '#', isComingSoon: true }
+        { name: 'Terms of Use', href: '#', isComingSoon: true, isUnclickable: false },
+        { name: 'Privacy Policy', href: '#', isComingSoon: true, isUnclickable: false },
+        { name: 'Cookie Preferences', href: '#', isComingSoon: true, isUnclickable: false }
       ]
     }
   };
@@ -72,10 +72,10 @@ export function Footer({ className = '' }: FooterProps) {
               <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.name}>
-                    {link.isComingSoon ? (
+                    {(link.isComingSoon || link.isUnclickable) ? (
                       <span 
                         className="text-gray-400 opacity-60 cursor-not-allowed text-[15px] block"
-                        title="Coming Soon"
+                        title={link.isComingSoon ? 'Coming Soon' : ''}
                       >
                         {link.name}
                       </span>

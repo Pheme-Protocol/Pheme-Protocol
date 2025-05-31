@@ -92,16 +92,7 @@ export function SupportChat({ className = '' }: SupportChatProps) {
 
   // Load messages from localStorage on mount
   useEffect(() => {
-    const savedMessages = localStorage.getItem('pheme-support-chat-history');
-    if (savedMessages) {
-      setMessages(JSON.parse(savedMessages));
-    } else {
-      setMessages([{
-        role: 'assistant',
-        content: "Hi! I'm PHEME Support. How can I help you today?",
-        timestamp: new Date().toISOString()
-      }]);
-    }
+    localStorage.removeItem('pheme-support-chat-history');
   }, []);
 
   // Save messages to localStorage when they change
@@ -115,6 +106,13 @@ export function SupportChat({ className = '' }: SupportChatProps) {
     if (isOpen) {
       previousActiveElement.current = document.activeElement as HTMLElement;
       inputRef.current?.focus();
+      // Always clear chat history on open
+      setMessages([{
+        role: 'assistant',
+        content: "Hi! I'm PHEME Support. How can I help you today?",
+        timestamp: new Date().toISOString()
+      }]);
+      localStorage.removeItem('pheme-support-chat-history');
     } else {
       previousActiveElement.current?.focus();
     }
@@ -275,7 +273,7 @@ export function SupportChat({ className = '' }: SupportChatProps) {
 
         <div 
           ref={messagesContainerRef}
-          className="p-4 h-96 overflow-y-auto space-y-4" 
+          className="p-4 overflow-y-auto space-y-4 flex-1 min-h-0 h-96 sm:h-auto" 
           role="log" 
           aria-live="polite" 
           aria-label="Chat messages"
@@ -339,6 +337,8 @@ export function SupportChat({ className = '' }: SupportChatProps) {
               onChange={(e) => setInput(e.target.value)}
               onFocus={handleInputFocus}
               placeholder="Type your message..."
+              autoComplete="off"
+              autoCorrect="off"
               className="flex-1 px-4 py-2 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark"
               disabled={isLoading}
               aria-disabled={isLoading}
