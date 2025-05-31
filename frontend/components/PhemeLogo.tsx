@@ -6,7 +6,7 @@ interface PhemeLogoProps {
   className?: string;
 }
 
-export default function PhemeLogo({ width = 38, height = 38, className = '' }: PhemeLogoProps) {
+export default function PhemeLogo({ width = 200, height = 200, className = '' }: PhemeLogoProps) {
   return (
     <Image
       src="/Pheme_wave.svg"

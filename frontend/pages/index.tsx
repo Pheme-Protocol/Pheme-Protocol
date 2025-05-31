@@ -310,8 +310,8 @@ export default function Home() {
     <>
       <Head>
         <title>PHEME - Earn Trust Onchain</title>
-        <link rel="icon" href="/Pheme_wave.svg" type="image/svg+xml" />
-        <link rel="shortcut icon" type="image/svg+xml" href="/Pheme_wave.svg" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
         <meta name="description" content="PHEME is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation." />
         <meta property="og:title" content="PHEME - Earn Trust Onchain" />
         <meta property="og:description" content="PHEME is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation." />
@@ -324,18 +324,7 @@ export default function Home() {
           isMobile && isConnected ? 'hidden' : ''
         }`}>
           <div className="flex items-center gap-3">
-            <Image 
-              src="/Pheme_wave.svg" 
-              alt="PHEME Logo" 
-              width={38} 
-              height={38}
-              priority
-              quality={100}
-              className="flex-shrink-0"
-              style={{
-                transform: 'translateZ(0)'
-              }}
-            />
+            <PhemeLogo width={80} height={80} />
             <h1 className="text-4xl font-bold text-primary-light dark:text-primary-dark">PHEME</h1>
           </div>
           <Navigation />
