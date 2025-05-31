@@ -3,7 +3,7 @@ const nextConfig = {
   output: 'standalone',
   reactStrictMode: true,
   images: {
-    domains: ['localhost'],
+    domains: ['localhost', 'phemeai.xyz', 'phemeprotocol.com', 'pheme-protocol.vercel.app'],
     unoptimized: true,
   },
   eslint: {
