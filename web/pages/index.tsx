@@ -54,6 +54,15 @@ export default function Home() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  useEffect(() => {
+    if (isMobile && isConnected) {
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = 'auto';
+      };
+    }
+  }, [isMobile, isConnected]);
+
   const handleWaitlist = async (e: React.FormEvent) => {
     e.preventDefault();
     setWaitlistStatus('loading');
@@ -84,7 +93,6 @@ export default function Home() {
         setEmail('');
       }, 2000);
     } catch (error) {
-      console.error('Waitlist error:', error);
       setErrorMessage(error instanceof Error ? error.message : 'Failed to join waitlist');
       setWaitlistStatus('error');
     }
@@ -165,17 +173,19 @@ export default function Home() {
 
   // iPhone interface component
   const IPhoneInterface = () => {
-    // For mobile: only show PhemeChat when connected
-    if (isMobile) {
-      if (!isConnected) return null;
-
-      // Lock body scroll when chat is active on mobile
-      useEffect(() => {
+    // Lock body scroll when chat is active on mobile
+    useEffect(() => {
+      if (isMobile && isConnected) {
         document.body.style.overflow = 'hidden';
         return () => {
           document.body.style.overflow = 'auto';
         };
-      }, []);
+      }
+    }, []);
+
+    // For mobile: only show PhemeChat when connected
+    if (isMobile) {
+      if (!isConnected) return null;
 
       return (
         <div className="fixed inset-0 z-50 bg-background-light dark:bg-background-dark flex flex-col overflow-hidden">
