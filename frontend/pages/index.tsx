@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { ConnectButton } from '../components/ConnectButton';
 import { useAccount, useDisconnect } from 'wagmi';
@@ -10,6 +10,7 @@ import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
 import { SupportChat } from '../components/SupportChat';
 import Head from 'next/head';
+import SplashScreen from "@/components/SplashScreen";
 
 export default function Home() {
   const { isConnected, address } = useAccount();
@@ -22,6 +23,24 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [messages, setMessages] = useState<{ sender: string; text: string; id: string }[]>([]);
+  const [showSplash, setShowSplash] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
+  const hasDisconnected = useRef(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    // Only disconnect once, on first mount, if connected
+    if (
+      typeof window !== 'undefined' &&
+      isConnected &&
+      !hasDisconnected.current
+    ) {
+      disconnect();
+      hasDisconnected.current = true;
+    }
+    // Only run on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     // Check if device is mobile
@@ -305,6 +324,10 @@ export default function Home() {
       </div>
     );
   };
+
+  if (showSplash) {
+    return <SplashScreen onComplete={() => setShowSplash(false)} />;
+  }
 
   return (
     <>

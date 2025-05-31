@@ -4,6 +4,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface SplashScreenProps {
   onComplete?: () => void;
@@ -58,6 +59,12 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isSkipped, setIsSkipped] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Ensure component is mounted before any client-side operations
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Detect mobile device
   useEffect(() => {
@@ -103,10 +110,10 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
   useEffect(() => {
     // Sequence timing
     const sequenceTiming = {
-      identityMesh: 3000,
-      aiReputation: 1250,
-      skillWallet: 1250,
-      taglines: 1250
+      identityMesh: 1800,
+      aiReputation: 800,
+      skillWallet: 800,
+      taglines: 800
     };
     // Start sequences
     const sequenceInterval = setInterval(() => {
@@ -196,8 +203,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
   };
 
   const handleLaunch = () => {
-    onComplete?.();
-    router.push('/');
+    if (onComplete) onComplete();
   };
 
   // Neon/Chalk style for formulas (responsive)
@@ -470,22 +476,31 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
     }
   };
 
+  // Don't render anything until component is mounted
+  if (!isMounted) {
+    return null;
+  }
+
   if (!isVisible || isSkipped) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black">
-        <div className="text-center">
-          <img
-            src="/Pheme_wave.svg"
-            alt="PHEME Logo"
-            className="w-32 h-32 mx-auto mb-8"
-          />
+      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black min-h-screen px-4">
+        <div className="text-center w-full max-w-xs mx-auto flex flex-col items-center justify-center">
+          <div className="relative w-32 h-32 mx-auto mb-8">
+            <Image
+              src="/Pheme_wave.svg"
+              alt="PHEME Logo"
+              fill
+              priority
+              className="object-contain"
+            />
+          </div>
           <motion.button
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleLaunch}
-            className="px-8 py-3 rounded-lg text-lg font-semibold bg-primary-light dark:bg-primary-dark text-white hover:bg-primary-dark dark:hover:bg-primary-light cursor-pointer"
+            className="px-8 py-3 rounded-lg text-lg font-semibold bg-primary-light dark:bg-primary-dark text-white hover:bg-primary-dark dark:hover:bg-primary-light cursor-pointer w-full max-w-xs"
           >
             Launch PHEME
           </motion.button>
@@ -496,13 +511,13 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center z-50 overflow-hidden"
+      className="fixed inset-0 flex items-center justify-center z-50 overflow-hidden min-h-screen px-4"
       style={{
         background: '#000000',
       }}
       onClick={handleTap}
     >
-      <div className="w-full h-full relative">
+      <div className="w-full h-full relative flex items-center justify-center">
         <AnimatePresence mode="wait">
           {!showLogo ? (
             renderSequence()
@@ -513,11 +528,13 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
               exit={{ scale: 1.5, opacity: 0 }}
               className="absolute inset-0 flex items-center justify-center"
             >
-              <div className="text-center">
-                <img
+              <div className="text-center w-full max-w-xs mx-auto flex flex-col items-center justify-center">
+                <Image
                   src="/Pheme_wave.svg"
                   alt="PHEME Logo"
-                  className="w-32 h-32 mx-auto mb-8"
+                  fill
+                  priority
+                  className="object-contain"
                 />
                 <motion.button
                   initial={{ opacity: 0, y: 20 }}
@@ -526,11 +543,11 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                   whileTap={{ scale: 0.95 }}
                   onClick={handleLaunch}
                   disabled={!isReady}
-                  className={`px-8 py-3 rounded-lg text-lg font-semibold transition-all duration-300 ${
+                  className={`px-8 py-3 rounded-lg text-lg font-semibold transition-all duration-300 w-full max-w-xs mt-8 mb-4 ${
                     isReady 
                       ? 'bg-primary-light dark:bg-primary-dark text-white hover:bg-primary-dark dark:hover:bg-primary-light cursor-pointer'
                       : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                  } ${isMobile ? 'mt-8 mb-4 text-base px-6 py-3' : ''}`}
+                  }`}
                 >
                   Launch PHEME
                 </motion.button>
