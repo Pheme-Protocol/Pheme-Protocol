@@ -19,6 +19,6 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "cookie": "0.7.0"
+    "cookie": "^1.0.2"
   }
 }
