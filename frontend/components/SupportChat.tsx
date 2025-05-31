@@ -21,6 +21,74 @@ export function SupportChat({ className = '' }: SupportChatProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const lastMessageRef = useRef<HTMLDivElement>(null);
+
+  // Handle mobile keyboard visibility
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        const heightDiff = window.outerHeight - window.innerHeight;
+        setIsKeyboardVisible(heightDiff > 100);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Scroll to message function with delay
+  const scrollToMessage = (element: HTMLDivElement | null) => {
+    if (element && messagesContainerRef.current) {
+      // Small delay to ensure DOM is updated
+      setTimeout(() => {
+        const container = messagesContainerRef.current;
+        if (!container) return;
+        
+        const elementTop = element.offsetTop;
+        const containerHeight = container.clientHeight;
+        const scrollPosition = elementTop - (containerHeight / 4);
+        
+        // Force a reflow to ensure accurate measurements
+        container.style.scrollBehavior = 'auto';
+        container.scrollTop = scrollPosition;
+        
+        // Reset scroll behavior after position is set
+        requestAnimationFrame(() => {
+          container.style.scrollBehavior = 'smooth';
+        });
+      }, 50);
+    }
+  };
+
+  // Scroll to new message when messages change
+  useEffect(() => {
+    if (lastMessageRef.current) {
+      scrollToMessage(lastMessageRef.current);
+    }
+  }, [messages]);
+
+  // Scroll to bottom when typing indicator appears
+  useEffect(() => {
+    if (isTyping && messagesContainerRef.current) {
+      const container = messagesContainerRef.current;
+      container.scrollTop = container.scrollHeight;
+    }
+  }, [isTyping]);
+
+  // Handle input focus for mobile
+  const handleInputFocus = () => {
+    if (messagesContainerRef.current) {
+      setTimeout(() => {
+        const container = messagesContainerRef.current;
+        if (container) {
+          container.scrollTop = container.scrollHeight;
+        }
+      }, 100);
+    }
+  };
 
   // Load messages from localStorage on mount
   useEffect(() => {
@@ -41,10 +109,6 @@ export function SupportChat({ className = '' }: SupportChatProps) {
     if (messages.length > 0) {
       localStorage.setItem('pheme-support-chat-history', JSON.stringify(messages));
     }
-  }, [messages]);
-
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   useEffect(() => {
@@ -91,6 +155,8 @@ export function SupportChat({ className = '' }: SupportChatProps) {
     const userMessage = input.trim();
     setInput('');
     setIsLoading(true);
+    setIsTyping(true);
+    
     setMessages(prev => [...prev, {
       role: 'user',
       content: userMessage,
@@ -98,7 +164,6 @@ export function SupportChat({ className = '' }: SupportChatProps) {
     }]);
 
     try {
-      setIsTyping(true);
       const response = await fetch('/api/support-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -208,10 +273,17 @@ export function SupportChat({ className = '' }: SupportChatProps) {
           </button>
         </div>
 
-        <div className="p-4 h-96 overflow-y-auto space-y-4" role="log" aria-live="polite" aria-label="Chat messages">
+        <div 
+          ref={messagesContainerRef}
+          className="p-4 h-96 overflow-y-auto space-y-4" 
+          role="log" 
+          aria-live="polite" 
+          aria-label="Chat messages"
+        >
           {messages.map((message, index) => (
             <div
               key={index}
+              ref={index === messages.length - 1 ? lastMessageRef : null}
               className={`flex ${message.role === 'user' ? 'justify-start' : 'justify-end'}`}
               role="article"
               aria-label={`Message from ${message.role === 'user' ? 'you' : 'PHEME Support'}`}
@@ -265,6 +337,7 @@ export function SupportChat({ className = '' }: SupportChatProps) {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onFocus={handleInputFocus}
               placeholder="Type your message..."
               className="flex-1 px-4 py-2 rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark"
               disabled={isLoading}
