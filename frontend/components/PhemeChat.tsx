@@ -139,8 +139,8 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
         <Image
           src="/Pheme_wave.svg"
           alt="PHEME Logo"
-          width={64}
-          height={64}
+          width={24}
+          height={24}
           className="rounded-full"
         />
         <h3 className="font-bold text-lg">PHEME Chat</h3>

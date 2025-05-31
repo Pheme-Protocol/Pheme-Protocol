@@ -38,9 +38,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>PHEME - Earn Trust Onchain</title>
         <meta name="description" content="Pheme is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation." />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/Pheme_wave.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" type="image/svg+xml" href="/Pheme_wave.svg" />
         <meta property="og:title" content="PHEME - Earn Trust Onchain" />
         <meta property="og:description" content="Pheme is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation." />
         <meta property="og:type" content="website" />

@@ -187,13 +187,15 @@ export function SupportChat({ className = '' }: SupportChatProps) {
       >
         <div className="flex items-center justify-between p-4 border-b dark:border-gray-700" role="banner">
           <div className="flex items-center gap-3">
-            <Image
-              src="/Pheme_wave.svg"
-              alt="PHEME Logo"
-              width={64}
-              height={64}
-              className="w-16 h-16"
-            />
+            <div className="rounded-full bg-primary-light dark:bg-primary-dark p-1">
+              <Image
+                src="/Pheme_wave.svg"
+                alt="PHEME Logo"
+                width={20}
+                height={20}
+                className="w-5 h-5"
+              />
+            </div>
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white">PHEME Support</h3>
               <p className="text-sm text-gray-500 dark:text-gray-400">Always here to help</p>
