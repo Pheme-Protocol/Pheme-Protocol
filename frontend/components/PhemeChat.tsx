@@ -41,17 +41,46 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const lastMessageRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to bottom when new messages arrive
+  // Scroll to message function with delay
+  const scrollToMessage = (element: HTMLDivElement | null) => {
+    if (element && messagesContainerRef.current) {
+      // Small delay to ensure DOM is updated
+      setTimeout(() => {
+        const container = messagesContainerRef.current;
+        if (!container) return;
+        
+        const elementTop = element.offsetTop;
+        const containerHeight = container.clientHeight;
+        const scrollPosition = elementTop - (containerHeight / 4);
+        
+        // Force a reflow to ensure accurate measurements
+        container.style.scrollBehavior = 'auto';
+        container.scrollTop = scrollPosition;
+        
+        // Reset scroll behavior after position is set
+        requestAnimationFrame(() => {
+          container.style.scrollBehavior = 'smooth';
+        });
+      }, 50);
+    }
+  };
+
+  // Scroll to new message when messages change
   useEffect(() => {
-    if (messagesContainerRef.current && messagesEndRef.current) {
-      const container = messagesContainerRef.current;
-      const scrollHeight = container.scrollHeight;
-      const height = container.clientHeight;
-      const maxScroll = scrollHeight - height;
-      container.scrollTop = maxScroll > 0 ? maxScroll : 0;
+    if (lastMessageRef.current) {
+      scrollToMessage(lastMessageRef.current);
     }
   }, [messages]);
+
+  // Scroll to bottom when loading state changes
+  useEffect(() => {
+    if (isLoading && messagesContainerRef.current) {
+      const container = messagesContainerRef.current;
+      container.scrollTop = container.scrollHeight;
+    }
+  }, [isLoading]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -146,16 +175,20 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
         <h3 className="font-bold text-lg">PHEME Chat</h3>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-800">
+      <div 
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-800"
+      >
         {messages.length === 0 ? (
           <div className="text-center p-6 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
             <p className="text-lg font-medium mb-2">Welcome to PHEME Chat!</p>
             <p className="text-base text-gray-600 dark:text-gray-400">Ask me to verify your skills or learn more about the PHEME protocol.</p>
           </div>
         ) : (
-          messages.map((msg) => (
+          messages.map((msg, index) => (
             <div
               key={msg.id}
+              ref={index === messages.length - 1 ? lastMessageRef : null}
               className={`flex ${msg.sender === 'You' ? 'justify-start' : 'justify-end'} mb-4`}
               role="article"
               aria-label={`Message from ${msg.sender === 'You' ? 'you' : 'PHEME Support'}`}
