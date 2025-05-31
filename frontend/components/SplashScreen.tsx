@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 interface SplashScreenProps {
   onComplete?: () => void;
@@ -42,6 +43,7 @@ const verificationMessages = [
 ];
 
 export default function SplashScreen({ onComplete }: SplashScreenProps) {
+  const router = useRouter();
   const [currentSequence, setCurrentSequence] = useState(0);
   const [currentTagline, setCurrentTagline] = useState(0);
   const [showLogo, setShowLogo] = useState(false);
@@ -54,6 +56,8 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
   const [validatorNodes, setValidatorNodes] = useState<{ x: number; y: number; active: boolean }[]>([]);
   const meshRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [isSkipped, setIsSkipped] = useState(false);
 
   // Detect mobile device
   useEffect(() => {
@@ -178,6 +182,23 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
       clearInterval(nodeInterval);
     };
   }, [currentSequence]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleTap = () => {
+    setIsSkipped(true);
+  };
+
+  const handleLaunch = () => {
+    onComplete?.();
+    router.push('/');
+  };
 
   // Neon/Chalk style for formulas (responsive)
   const formulaStyle = {
@@ -449,12 +470,37 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
     }
   };
 
+  if (!isVisible || isSkipped) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black">
+        <div className="text-center">
+          <img
+            src="/Pheme_wave.svg"
+            alt="PHEME Logo"
+            className="w-32 h-32 mx-auto mb-8"
+          />
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleLaunch}
+            className="px-8 py-3 rounded-lg text-lg font-semibold bg-primary-light dark:bg-primary-dark text-white hover:bg-primary-dark dark:hover:bg-primary-light cursor-pointer"
+          >
+            Launch PHEME
+          </motion.button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className="fixed inset-0 flex items-center justify-center z-50 overflow-hidden"
       style={{
         background: '#000000',
       }}
+      onClick={handleTap}
     >
       <div className="w-full h-full relative">
         <AnimatePresence mode="wait">
@@ -478,7 +524,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                   animate={{ opacity: isReady ? 1 : 0, y: isReady ? 0 : 20 }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={onComplete}
+                  onClick={handleLaunch}
                   disabled={!isReady}
                   className={`px-8 py-3 rounded-lg text-lg font-semibold transition-all duration-300 ${
                     isReady 
