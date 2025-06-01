@@ -47,9 +47,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run Slither
-        uses: docker://trailofbits/otx-slither:latest
+        uses: addnab/docker-run-action@v3
         with:
-          args: slither contracts --fail-on-high --exit-on-findings
+          image: trailofbits/slither:latest
+          options: -v ${{ github.workspace }}:/src
+          run: slither /src/contracts --fail-on-high --exit-on-findings
 
   # 3) Build & Compile
   build:
