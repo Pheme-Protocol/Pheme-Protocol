@@ -41,7 +41,7 @@ function readSpecificFiles(): string {
           .replace(/\n#+ /g, '\n- '); // Convert subheadings to bullet points
         content += `\n- ${path.basename(file, '.md')}\n${fileContent}\n`;
       }
-    } catch (error) {
+    } catch {
       // Silently handle file read errors
     }
   }
@@ -52,7 +52,7 @@ function readSpecificFiles(): string {
 let DOCS_CONTENT = '';
 try {
   DOCS_CONTENT = readSpecificFiles();
-} catch (error) {
+} catch {
   // Silently handle documentation loading errors
 }
 
@@ -162,7 +162,7 @@ export default async function handler(
       try {
         const errorJson = JSON.parse(errorText);
         errorMessage = errorJson.error?.message || errorText;
-      } catch (e) {
+      } catch {
         // Silently handle JSON parse errors
       }
       
@@ -180,9 +180,9 @@ export default async function handler(
     const sanitizedReply = sanitizeResponse(reply);
     res.status(200).json({ reply: sanitizedReply });
 
-  } catch (error) {
+  } catch {
     res.status(500).json({ 
-      error: error instanceof Error ? error.message : 'Internal server error'
+      error: 'Internal server error'
     });
   }
 }

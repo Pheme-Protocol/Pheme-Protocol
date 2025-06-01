@@ -168,7 +168,7 @@ export function SupportChat({ className = '' }: SupportChatProps) {
         content: data.reply,
         timestamp: new Date().toISOString()
       }]);
-    } catch (error) {
+    } catch {
       setMessages(prev => [...prev, {
         role: 'assistant',
         content: 'Sorry, I encountered an error. Please try again or email support@phemeai.xyz if the issue persists.',

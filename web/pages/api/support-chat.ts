@@ -23,7 +23,7 @@ function readMarkdownFiles(dir: string): string {
     }
 
     return content;
-  } catch (error) {
+  } catch {
     return '';
   }
 }
@@ -33,7 +33,7 @@ let DOCS_CONTENT = '';
 try {
   const docsDir = path.join(process.cwd(), '../../docs');
   DOCS_CONTENT = readMarkdownFiles(docsDir);
-} catch (error) {
+} catch {
   // Silently handle documentation loading errors
 }
 
@@ -119,7 +119,7 @@ export default async function handler(
     }
 
     res.status(200).json({ reply });
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
 } 
