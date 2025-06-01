@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String    @id @default(uuid()) @db.Uuid
+  wallet_address   String    @unique
+  username         String?
+  xp               Int       @default(0)
+  reputation_score Float     @default(0)
+  submissions      Submission[]
+  userBadges       USER_BADGES[]
+  guildMemberships GUILD_MEMBERS[]
+}
+
+model Task {
+  id        String       @id @default(uuid()) @db.Uuid
+  title     String
+  difficulty Int
+  metadata  Json
+  submissions Submission[]
+}
+
+model Submission {
+  id           String   @id @default(uuid()) @db.Uuid
+  user         User     @relation(fields: [user_id], references: [id])
+  user_id      String   @db.Uuid
+  task         Task     @relation(fields: [task_id], references: [id])
+  task_id      String   @db.Uuid
+  submission_url String
+  status       String
+  created_at   DateTime @default(now())
+  reviewed_at  DateTime?
+}
+
+model Badge {
+  id        String        @id @default(uuid()) @db.Uuid
+  name      String
+  rarity    String
+  criteria  Json
+  userBadges USER_BADGES[]
+}
+
+model USER_BADGES {
+  user_id   String   @db.Uuid
+  badge_id  String   @db.Uuid
+  awarded_at DateTime @default(now())
+
+  user   User   @relation(fields: [user_id], references: [id])
+  badge  Badge  @relation(fields: [badge_id], references: [id])
+
+  @@id([user_id, badge_id])
+}
+
+model Guild {
+  id          String         @id @default(uuid()) @db.Uuid
+  name        String
+  description String
+  members     GUILD_MEMBERS[]
+}
+
+model GUILD_MEMBERS {
+  guild_id String   @db.Uuid
+  user_id  String   @db.Uuid
+  joined_at DateTime @default(now())
+
+  guild Guild @relation(fields: [guild_id], references: [id])
+  user  User  @relation(fields: [user_id], references: [id])
+
+  @@id([guild_id, user_id])
+} 
