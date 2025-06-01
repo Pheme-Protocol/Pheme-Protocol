@@ -13,7 +13,8 @@
     "dev": "yarn workspace @pheme-protocol/web dev",
     "build": "yarn workspace @pheme-protocol/web build",
     "start": "yarn workspace @pheme-protocol/web start",
-    "lint": "yarn workspace @pheme-protocol/web lint"
+    "lint": "yarn workspace @pheme-protocol/web lint",
+    "test": "yarn workspace @pheme-protocol/web test"
   },
   "dependencies": {
     "@rainbow-me/rainbowkit": "^2.2.5",
