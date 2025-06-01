@@ -19,7 +19,7 @@ let mockAccount: MockAccount | null = null
 
 jest.mock('@rainbow-me/rainbowkit', () => ({
   ConnectButton: {
-    Custom: ({ children }: { children: (props: any) => React.ReactNode }) => children({
+    Custom: ({ children }: { children: (props: { account: MockAccount | null, openConnectModal: () => void, mounted: boolean, chain: { id: number, name: string } }) => React.ReactNode }) => children({
       account: mockAccount,
       openConnectModal: mockOpenConnectModal,
       mounted: true,
