@@ -11,7 +11,7 @@ on:
       - develop
 
 env:
-  NODE_VERSION: ${{ env.NODE_VERSION }}
+  NODE_VERSION: '20'
   DOCKER_IMAGE_REGISTRY: docker.io
   DOCKER_IMAGE_NAMESPACE: ${{ secrets.DOCKER_USERNAME }}
 
