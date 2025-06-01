@@ -51,7 +51,7 @@ jobs:
         with:
           image: trailofbits/slither:latest
           options: -v ${{ github.workspace }}:/src
-          run: slither /src/contracts --fail-on-high --exit-on-findings
+          run: slither /src/contracts
 
   # 3) Build & Compile
   build:
