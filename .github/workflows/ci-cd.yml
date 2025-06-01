@@ -30,6 +30,11 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
 
+      - name: Clean node_modules and yarn cache
+        run: |
+          rm -rf node_modules yarn.lock
+          yarn cache clean
+
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
@@ -75,6 +80,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
+
+      - name: Clean node_modules and yarn cache
+        run: |
+          rm -rf node_modules yarn.lock
+          yarn cache clean
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
