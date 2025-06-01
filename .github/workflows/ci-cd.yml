@@ -46,12 +46,21 @@ jobs:
     needs: lint-test
     steps:
       - uses: actions/checkout@v3
+      - name: List files in /src and /src/contracts
+        uses: addnab/docker-run-action@v3
+        with:
+          image: alpine:latest
+          options: -v ${{ github.workspace }}:/src
+          run: |
+            ls -l /src
+            ls -l /src/contracts || echo "/src/contracts does not exist"
+
       - name: Run Slither
         uses: addnab/docker-run-action@v3
         with:
           image: trailofbits/slither:latest
           options: -v ${{ github.workspace }}:/src
-          run: slither /contracts
+          run: slither /src/contracts
 
   # 3) Build & Compile
   build:
