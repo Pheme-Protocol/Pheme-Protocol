@@ -21,7 +21,8 @@
     ],
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "composite": true
   },
   "include": [
     "next-env.d.ts",
