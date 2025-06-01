@@ -1,0 +1,187 @@
+name: CI / CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+env:
+  NODE_VERSION: '18'
+  DOCKER_IMAGE_REGISTRY: docker.io
+  DOCKER_IMAGE_NAMESPACE: ${{ secrets.DOCKER_USERNAME }}
+
+jobs:
+
+  # 1) Lint & Test
+  lint-test:
+    name: "🔍 Lint & Test"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run ESLint
+        run: yarn lint
+
+      - name: Run Jest tests
+        run: yarn test --ci
+
+  # 2) Solidity Security Scan (contracts/ exists)
+  solidity-scan:
+    name: "🛡️ Solidity Security Scan"
+    runs-on: ubuntu-latest
+    needs: lint-test
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Slither
+        uses: docker://trailofbits/otx-slither:latest
+        with:
+          args: slither contracts --fail-on-high --exit-on-findings
+
+  # 3) Build & Compile
+  build:
+    name: "🏗️ Build & Compile"
+    runs-on: ubuntu-latest
+    needs: [lint-test, solidity-scan]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Compile Contracts
+        working-directory: contracts
+        run: yarn compile
+
+      - name: Build Backend (src)
+        working-directory: src
+        run: yarn build
+
+      - name: Build Frontend (web)
+        working-directory: web
+        run: yarn build
+
+      # - name: Build Bots
+      #   if: ${{ exists('bots/') }}
+      #   working-directory: bots
+      #   run: yarn build
+      #   # TODO: Uncomment if bots/ is added
+
+  # 4) Docker Build & Push (if you use Docker Hub)
+  docker:
+    name: "🐳 Docker Build & Push"
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ secrets.DOCKER_USERNAME && secrets.DOCKER_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.DOCKER_IMAGE_REGISTRY }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build & Push Backend Image
+        run: |
+          docker build -t $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-backend:${GITHUB_SHA::8} src/
+          docker push $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-backend:${GITHUB_SHA::8}
+
+      - name: Build & Push Frontend Image
+        run: |
+          docker build -t $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-frontend:${GITHUB_SHA::8} web/
+          docker push $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-frontend:${GITHUB_SHA::8}
+
+      # - name: Build & Push Bots Image
+      #   if: ${{ exists('bots/') }}
+      #   run: |
+      #     docker build -t $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-bots:${GITHUB_SHA::8} bots/
+      #     docker push $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-bots:${GITHUB_SHA::8}
+      #   # TODO: Uncomment if bots/ is added
+
+  # 5) Deploy to Staging / Production
+  # deploy:
+  #   name: "🚀 Deploy to Staging / Prod"
+  #   runs-on: ubuntu-latest
+  #   needs: docker
+  #   if: github.ref == 'refs/heads/main'
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #
+  #     # 5.1) Configure AWS (or GCP/Azure) Credentials in Secrets
+  #     - name: Configure AWS Credentials
+  #       uses: aws-actions/configure-aws-credentials@v2
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: us-east-1
+  #
+  #     # 5.2) Terraform (Provision/Update Staging infra)
+  #     - name: Setup Terraform
+  #       uses: hashicorp/setup-terraform@v2
+  #       with:
+  #         terraform_version: 1.5.0
+  #
+  #     - name: Terraform Init & Apply (Staging)
+  #       working-directory: infra
+  #       run: |
+  #         terraform init
+  #         terraform apply -var-file=terraform.tfvars.staging -auto-approve
+  #
+  #     # 5.3) Kubernetes (Deploy Backend, Frontend, Bots)
+  #     - name: Setup kubectl
+  #       uses: azure/setup-kubectl@v3
+  #       with:
+  #         version: 'latest'
+  #
+  #     - name: Setup Helm
+  #       run: |
+  #         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+  #
+  #     - name: Deploy Backend via Helm
+  #       run: |
+  #         helm upgrade --install pheme-backend k8s/charts/backend \
+  #           --namespace pheme-staging \
+  #           --values k8s/values-staging.yaml \
+  #           --set image.tag=${GITHUB_SHA::8}
+  #
+  #     - name: Deploy Frontend via Helm
+  #       run: |
+  #         helm upgrade --install pheme-frontend k8s/charts/frontend \
+  #           --namespace pheme-staging \
+  #           --values k8s/values-staging.yaml \
+  #           --set image.tag=${GITHUB_SHA::8}
+  #
+  #     # - name: Deploy Bots via Helm
+  #     #   run: |
+  #     #     helm upgrade --install pheme-bots k8s/charts/bots \
+  #     #       --namespace pheme-staging \
+  #     #       --values k8s/values-staging.yaml \
+  #     #       --set image.tag=${GITHUB_SHA::8}
+  #     #   # TODO: Uncomment if bots/ is added
+  #     #
+  #     # 5.4) Smoke Test
+  #     - name: Smoke Test
+  #       run: |
+  #         curl -f https://staging.app.phemebot.xyz/health || (echo "Health check failed" && exit 1)
+  #   # TODO: Uncomment and adjust if infra/ and k8s/ are added 
