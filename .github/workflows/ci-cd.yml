@@ -51,7 +51,7 @@ jobs:
         with:
           image: trailofbits/slither:latest
           options: -v ${{ github.workspace }}:/src
-          run: slither /src/contracts
+          run: slither /contracts
 
   # 3) Build & Compile
   build:
