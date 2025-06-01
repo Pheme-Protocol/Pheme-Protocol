@@ -131,7 +131,7 @@ export default async function handler(
     return res.status(200).json({ 
       message: 'Successfully joined the waitlist' 
     });
-  } catch (error) {
+  } catch {
     return res.status(500).json({ 
       message: 'Failed to join waitlist. Please try again later.' 
     });
