@@ -21,13 +21,20 @@
 import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
 import { useDisconnect } from 'wagmi'
 
-export function ConnectButton() {
+interface ConnectButtonProps {
+  onError?: (error: Error) => void;
+  onConnectClick?: () => void;
+  onClick?: () => void;
+}
+
+export function ConnectButton({ onError, onConnectClick, onClick }: ConnectButtonProps) {
   const { disconnect } = useDisconnect()
   
   return (
     <RainbowConnectButton.Custom>
       {({
         account,
+        chain,
         openConnectModal,
         mounted,
       }) => {
@@ -40,7 +47,15 @@ export function ConnectButton() {
         if (!account) {
           return (
             <button
-              onClick={openConnectModal}
+              onClick={async () => {
+                onClick?.();
+                onConnectClick?.();
+                try {
+                  await openConnectModal?.();
+                } catch (error) {
+                  onError?.(error as Error);
+                }
+              }}
               className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-semibold"
             >
               Connect Wallet

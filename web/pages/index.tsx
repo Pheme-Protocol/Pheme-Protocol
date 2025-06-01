@@ -11,6 +11,7 @@ import { Footer } from '../components/Footer';
 import { SupportChat } from '../components/SupportChat';
 import Head from 'next/head';
 import SplashScreen from "@/components/SplashScreen";
+import { ErrorBanner } from '../components/ErrorBanner';
 
 export default function Home() {
   const { isConnected, address } = useAccount();
@@ -25,6 +26,10 @@ export default function Home() {
   const [messages, setMessages] = useState<{ sender: string; text: string; id: string }[]>([]);
   const [showSplash, setShowSplash] = useState(true);
   const hasDisconnected = useRef(false);
+  const [walletConnectAttempted, setWalletConnectAttempted] = useState(false);
+  const [walletConnectError, setWalletConnectError] = useState<string | null>(null);
+  const [walletConnectInitiated, setWalletConnectInitiated] = useState(false);
+  const [connectClicked, setConnectClicked] = useState(false);
 
   useEffect(() => {
     // Only disconnect once, on first mount, if connected
@@ -62,6 +67,26 @@ export default function Home() {
       };
     }
   }, [isMobile, isConnected]);
+
+  // Clear error if user connects
+  useEffect(() => {
+    if (isConnected) {
+      setWalletConnectError(null);
+      setWalletConnectAttempted(false);
+      setConnectClicked(false);
+    }
+  }, [isConnected]);
+
+  // Auto-hide wallet connect error after 5 seconds
+  useEffect(() => {
+    if (walletConnectAttempted && walletConnectError && !isConnected) {
+      const timer = setTimeout(() => {
+        setWalletConnectAttempted(false);
+        setWalletConnectError(null);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [walletConnectAttempted, walletConnectError, isConnected]);
 
   const handleWaitlist = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,7 +137,35 @@ export default function Home() {
 
       {/* Call-to-Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-4 mb-8 lg:mb-12">
-        <ConnectButton />
+        <ConnectButton 
+          onClick={() => setConnectClicked(true)}
+          onConnectClick={() => setWalletConnectInitiated(true)}
+          onError={(err: unknown) => {
+            console.log('Wallet connect error:', err);
+            let msg = '';
+            if (typeof err === 'string') {
+              msg = err.toLowerCase();
+            } else if (err && typeof err === 'object') {
+              if ('message' in err && typeof (err as { message?: unknown }).message === 'string') {
+                msg = ((err as { message: string }).message).toLowerCase();
+              } else if ('reason' in err && typeof (err as { reason?: unknown }).reason === 'string') {
+                msg = ((err as { reason: string }).reason).toLowerCase();
+              }
+            }
+            if (
+              walletConnectInitiated &&
+              msg &&
+              (msg.includes('rejected') ||
+                msg.includes('user denied') ||
+                msg.includes('cancel') ||
+                msg.includes('user closed') ||
+                msg.includes('user closed modal'))
+            ) {
+              setWalletConnectError('You rejected the wallet connection. Please connect your wallet to continue.');
+            }
+            setWalletConnectInitiated(false);
+          }}
+        />
         <button 
           onClick={() => setShowWaitlistModal(true)}
           className="w-full sm:w-auto border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white px-6 py-2.5 rounded-md font-semibold hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 focus:ring-2 focus:ring-gray-500 focus:outline-none transition-colors"
@@ -358,6 +411,16 @@ export default function Home() {
           </div>
           <Navigation />
         </header>
+
+        {/* Error Banner for wallet connect - top center, not shown by default */}
+        {connectClicked && walletConnectError && !isConnected && (
+          <div className="w-full flex justify-center mt-2 z-50">
+            <div className="bg-yellow-200 text-yellow-900 px-4 py-3 rounded shadow-lg w-full max-w-md text-center flex justify-between items-center">
+              <span>{walletConnectError}</span>
+              <button onClick={() => { setConnectClicked(false); setWalletConnectError(null); }} className="ml-4 text-lg font-bold">&times;</button>
+            </div>
+          </div>
+        )}
 
         {/* Main Content */}
         <main className="flex-grow">

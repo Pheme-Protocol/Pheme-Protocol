@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
+import { SkillWalletController } from './controllers/SkillWalletController';
 
 @Module({
   imports: [],
-  controllers: [],
-  providers: [PrismaService],
+  controllers: [SkillWalletController],
+  providers: [],
 })
 export class AppModule {} 
