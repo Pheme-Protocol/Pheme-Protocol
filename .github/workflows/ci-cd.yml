@@ -129,7 +129,7 @@ jobs:
             echo "Docker credentials not set, skipping build/push."
             exit 0
           fi
-          docker build -f src/Dockerfile.backend -t $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-backend:${GITHUB_SHA::8} src/
+          docker build -f src/Dockerfile.backend -t $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-backend:${GITHUB_SHA::8} .
           docker push $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-backend:${GITHUB_SHA::8}
 
       - name: Build & Push Frontend Image

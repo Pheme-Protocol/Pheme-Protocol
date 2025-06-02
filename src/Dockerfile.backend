@@ -3,12 +3,12 @@ FROM node:20-alpine AS base
 WORKDIR /app
 
 # ---- Install dependencies ----
-COPY package.json yarn.lock ../
-COPY ../src/package.json ./package.json
+COPY src/package.json ./package.json
+COPY src/yarn.lock ./yarn.lock
 RUN yarn install --frozen-lockfile --production=false
 
 # ---- Copy backend source ----
-COPY . .
+COPY src/. .
 
 # ---- Prisma generate ----
 RUN yarn prisma generate || :
@@ -26,8 +26,8 @@ COPY --from=base /app/node_modules ./node_modules
 COPY --from=base /app/package.json ./package.json
 COPY --from=base /app/prisma ./prisma
 
-# Copy .env.local if present (docker-compose will mount it)
-COPY ../.env.local .env.local
+# Copy .env.local if present (handled at runtime via environment variables in CI/CD)
+# (No COPY for .env.local; use GitHub Secrets or runtime env injection)
 
 EXPOSE 3001
 CMD ["node", "dist/main.js"] 
