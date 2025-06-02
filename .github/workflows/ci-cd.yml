@@ -41,8 +41,14 @@ jobs:
       - name: Run ESLint
         run: yarn lint
 
+      - name: Lint all workspaces
+        run: yarn workspaces run lint
+
       - name: Run Jest tests
         run: yarn test --ci
+
+      - name: Test all workspaces
+        run: yarn workspaces run test
 
   # 2) Solidity Security Scan (contracts/ exists)
   solidity-scan:
@@ -51,21 +57,20 @@ jobs:
     needs: lint-test
     steps:
       - uses: actions/checkout@v3
-      - name: List files in /src and /src/contracts
+      - name: List files in /contracts
         uses: addnab/docker-run-action@v3
         with:
           image: alpine:latest
-          options: -v ${{ github.workspace }}:/src
+          options: -v ${{ github.workspace }}:/contracts
           run: |
-            ls -l /src
-            ls -l /src/contracts || echo "/src/contracts does not exist"
+            ls -l /contracts || echo "/contracts does not exist"
 
       - name: Run Slither
         uses: addnab/docker-run-action@v3
         with:
           image: trailofbits/slither:latest
-          options: -v ${{ github.workspace }}:/src
-          run: slither /src/contracts
+          options: -v ${{ github.workspace }}:/contracts
+          run: slither /contracts
 
   # 3) Build & Compile
   build:
