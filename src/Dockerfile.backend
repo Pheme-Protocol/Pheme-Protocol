@@ -3,8 +3,8 @@ FROM node:20-alpine AS base
 WORKDIR /app
 
 # ---- Install dependencies ----
-COPY package.json ./package.json
-COPY yarn.lock ./yarn.lock
+COPY package.json yarn.lock ./
+COPY src/package.json ./src/package.json
 RUN yarn install --frozen-lockfile --production=false
 
 # ---- Copy backend source ----
