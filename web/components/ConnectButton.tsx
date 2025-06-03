@@ -18,18 +18,41 @@
 
 'use client'
 
-import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
 import { useDisconnect } from 'wagmi'
+import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
+import { useEffect, useState } from 'react'
 
 interface ConnectButtonProps {
-  onError?: (error: Error) => void;
-  onConnectClick?: () => void;
-  onClick?: () => void;
+  onError?: (error: Error) => void
+  onConnectClick?: () => void
+  onClick?: () => void
 }
 
 export function ConnectButton({ onError, onConnectClick, onClick }: ConnectButtonProps) {
   const { disconnect } = useDisconnect()
+  const [isTestMode, setIsTestMode] = useState(false)
+
+  useEffect(() => {
+    // Check if we're in test mode
+    const testMode = localStorage.getItem('__TEST__') === 'true'
+    setIsTestMode(testMode)
+  }, [])
   
+  if (isTestMode) {
+    // In test mode, render a simple button that simulates connection
+    return (
+      <button
+        onClick={() => {
+          onClick?.()
+          onConnectClick?.()
+        }}
+        className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-semibold"
+      >
+        Connect Wallet
+      </button>
+    )
+  }
+
   return (
     <RainbowConnectButton.Custom>
       {({
