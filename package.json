@@ -8,7 +8,7 @@
     "contracts",
     "subgraph"
   ],
-  "description": "PHEME - Web3 Skill Verification Platform",
+  "description": "PHEME - onchain skill and reputation protocol",
   "scripts": {
     "dev": "yarn workspace @pheme-protocol/web dev",
     "build": "yarn workspace @pheme-protocol/web build",
