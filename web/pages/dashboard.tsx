@@ -10,11 +10,10 @@ import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
 import { SupportChat } from '../components/SupportChat';
 import Head from 'next/head';
-import SplashScreen from "@/components/SplashScreen";
 import { ErrorBanner } from '../components/ErrorBanner';
 import { useRouter } from 'next/router';
 
-export default function Home() {
+export default function Dashboard() {
   const router = useRouter();
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
@@ -26,39 +25,21 @@ export default function Home() {
   const [isLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [messages, setMessages] = useState<{ sender: string; text: string; id: string }[]>([]);
-  const [showSplash, setShowSplash] = useState(true);
-  const [hasSeenSplash, setHasSeenSplash] = useState(false);
-  const hasDisconnected = useRef(false);
   const [walletConnectAttempted, setWalletConnectAttempted] = useState(false);
   const [walletConnectError, setWalletConnectError] = useState<string | null>(null);
   const [walletConnectInitiated, setWalletConnectInitiated] = useState(false);
   const [connectClicked, setConnectClicked] = useState(false);
 
+  // Check if the page was loaded via reload
   useEffect(() => {
-    // Check if we're coming from the mint page
-    if (router.isReady) {
-      const fromMint = router.query.from === 'mint';
-      setShowSplash(!fromMint);
+    const navigationEntries = performance.getEntriesByType('navigation');
+    if (navigationEntries.length > 0) {
+      const navEntry = navigationEntries[0] as PerformanceNavigationTiming;
+      if (navEntry.type === 'reload') {
+        router.replace('/');
+      }
     }
-  }, [router.isReady, router.query.from]);
-
-  const handleSplashComplete = () => {
-    setShowSplash(false);
-    setHasSeenSplash(true);
-    localStorage.setItem('hasSeenSplash', 'true');
-  };
-
-  useEffect(() => {
-    // Only disconnect once, on first mount, if connected
-    if (
-      typeof window !== 'undefined' &&
-      isConnected &&
-      !hasDisconnected.current
-    ) {
-      disconnect();
-      hasDisconnected.current = true;
-    }
-  }, [isConnected, disconnect]);
+  }, [router]);
 
   useEffect(() => {
     // Check if device is mobile
@@ -400,10 +381,6 @@ export default function Home() {
       </div>
     );
   };
-
-  if (showSplash && !hasSeenSplash) {
-    return <SplashScreen onComplete={handleSplashComplete} />;
-  }
 
   return (
     <>
