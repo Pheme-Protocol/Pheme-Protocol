@@ -1,4 +1,5 @@
 import { Address } from 'viem';
+import { baseSepolia } from 'wagmi/chains';
 
 const SKILL_WALLET_ABI = [
   {
@@ -55,5 +56,26 @@ export const getSkillWalletContract = () => {
   return {
     address,
     abi: SKILL_WALLET_ABI,
+  };
+};
+
+export const checkBaseSepoliaNetwork = (chainId?: number) => {
+  if (!chainId) {
+    return {
+      isCorrectNetwork: false,
+      message: 'Please connect your wallet to continue'
+    };
+  }
+
+  if (chainId !== baseSepolia.id) {
+    return {
+      isCorrectNetwork: false,
+      message: 'Please switch to Base Sepolia network to continue'
+    };
+  }
+
+  return {
+    isCorrectNetwork: true,
+    message: null
   };
 }; 
