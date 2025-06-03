@@ -113,7 +113,7 @@ export default function MintSkillWallet() {
           router.push('/');
         }, 2000);
       } else {
-        setErrorBanner('Mint failed. Please try again.');
+        setErrorBanner('Please switch to Base Sepolia network to continue');
       }
       // Reset error after a short delay
       setTimeout(() => {
