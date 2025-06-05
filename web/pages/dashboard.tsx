@@ -123,13 +123,13 @@ export default function Dashboard() {
 
   // Main content component
   const MainContent = () => (
-    <>
+    <div className="card bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 dark:bg-gray-900/90 border border-gray-200 dark:border-gray-800 shadow-2xl rounded-3xl p-10 transition-all duration-300">
       {/* Headline and Tagline */}
-      <h2 className="text-4xl lg:text-5xl font-bold mb-4 lg:mb-6 leading-tight">Earn Trust Onchain</h2>
-      <p className="text-xl lg:text-2xl font-medium text-gray-700 dark:text-gray-300 mb-4 lg:mb-6">
+      <h2 className="text-4xl lg:text-5xl font-bold mb-4 lg:mb-6 leading-tight text-white">Earn Trust Onchain</h2>
+      <p className="text-xl lg:text-2xl font-medium text-white mb-4 lg:mb-6">
         The bridge between who you are and who you want to become.
       </p>
-      <p className="text-base lg:text-lg text-gray-600 dark:text-gray-400 mb-6 lg:mb-8">
+      <p className="text-base lg:text-lg text-white mb-6 lg:mb-8">
         Pheme is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation.
       </p>
 
@@ -166,7 +166,7 @@ export default function Dashboard() {
         />
         <button 
           onClick={() => setShowWaitlistModal(true)}
-          className="w-full sm:w-auto border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white px-6 py-2.5 rounded-md font-semibold hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 focus:ring-2 focus:ring-gray-500 focus:outline-none transition-colors"
+          className="btn-primary bg-white text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl border-2 border-blue-700 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Join Waitlist
         </button>
@@ -219,7 +219,7 @@ export default function Dashboard() {
           }}
         />
       </div>
-    </>
+    </div>
   );
 
   // iPhone interface component
