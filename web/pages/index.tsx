@@ -142,15 +142,17 @@ export default function Home() {
 
   // Main content component
   const MainContent = () => (
-    <>
+    <div className="card bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-800 shadow-2xl rounded-3xl p-10 transition-all duration-300">
       {/* Headline and Tagline */}
-      <h2 className="text-4xl lg:text-5xl font-bold mb-4 lg:mb-6 leading-tight">Earn Trust Onchain</h2>
-      <p className="text-xl lg:text-2xl font-medium text-gray-700 dark:text-gray-300 mb-4 lg:mb-6">
-        The bridge between who you are and who you want to become.
-      </p>
-      <p className="text-base lg:text-lg text-gray-600 dark:text-gray-400 mb-6 lg:mb-8">
-        Pheme is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation.
-      </p>
+      <div className="my-24">
+        <h2 className="text-4xl lg:text-5xl font-bold mb-4 lg:mb-6 leading-tight text-gray-900 dark:text-white">Earn Trust Onchain</h2>
+        <p className="text-xl lg:text-2xl font-medium text-gray-800 dark:text-white mb-4 lg:mb-6">
+          The bridge between who you are and who you want to become.
+        </p>
+        <p className="text-base lg:text-lg text-gray-700 dark:text-gray-300 mb-6 lg:mb-8">
+          Pheme is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation.
+        </p>
+      </div>
 
       {/* Call-to-Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-4 mb-8 lg:mb-12">
@@ -185,7 +187,7 @@ export default function Home() {
         />
         <button 
           onClick={() => setShowWaitlistModal(true)}
-          className="w-full sm:w-auto border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white px-6 py-2.5 rounded-md font-semibold hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 focus:ring-2 focus:ring-gray-500 focus:outline-none transition-colors"
+          className="btn-primary bg-white text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl border-2 border-blue-700 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Join Waitlist
         </button>
@@ -238,7 +240,7 @@ export default function Home() {
           }}
         />
       </div>
-    </>
+    </div>
   );
 
   // iPhone interface component
@@ -286,7 +288,7 @@ export default function Home() {
             <PhemeChat messages={messages} setMessages={setMessages} />
           </div>
         ) : (
-          <div className="bg-white dark:bg-gray-900 rounded-[40px] text-gray-900 dark:text-white p-3 shadow-[0_0_60px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_0_60px_-15px_rgba(255,255,255,0.1)] border-[12px] border-gray-900 dark:border-gray-950 relative overflow-hidden ring-2 ring-gray-900/30 dark:ring-white/20">
+          <div className="bg-white dark:bg-gray-900 rounded-[40px] text-gray-900 dark:text-white p-3 shadow-[0_0_60px_-15px_rgba(0,0,0,0.2)] dark:shadow-[0_0_60px_-15px_rgba(255,255,255,0.1)] border-[12px] border-gray-200 dark:border-gray-950 relative overflow-hidden ring-2 ring-gray-200/30 dark:ring-white/20">
             {/* Device Frame Details */}
             <div 
               className="absolute inset-0 bg-gradient-to-b from-gray-800/20 to-transparent pointer-events-none" 
@@ -306,11 +308,11 @@ export default function Home() {
             {/* Chat Content */}
             <div className="bg-white dark:bg-gray-900 rounded-3xl p-4 min-h-[500px] shadow-inner relative">
               <div className="absolute inset-0 bg-gradient-to-b from-white/50 dark:from-white/5 to-transparent opacity-50 rounded-3xl pointer-events-none"></div>
-              <h3 className="font-bold text-center text-xl mb-6">Talk to PHEME</h3>
+              <h3 className="font-bold text-center text-xl mb-6 text-gray-900 dark:text-white">Talk to PHEME</h3>
               <div className="space-y-4" role="log" aria-live="polite">
                 <div className="animate-fade-in-1">
                   <div className="flex justify-start">
-                    <div className="bg-blue-500 text-white p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm">
+                    <div className="bg-blue-600 text-white p-3 rounded-2xl rounded-tl-sm max-w-[80%] shadow-sm">
                       <div className="typing-indicator mb-2" aria-hidden="true">
                         <span className="dot"></span>
                         <span className="dot"></span>
@@ -323,7 +325,7 @@ export default function Home() {
                 
                 <div className="animate-fade-in-2">
                   <div className="flex justify-end">
-                    <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-3 rounded-2xl rounded-tr-sm max-w-[80%] shadow-sm border border-gray-200 dark:border-gray-700">
+                    <div className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-3 rounded-2xl rounded-tr-sm max-w-[80%] shadow-sm border border-gray-200 dark:border-gray-700">
                       <div className="typing-indicator mb-2" aria-hidden="true">
                         <span className="dot"></span>
                         <span className="dot"></span>
@@ -417,14 +419,21 @@ export default function Home() {
         <meta property="og:image" content="/Pheme_wave.svg" />
       </Head>
 
-      <div className="min-h-screen flex flex-col bg-background-light dark:bg-background-dark text-gray-900 dark:text-white transition-colors">
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-amber-50 via-white to-blue-50 dark:from-background-dark dark:to-background-dark text-gray-900 dark:text-white transition-colors relative overflow-hidden">
+        {/* Mesh Background */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-200/10 dark:from-blue-500/10 via-transparent to-transparent animate-pulse"></div>
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f46e5/10px_1px_transparent_1px),linear-gradient(to_bottom,#4f46e5/10px_1px_transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-10 dark:opacity-30"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-100/5 to-blue-100/5 dark:from-transparent dark:via-blue-900/5 dark:to-transparent"></div>
+        </div>
+
         {/* Header with Navigation */}
-        <header className={`container mx-auto px-4 py-6 flex justify-between items-center ${
+        <header className={`container mx-auto px-4 py-6 flex justify-between items-center relative z-10 ${
           isMobile && isConnected ? 'hidden' : ''
         }`}>
           <div className="flex items-center gap-3">
             <PhemeLogo width={80} height={80} />
-            <h1 className="text-4xl font-bold text-primary-light dark:text-primary-dark">PHEME</h1>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent">PHEME</h1>
           </div>
           <Navigation />
         </header>
@@ -440,7 +449,7 @@ export default function Home() {
         )}
 
         {/* Main Content */}
-        <main className="flex-grow">
+        <main className="flex-grow relative z-10">
           <div className="container mx-auto px-4 py-8 md:py-16">
             {/* Top section with main content and iPhone */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
@@ -456,45 +465,45 @@ export default function Home() {
 
             {/* Features section */}
             {(!isMobile || !isConnected) && (
-              <div className="mt-32 lg:mt-48 -mx-4 px-4">
+              <div className="mt-40 lg:mt-56 -mx-4 px-4">
+                {/* Headline above features */}
+                <div className="my-20 text-center">
+                  <h2 className="text-xl md:text-2xl font-semibold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent max-w-3xl mx-auto">
+                    Proving your skills shouldn't be a black box. Build your onchain reputation transparently with AI-powered validation on Pheme.
+                  </h2>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto">
                   {/* Skill Wallet */}
-                  <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left space-y-4 sm:space-y-0 sm:space-x-6 group">
-                    <div className="bg-gradient-to-br from-primary-light/20 to-primary-dark/20 dark:from-primary-light/10 dark:to-primary-dark/10 rounded-xl p-4 transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg group-hover:from-primary-light/30 group-hover:to-primary-dark/30">
-                      <Wallet className="h-12 w-12 transition-transform duration-300 group-hover:scale-110" strokeWidth={1.5} />
+                  <div className="group bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200 dark:border-white/10 p-8 flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-blue-200 dark:hover:border-blue-500/30">
+                    <div className="mb-6 flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30">
+                      <Wallet className="h-10 w-10 text-blue-700 dark:text-blue-300 transition-transform duration-300 group-hover:scale-110" strokeWidth={2} />
                     </div>
-                    <div>
-                      <p className="text-xl font-semibold mb-2 transition-colors duration-300 group-hover:text-primary-light dark:group-hover:text-primary-dark">Skill Wallet</p>
-                      <p className="text-base text-gray-700 dark:text-gray-300">
-                        Immutable, non-transferable proof of skill stored onchain.
-                      </p>
-                    </div>
+                    <p className="text-xl font-bold mb-3 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-white dark:to-gray-300 bg-clip-text text-transparent tracking-wide">Skill Wallet</p>
+                    <p className="text-base text-gray-800 dark:text-gray-300 font-medium">
+                      A soulbound NFT that holds your validated skills, reputation scores, and achievements. Immutable and non-transferable, it represents your unique identity and proof-of-skill in the Pheme ecosystem.
+                    </p>
                   </div>
 
                   {/* Reputation Oracle */}
-                  <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left space-y-4 sm:space-y-0 sm:space-x-6 group">
-                    <div className="bg-gradient-to-br from-primary-light/20 to-primary-dark/20 dark:from-primary-light/10 dark:to-primary-dark/10 rounded-xl p-4 transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg group-hover:from-primary-light/30 group-hover:to-primary-dark/30">
-                      <UserCheck className="h-12 w-12 transition-transform duration-300 group-hover:scale-110" strokeWidth={1.5} />
+                  <div className="group bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200 dark:border-white/10 p-8 flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-blue-200 dark:hover:border-blue-500/30">
+                    <div className="mb-6 flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30">
+                      <UserCheck className="h-10 w-10 text-blue-700 dark:text-blue-300 transition-transform duration-300 group-hover:scale-110" strokeWidth={2} />
                     </div>
-                    <div>
-                      <p className="text-xl font-semibold mb-2 transition-colors duration-300 group-hover:text-primary-light dark:group-hover:text-primary-dark">Reputation Oracle</p>
-                      <p className="text-base text-gray-700 dark:text-gray-300">
-                        AI-reviewed scores to filter real contributors.
-                      </p>
-                    </div>
+                    <p className="text-xl font-bold mb-3 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-white dark:to-gray-300 bg-clip-text text-transparent tracking-wide">Reputation Oracle</p>
+                    <p className="text-base text-gray-800 dark:text-gray-300 font-medium">
+                      AI-powered engine that scores your contributions, skill breadth, and consistency. Reputation scores are public, onchain, and amplify your influence in governance and access to opportunities.
+                    </p>
                   </div>
 
                   {/* Community Governance */}
-                  <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left space-y-4 sm:space-y-0 sm:space-x-6 group">
-                    <div className="bg-gradient-to-br from-primary-light/20 to-primary-dark/20 dark:from-primary-light/10 dark:to-primary-dark/10 rounded-xl p-4 transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg group-hover:from-primary-light/30 group-hover:to-primary-dark/30">
-                      <Users className="h-12 w-12 transition-transform duration-300 group-hover:scale-110" strokeWidth={1.5} />
+                  <div className="group bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200 dark:border-white/10 p-8 flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-blue-200 dark:hover:border-blue-500/30">
+                    <div className="mb-6 flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30">
+                      <Users className="h-10 w-10 text-blue-700 dark:text-blue-300 transition-transform duration-300 group-hover:scale-110" strokeWidth={2} />
                     </div>
-                    <div>
-                      <p className="text-xl font-semibold mb-2 transition-colors duration-300 group-hover:text-primary-light dark:group-hover:text-primary-dark">Community Governance</p>
-                      <p className="text-base text-gray-700 dark:text-gray-300">
-                        Decisions made by token holders in full transparency.
-                      </p>
-                    </div>
+                    <p className="text-xl font-bold mb-3 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-white dark:to-gray-300 bg-clip-text text-transparent tracking-wide">Community Governance</p>
+                    <p className="text-base text-gray-800 dark:text-gray-300 font-medium">
+                      Decisions are made by token holders and reputation leaders through transparent, onchain voting. Propose, discuss, and vote to shape the protocol's future and manage the DAO treasury.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -502,8 +511,56 @@ export default function Home() {
           </div>
         </main>
 
+        {/* End-of-page Testnet Coming section */}
+        <section className="w-full min-h-[50vh] flex flex-col items-center justify-center bg-gradient-to-b from-white to-gray-50 dark:from-background-dark dark:to-background-dark relative mt-24">
+          <div className="flex flex-col items-center justify-center py-16">
+            <PhemeLogo width={80} height={80} />
+            <h2 className="mt-6 text-6xl md:text-7xl lg:text-8xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent text-center drop-shadow-lg leading-tight">Testnet is Coming</h2>
+            <button className="mt-6 px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl">Follow us for latest updates</button>
+          </div>
+        </section>
+
         {/* Footer */}
-        <Footer className={isMobile && isConnected ? 'hidden' : ''} />
+        <footer className="w-full bg-white/90 dark:bg-background-dark/50 backdrop-blur-sm py-16 px-4 relative z-10 border-t border-gray-200 dark:border-gray-800">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-gray-600">
+            <div>
+              <h3 className="text-sm font-semibold text-gray-700 mb-4">Developers</h3>
+              <ul className="space-y-2">
+                <li><span className="text-gray-600">Docs</span></li>
+                <li><a href="https://github.com/Pheme-Protocol" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 transition-colors">GitHub</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-gray-700 mb-4">Community</h3>
+              <ul className="space-y-2">
+                <li><span className="text-gray-600">Community Forum</span></li>
+                <li><span className="text-gray-600">Feature Requests</span></li>
+                <li><span className="text-gray-600">Contact Admin</span></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-gray-700 mb-4">About</h3>
+              <ul className="space-y-2">
+                <li><span className="text-gray-600">Blog</span></li>
+                <li><span className="text-gray-600">Jobs</span></li>
+              </ul>
+            </div>
+          </div>
+          <div className="flex justify-center items-center mt-10 space-x-6">
+            <span aria-label="Discord" className="text-2xl text-gray-600">
+              <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.369A19.791 19.791 0 0 0 16.885 3.2a.117.117 0 0 0-.125.06c-.543.96-1.146 2.217-1.573 3.2a18.524 18.524 0 0 0-5.372 0c-.427-.995-1.03-2.24-1.573-3.2a.117.117 0 0 0-.125-.06A19.736 19.736 0 0 0 3.684 4.369a.105.105 0 0 0-.047.043C.533 9.045-.32 13.579.099 18.057a.12.12 0 0 0 .045.083c2.052 1.507 4.042 2.422 5.992 3.029a.116.116 0 0 0 .127-.043c.462-.63.874-1.295 1.226-1.994a.112.112 0 0 0-.065-.158c-.652-.247-1.27-.549-1.872-.892a.117.117 0 0 1-.012-.194c.126-.094.252-.192.372-.291a.112.112 0 0 1 .114-.013c3.927 1.793 8.18 1.793 12.061 0a.112.112 0 0 1 .115.012c.12.099.246.197.372.291a.117.117 0 0 1-.011.194 12.298 12.298 0 0 1-1.873.892.112.112 0 0 0-.064.159c.36.698.772 1.362 1.225 1.993a.115.115 0 0 0 .127.044c1.95-.607 3.94-1.522 5.993-3.029a.115.115 0 0 0 .045-.083c.5-5.177-.838-9.673-3.573-13.645a.093.093 0 0 0-.047-.043ZM8.02 15.331c-1.183 0-2.156-1.085-2.156-2.419 0-1.333.955-2.418 2.156-2.418 1.21 0 2.174 1.095 2.156 2.418 0 1.334-.955 2.419-2.156 2.419Zm7.974 0c-1.183 0-2.156-1.085-2.156-2.419 0-1.333.955-2.418 2.156-2.418 1.21 0 2.174 1.095 2.156 2.418 0 1.334-.946 2.419-2.156 2.419Z"/></svg>
+            </span>
+            <a href="https://twitter.com/phemeai" target="_blank" rel="noopener noreferrer" aria-label="X" className="hover:text-blue-600 transition-colors text-2xl">
+              <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M17.53 6.47a.75.75 0 0 0-1.06 0L12 10.94 7.53 6.47a.75.75 0 0 0-1.06 1.06L10.94 12l-4.47 4.47a.75.75 0 1 0 1.06 1.06L12 13.06l4.47 4.47a.75.75 0 0 0 1.06-1.06L13.06 12l4.47-4.47a.75.75 0 0 0 0-1.06z"/></svg>
+            </a>
+            <a href="https://t.me/phemeai" target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="hover:text-blue-600 transition-colors text-2xl">
+              <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.95 1.24-5.5 3.65-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.29-.49.8-.75 3.12-1.36 5.2-2.26 6.24-2.7 2.98-1.24 3.6-1.45 4.01-1.46.09 0 .28.02.4.12.11.08.14.19.15.27-.01.06-.01.12-.02.18z"/>
+              </svg>
+            </a>
+          </div>
+          <div className="mt-10 text-center text-xs text-gray-600">© 2025 PHEME. All rights reserved.</div>
+        </footer>
 
         {/* Support Chat */}
         <SupportChat className={isMobile && isConnected ? 'hidden' : ''} />
