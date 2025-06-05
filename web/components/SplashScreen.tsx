@@ -331,22 +331,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
         return (
           <motion.div className="absolute inset-0 flex items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <div className="w-full max-w-md p-8 relative">
-              {/* Validator Nodes Orbit with glowing trails */}
-              <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
-                {validatorNodes.map((node, i) => (
-                  <motion.circle
-                    key={i}
-                    cx={`50%`} cy={`50%`}
-                    r={150}
-                    fill="none"
-                    stroke="#00ffe7"
-                    strokeWidth={0.5}
-                    initial={{ opacity: 0.08 }}
-                    animate={{ opacity: [0.08, 0.18, 0.08] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
-                  />
-                ))}
-              </svg>
+              {/* Removed SVG validator node orbits (large decorative circles) */}
               {validatorNodes.map((node, i) => (
                 <motion.div
                   key={i}
@@ -373,17 +358,8 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                   }}
                 />
               ))}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                className="w-32 h-32 mx-auto mb-8 relative z-10"
-              >
-                <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-primary-light dark:text-primary-dark">
-                  <circle cx="12" cy="12" r="12" fill="#222" />
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="#00ffe7"/>
-                  <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" fill="#fff"/>
-                </svg>
-              </motion.div>
+              {/* Removed concentric SVG circles */}
+              <div className="w-32 h-32 mx-auto mb-8 relative z-10"></div>
               <div className="w-full h-4 bg-gray-800 rounded-full overflow-hidden relative z-10">
                 <motion.div
                   className="h-full"
