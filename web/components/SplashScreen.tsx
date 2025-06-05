@@ -110,7 +110,6 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
     const sequenceTiming = {
       identityMesh: 1800,
       aiReputation: 800,
-      skillWallet: 800,
       taglines: 800
     };
     // Start sequences
