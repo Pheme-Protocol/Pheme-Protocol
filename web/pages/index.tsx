@@ -33,6 +33,8 @@ export default function Home() {
   const [walletConnectError, setWalletConnectError] = useState<string | null>(null);
   const [walletConnectInitiated, setWalletConnectInitiated] = useState(false);
   const [connectClicked, setConnectClicked] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     // Check if we're coming from the mint page
@@ -104,6 +106,61 @@ export default function Home() {
       return () => clearTimeout(timer);
     }
   }, [walletConnectAttempted, walletConnectError, isConnected]);
+
+  // Focus management for modal
+  useEffect(() => {
+    if (showWaitlistModal) {
+      // Store the currently focused element
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      // Focus the modal
+      modalRef.current?.focus();
+    } else {
+      // Restore focus when modal is closed
+      previousFocusRef.current?.focus();
+    }
+  }, [showWaitlistModal]);
+
+  // Handle escape key to close modal
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && showWaitlistModal) {
+        setShowWaitlistModal(false);
+      }
+    };
+
+    if (showWaitlistModal) {
+      document.addEventListener('keydown', handleEscape);
+    }
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [showWaitlistModal]);
+
+  // Trap focus within modal
+  useEffect(() => {
+    const handleTabKey = (event: KeyboardEvent) => {
+      if (!showWaitlistModal) return;
+
+      const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusableElements?.length) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
+    };
+
+    if (showWaitlistModal) {
+      document.addEventListener('keydown', handleTabKey);
+    }
+    return () => document.removeEventListener('keydown', handleTabKey);
+  }, [showWaitlistModal]);
 
   const handleWaitlist = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -419,21 +476,21 @@ export default function Home() {
         <meta property="og:image" content="/Pheme_wave.svg" />
       </Head>
 
-      <div className="min-h-screen flex flex-col bg-gradient-to-b from-amber-50 via-white to-blue-50 dark:from-background-dark dark:to-background-dark text-gray-900 dark:text-white transition-colors relative overflow-hidden">
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-amber-50 via-white to-blue-50 dark:from-background-dark dark:to-background-dark text-gray-900 dark:text-white transition-colors relative overflow-hidden" lang="en">
         {/* Mesh Background */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-200/10 dark:from-blue-500/10 via-transparent to-transparent animate-pulse"></div>
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f46e5/10px_1px_transparent_1px),linear-gradient(to_bottom,#4f46e5/10px_1px_transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-10 dark:opacity-30"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-200/5 dark:from-blue-500/5 via-transparent to-transparent animate-pulse"></div>
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f46e5/1px_1px_transparent_1px),linear-gradient(to_bottom,#4f46e5/1px_1px_transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-5 dark:opacity-10"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-100/5 to-blue-100/5 dark:from-transparent dark:via-blue-900/5 dark:to-transparent"></div>
         </div>
 
         {/* Header with Navigation */}
-        <header className={`container mx-auto px-4 py-6 flex justify-between items-center relative z-10 ${
+        <header className={`container mx-auto px-4 sm:px-6 py-4 sm:py-6 flex justify-between items-center relative z-10 ${
           isMobile && isConnected ? 'hidden' : ''
         }`}>
-          <div className="flex items-center gap-3">
-            <PhemeLogo width={80} height={80} />
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent">PHEME</h1>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <PhemeLogo width={isMobile ? 60 : 80} height={isMobile ? 60 : 80} />
+            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent">PHEME</h1>
           </div>
           <Navigation />
         </header>
@@ -449,10 +506,10 @@ export default function Home() {
         )}
 
         {/* Main Content */}
-        <main className="flex-grow relative z-10">
-          <div className="container mx-auto px-4 py-8 md:py-16">
+        <main id="main-content" className="flex-grow relative z-10">
+          <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-16">
             {/* Top section with main content and iPhone */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-start">
               {/* Left side: Main content */}
               <div className="max-w-2xl mx-auto lg:mx-0">
                 {(!isMobile || !isConnected) && <MainContent />}
@@ -465,43 +522,42 @@ export default function Home() {
 
             {/* Features section */}
             {(!isMobile || !isConnected) && (
-              <div className="mt-40 lg:mt-56 -mx-4 px-4">
+              <div className="mt-20 sm:mt-32 lg:mt-40 -mx-4 px-4">
                 {/* Headline above features */}
-                <div className="my-20 text-center">
-                  <h2 className="text-xl md:text-2xl font-semibold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent max-w-3xl mx-auto">
+                <div className="my-12 sm:my-16 lg:my-20 text-center">
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-semibold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent max-w-3xl mx-auto px-4">
                     Proving your skills shouldn't be a black box. Build your onchain reputation transparently with AI-powered validation on Pheme.
                   </h2>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto">
-                  {/* Skill Wallet */}
-                  <div className="group bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200 dark:border-white/10 p-8 flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-blue-200 dark:hover:border-blue-500/30">
-                    <div className="mb-6 flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30">
-                      <Wallet className="h-10 w-10 text-blue-700 dark:text-blue-300 transition-transform duration-300 group-hover:scale-110" strokeWidth={2} />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 max-w-7xl mx-auto">
+                  {/* Feature cards with adjusted padding */}
+                  <div className="group bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200 dark:border-white/10 p-6 sm:p-8 flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-blue-200 dark:hover:border-blue-500/30">
+                    <div className="mb-4 sm:mb-6 flex items-center justify-center w-12 sm:w-16 h-12 sm:h-16 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30">
+                      <Wallet className="h-8 w-8 sm:h-10 sm:w-10 text-blue-700 dark:text-blue-300 transition-transform duration-300 group-hover:scale-110" strokeWidth={2} />
                     </div>
-                    <p className="text-xl font-bold mb-3 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-white dark:to-gray-300 bg-clip-text text-transparent tracking-wide">Skill Wallet</p>
-                    <p className="text-base text-gray-800 dark:text-gray-300 font-medium">
+                    <p className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-white dark:to-gray-300 bg-clip-text text-transparent tracking-wide">Skill Wallet</p>
+                    <p className="text-sm sm:text-base text-gray-800 dark:text-gray-300 font-medium">
                       A soulbound NFT that holds your validated skills, reputation scores, and achievements. Immutable and non-transferable, it represents your unique identity and proof-of-skill in the Pheme ecosystem.
                     </p>
                   </div>
 
-                  {/* Reputation Oracle */}
-                  <div className="group bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200 dark:border-white/10 p-8 flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-blue-200 dark:hover:border-blue-500/30">
-                    <div className="mb-6 flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30">
-                      <UserCheck className="h-10 w-10 text-blue-700 dark:text-blue-300 transition-transform duration-300 group-hover:scale-110" strokeWidth={2} />
+                  {/* Repeat similar adjustments for other feature cards */}
+                  <div className="group bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200 dark:border-white/10 p-6 sm:p-8 flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-blue-200 dark:hover:border-blue-500/30">
+                    <div className="mb-4 sm:mb-6 flex items-center justify-center w-12 sm:w-16 h-12 sm:h-16 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30">
+                      <UserCheck className="h-8 w-8 sm:h-10 sm:w-10 text-blue-700 dark:text-blue-300 transition-transform duration-300 group-hover:scale-110" strokeWidth={2} />
                     </div>
-                    <p className="text-xl font-bold mb-3 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-white dark:to-gray-300 bg-clip-text text-transparent tracking-wide">Reputation Oracle</p>
-                    <p className="text-base text-gray-800 dark:text-gray-300 font-medium">
+                    <p className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-white dark:to-gray-300 bg-clip-text text-transparent tracking-wide">Reputation Oracle</p>
+                    <p className="text-sm sm:text-base text-gray-800 dark:text-gray-300 font-medium">
                       AI-powered engine that scores your contributions, skill breadth, and consistency. Reputation scores are public, onchain, and amplify your influence in governance and access to opportunities.
                     </p>
                   </div>
 
-                  {/* Community Governance */}
-                  <div className="group bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200 dark:border-white/10 p-8 flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-blue-200 dark:hover:border-blue-500/30">
-                    <div className="mb-6 flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30">
-                      <Users className="h-10 w-10 text-blue-700 dark:text-blue-300 transition-transform duration-300 group-hover:scale-110" strokeWidth={2} />
+                  <div className="group bg-white dark:bg-white/10 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200 dark:border-white/10 p-6 sm:p-8 flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-blue-200 dark:hover:border-blue-500/30">
+                    <div className="mb-4 sm:mb-6 flex items-center justify-center w-12 sm:w-16 h-12 sm:h-16 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30">
+                      <Users className="h-8 w-8 sm:h-10 sm:w-10 text-blue-700 dark:text-blue-300 transition-transform duration-300 group-hover:scale-110" strokeWidth={2} />
                     </div>
-                    <p className="text-xl font-bold mb-3 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-white dark:to-gray-300 bg-clip-text text-transparent tracking-wide">Community Governance</p>
-                    <p className="text-base text-gray-800 dark:text-gray-300 font-medium">
+                    <p className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-white dark:to-gray-300 bg-clip-text text-transparent tracking-wide">Community Governance</p>
+                    <p className="text-sm sm:text-base text-gray-800 dark:text-gray-300 font-medium">
                       Decisions are made by token holders and reputation leaders through transparent, onchain voting. Propose, discuss, and vote to shape the protocol's future and manage the DAO treasury.
                     </p>
                   </div>
@@ -512,17 +568,17 @@ export default function Home() {
         </main>
 
         {/* End-of-page Testnet Coming section */}
-        <section className="w-full min-h-[50vh] flex flex-col items-center justify-center bg-gradient-to-b from-white to-gray-50 dark:from-background-dark dark:to-background-dark relative mt-24">
-          <div className="flex flex-col items-center justify-center py-16">
-            <PhemeLogo width={80} height={80} />
-            <h2 className="mt-6 text-6xl md:text-7xl lg:text-8xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent text-center drop-shadow-lg leading-tight">Testnet is Coming</h2>
-            <button className="mt-6 px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl">Follow us for latest updates</button>
+        <section className="w-full min-h-[40vh] sm:min-h-[50vh] flex flex-col items-center justify-center bg-gradient-to-b from-white to-gray-50 dark:from-background-dark dark:to-background-dark relative mt-16 sm:mt-24">
+          <div className="flex flex-col items-center justify-center py-12 sm:py-16">
+            <PhemeLogo width={isMobile ? 60 : 80} height={isMobile ? 60 : 80} />
+            <h2 className="mt-4 sm:mt-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent text-center drop-shadow-lg leading-tight px-4">Testnet is Coming</h2>
+            <button className="mt-4 sm:mt-6 px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-base sm:text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl">Follow us for latest updates</button>
           </div>
         </section>
 
-        {/* Footer */}
-        <footer className="w-full bg-white/90 dark:bg-background-dark/50 backdrop-blur-sm py-16 px-4 relative z-10 border-t border-gray-200 dark:border-gray-800">
-          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-gray-600">
+        {/* Footer with adjusted spacing */}
+        <footer className="w-full bg-white/90 dark:bg-background-dark/50 backdrop-blur-sm py-12 sm:py-16 px-4 relative z-10 border-t border-gray-200 dark:border-gray-800">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 text-gray-600">
             <div>
               <h3 className="text-sm font-semibold text-gray-700 mb-4">Developers</h3>
               <ul className="space-y-2">
@@ -546,7 +602,7 @@ export default function Home() {
               </ul>
             </div>
           </div>
-          <div className="flex justify-center items-center mt-10 space-x-6">
+          <div className="flex justify-center items-center mt-8 sm:mt-10 space-x-4 sm:space-x-6">
             <span aria-label="Discord" className="text-2xl text-gray-600">
               <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.369A19.791 19.791 0 0 0 16.885 3.2a.117.117 0 0 0-.125.06c-.543.96-1.146 2.217-1.573 3.2a18.524 18.524 0 0 0-5.372 0c-.427-.995-1.03-2.24-1.573-3.2a.117.117 0 0 0-.125-.06A19.736 19.736 0 0 0 3.684 4.369a.105.105 0 0 0-.047.043C.533 9.045-.32 13.579.099 18.057a.12.12 0 0 0 .045.083c2.052 1.507 4.042 2.422 5.992 3.029a.116.116 0 0 0 .127-.043c.462-.63.874-1.295 1.226-1.994a.112.112 0 0 0-.065-.158c-.652-.247-1.27-.549-1.872-.892a.117.117 0 0 1-.012-.194c.126-.094.252-.192.372-.291a.112.112 0 0 1 .114-.013c3.927 1.793 8.18 1.793 12.061 0a.112.112 0 0 1 .115.012c.12.099.246.197.372.291a.117.117 0 0 1-.011.194 12.298 12.298 0 0 1-1.873.892.112.112 0 0 0-.064.159c.36.698.772 1.362 1.225 1.993a.115.115 0 0 0 .127.044c1.95-.607 3.94-1.522 5.993-3.029a.115.115 0 0 0 .045-.083c.5-5.177-.838-9.673-3.573-13.645a.093.093 0 0 0-.047-.043ZM8.02 15.331c-1.183 0-2.156-1.085-2.156-2.419 0-1.333.955-2.418 2.156-2.418 1.21 0 2.174 1.095 2.156 2.418 0 1.334-.955 2.419-2.156 2.419Zm7.974 0c-1.183 0-2.156-1.085-2.156-2.419 0-1.333.955-2.418 2.156-2.418 1.21 0 2.174 1.095 2.156 2.418 0 1.334-.946 2.419-2.156 2.419Z"/></svg>
             </span>
@@ -559,7 +615,7 @@ export default function Home() {
               </svg>
             </a>
           </div>
-          <div className="mt-10 text-center text-xs text-gray-600">© 2025 PHEME. All rights reserved.</div>
+          <div className="mt-8 sm:mt-10 text-center text-xs text-gray-600">© 2025 PHEME. All rights reserved.</div>
         </footer>
 
         {/* Support Chat */}
@@ -567,10 +623,20 @@ export default function Home() {
 
         {/* Waitlist Modal */}
         {showWaitlistModal && (
-          <div className="fixed inset-0 bg-black/75 dark:bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 sm:p-8 max-w-md w-full mx-4 sm:mx-auto">
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4">Join the Waitlist</h3>
-              <form onSubmit={handleWaitlist} className="space-y-4">
+          <div 
+            className="fixed inset-0 bg-black/75 dark:bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="waitlist-title"
+            aria-describedby="waitlist-description"
+          >
+            <div 
+              className="bg-white dark:bg-gray-800 rounded-xl p-6 sm:p-8 max-w-md w-full mx-4 sm:mx-auto"
+              ref={modalRef}
+            >
+              <h3 id="waitlist-title" className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4">Join the Waitlist</h3>
+              <p id="waitlist-description" className="sr-only">Join the PHEME Protocol waitlist to be notified when we launch</p>
+              <form onSubmit={handleWaitlist} className="space-y-4" noValidate>
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Email Address
@@ -583,15 +649,27 @@ export default function Home() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    aria-required="true"
+                    aria-invalid={!!errorMessage}
+                    aria-describedby={errorMessage ? "email-error" : undefined}
                   />
+                  {errorMessage && (
+                    <div id="email-error" className="text-red-500 dark:text-red-400 text-sm mt-1" role="alert">
+                      {errorMessage}
+                    </div>
+                  )}
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label htmlFor="wallet-address" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Wallet Address
                   </label>
                   {address ? (
-                    <div className="w-full border-2 rounded-lg p-2.5 sm:p-3 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 break-all">
+                    <div 
+                      id="wallet-address"
+                      className="w-full border-2 rounded-lg p-2.5 sm:p-3 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 break-all"
+                      aria-label={`Connected wallet address: ${address}`}
+                    >
                       {address}
                     </div>
                   ) : (
@@ -599,17 +677,12 @@ export default function Home() {
                       type="button"
                       onClick={openConnectModal}
                       className="w-full border-2 border-blue-500 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg p-2.5 sm:p-3 font-medium transition-colors"
+                      aria-label="Connect your wallet to continue"
                     >
                       Connect Wallet
                     </button>
                   )}
                 </div>
-
-                {errorMessage && (
-                  <div className="text-red-500 dark:text-red-400 text-sm">
-                    {errorMessage}
-                  </div>
-                )}
 
                 <button
                   type="submit"
@@ -617,21 +690,53 @@ export default function Home() {
                   className={`w-full bg-primary-light dark:bg-primary-dark text-white rounded-lg p-2.5 sm:p-3 font-semibold ${
                     waitlistStatus === 'loading' ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-dark dark:hover:bg-primary-light'
                   } transition-colors`}
+                  aria-label={waitlistStatus === 'loading' ? 'Submitting...' : 'Join Waitlist'}
                 >
-                  {waitlistStatus === 'loading' ? 'Joining...' : 
-                   waitlistStatus === 'success' ? 'Joined!' : 
-                   'Join Waitlist'}
+                  {waitlistStatus === 'loading' ? (
+                    <>
+                      <span aria-hidden="true">Joining...</span>
+                      <span className="sr-only">Submitting your waitlist application</span>
+                    </>
+                  ) : waitlistStatus === 'success' ? (
+                    <>
+                      <span aria-hidden="true">Joined!</span>
+                      <span className="sr-only">Successfully joined the waitlist</span>
+                    </>
+                  ) : (
+                    'Join Waitlist'
+                  )}
                 </button>
               </form>
               <button
                 onClick={() => setShowWaitlistModal(false)}
                 className="mt-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 font-medium text-sm sm:text-base"
+                aria-label="Close waitlist modal"
               >
                 Close
               </button>
             </div>
           </div>
         )}
+
+        {/* Skip to main content link for accessibility */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-black"
+        >
+          Skip to main content
+        </a>
+
+        {/* ARIA live regions for dynamic content */}
+        <div aria-live="polite" className="sr-only">
+          {waitlistStatus === 'loading' && 'Submitting waitlist request...'}
+          {waitlistStatus === 'success' && 'Successfully joined the waitlist!'}
+          {waitlistStatus === 'error' && `Error: ${errorMessage}`}
+        </div>
+
+        <div aria-live="polite" className="sr-only">
+          {isConnected && 'Wallet connected successfully'}
+          {walletConnectError && `Wallet connection error: ${walletConnectError}`}
+        </div>
       </div>
     </>
   );
