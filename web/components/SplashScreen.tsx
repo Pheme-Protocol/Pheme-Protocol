@@ -379,58 +379,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
             </div>
           </motion.div>
         );
-      case 2: // Skill Wallet with Matrix Effect
-        return (
-          <motion.div className="absolute inset-0 flex items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <div className="w-full max-w-md p-8">
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="bg-gray-800 rounded-xl p-6 shadow-xl"
-              >
-                {/* Matrix-style skill tags with fly-in bounce */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {skillTags.map((skill, index) => (
-                    <motion.div
-                      key={skill}
-                      initial={{ opacity: 0, y: 30, scale: 0.7 }}
-                      animate={{ opacity: 1, y: 0, scale: [0.7, 1.1, 1] }}
-                      transition={{ delay: index * 0.12, type: 'tween', duration: 0.7 }}
-                      className="px-3 py-1 bg-primary-light/20 dark:bg-primary-dark/20 rounded-full text-primary-light dark:text-primary-dark text-sm shadow-md"
-                      style={{
-                        fontFamily: 'Orbitron, Fira Mono, monospace',
-                        fontWeight: 600,
-                        color: '#00ffe7',
-                        textShadow: '0 0 8px #00ffe7',
-                        letterSpacing: '0.03em',
-                      }}
-                    >
-                      {skill}
-                    </motion.div>
-                  ))}
-                </div>
-                {/* Verification progress */}
-                <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden mb-4">
-                  <motion.div
-                    className="h-full"
-                    style={{ background: 'linear-gradient(90deg,rgb(0, 13, 255) 0%, #3a1c71 100%)' }}
-                    initial={{ width: 0 }}
-                    animate={{ width: `${verificationProgress}%` }}
-                    transition={{ duration: 0.5 }}
-                  />
-                </div>
-                <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  style={taglineStyle}
-                >
-                  {verificationMessages[Math.floor(verificationProgress / 20)]}
-                </motion.p>
-              </motion.div>
-            </div>
-          </motion.div>
-        );
-      case 3: // Taglines
+      case 2: // Taglines
         return (
           <motion.div className="absolute inset-0 flex items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <motion.p
