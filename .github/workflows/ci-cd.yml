@@ -29,6 +29,10 @@ jobs:
         run: |
           yarn cache clean
           yarn install --frozen-lockfile --verbose
+          cd src && yarn install --frozen-lockfile
+          cd ../web && yarn install --frozen-lockfile
+          cd ../contracts && yarn install --frozen-lockfile
+          cd ..
       
       - name: Run ESLint
         run: |
