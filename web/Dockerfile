@@ -4,14 +4,14 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy package files
-COPY ../package.json ../yarn.lock ./
-COPY ../web/package.json ./web/
+COPY package.json yarn.lock ./
+COPY web/package.json ./web/
 
 # Install dependencies
 RUN yarn install --frozen-lockfile
 
 # Copy source code
-COPY .. .
+COPY . .
 
 # Build the application
 RUN yarn workspace @pheme-protocol/web build
