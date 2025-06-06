@@ -105,11 +105,9 @@ jobs:
         if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
         working-directory: bots
         run: |
-          if [ -d "bots" ]; then
-            yarn install --frozen-lockfile
-            yarn audit
-            yarn build
-          fi
+          yarn install --frozen-lockfile
+          yarn audit
+          yarn build
         env:
           NODE_ENV: production
           BOT_SECURITY_LEVEL: high
