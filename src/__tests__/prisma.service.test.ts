@@ -23,18 +23,18 @@ jest.mock('../app/prisma.service', () => {
 
 describe('PrismaService', () => {
   let service: PrismaService;
-  let module: TestingModule;
+  let testingModule: TestingModule;
 
   beforeEach(async () => {
-    module = await Test.createTestingModule({
+    testingModule = await Test.createTestingModule({
       providers: [PrismaService],
     }).compile();
 
-    service = module.get<PrismaService>(PrismaService);
+    service = testingModule.get<PrismaService>(PrismaService);
   });
 
   afterEach(async () => {
-    await module.close();
+    await testingModule.close();
   });
 
   it('should be defined', () => {
