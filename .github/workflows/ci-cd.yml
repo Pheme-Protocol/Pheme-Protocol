@@ -138,7 +138,7 @@ jobs:
             echo "Docker credentials not set, skipping build/push."
             exit 0
           fi
-          cd web && docker build -t $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-frontend:${GITHUB_SHA::8} .
+          docker build -t $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-frontend:${GITHUB_SHA::8} -f web/Dockerfile web/
           docker push $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-frontend:${GITHUB_SHA::8}
 
       # - name: Build & Push Bots Image
