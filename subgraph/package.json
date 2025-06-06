@@ -13,9 +13,13 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "^0.68.0",
+    "@graphprotocol/graph-cli": "^0.97.1",
     "@graphprotocol/graph-ts": "^0.32.0",
-    "axios": "^1.9.0"
+    "axios": "^1.9.0",
+    "cross-spawn": "^7.0.6",
+    "ejs": "^3.1.10",
+    "parse-duration": "^2.1.4",
+    "semver": "^7.7.2"
   },
   "devDependencies": {
     "typescript": "^5.3.3"

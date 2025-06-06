@@ -93,12 +93,15 @@ const nextConfig = {
     ];
   },
   async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'https://phemeprotocol.com/api/:path*'
-      }
-    ]
+    if (process.env.NODE_ENV === 'production') {
+      return [
+        {
+          source: '/api/:path*',
+          destination: 'https://phemeprotocol.com/api/:path*'
+        }
+      ]
+    }
+    return []
   },
   async redirects() {
     return [

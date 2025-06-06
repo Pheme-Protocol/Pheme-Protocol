@@ -12,7 +12,7 @@ contract PhemeVerification is Ownable {
     
     uint256 public constant MAX_SKILL_ID_LENGTH = 100;
 
-    constructor() Ownable(msg.sender) {}
+    constructor() {}
 
     function createVerification(string memory skillId) external {
         if (bytes(skillId).length == 0) revert EmptySkillId();

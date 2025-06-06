@@ -5,6 +5,7 @@ module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -65,7 +66,6 @@ module.exports = {
         'gradient': 'gradient 8s linear infinite',
         'fadeIn': 'fadeIn 0.2s ease-out',
         'message-in': 'message-fade-in 0.5s ease forwards',
-        'fade-in': 'fade-in 0.3s ease-in-out',
         'bounce': 'bounce 1s infinite',
       },
       keyframes: {
