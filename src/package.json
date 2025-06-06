@@ -9,7 +9,7 @@
     "start": "node dist/main.js",
     "test": "jest",
     "test:ci": "jest --ci --coverage",
-    "lint": "eslint \"src/**/*.ts\" --fix"
+    "lint": "eslint \"app/**/*.ts\" --fix"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.2",
