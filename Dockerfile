@@ -1,68 +1,99 @@
-# Use Node.js LTS version
+# Use Node.js LTS version as base
 FROM node:20-alpine AS base
 
-# Install dependencies only when needed
+# Install common dependencies
+RUN apk add --no-cache libc6-compat python3 make g++ git
+
+# Stage 1: Dependencies
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy root package files
-COPY package.json yarn.lock ./
+# Copy all package files
+COPY package.json ./
+COPY yarn.lock ./
+COPY contracts/package.json ./contracts/
+COPY subgraph/package.json ./subgraph/
+COPY src/package.json ./src/
+COPY web/package.json ./web/
 
 # Install root dependencies
-RUN yarn --frozen-lockfile
+RUN yarn install --frozen-lockfile
 
-# Copy web package files
-COPY web/package.json web/yarn.lock ./web/
+# Stage 2: Contracts Build
+FROM deps AS contracts-builder
+WORKDIR /app/contracts
+COPY contracts/ .
+RUN yarn install --frozen-lockfile
+RUN yarn compile
+# Create artifacts directory if it doesn't exist
+RUN mkdir -p artifacts
 
-# Install web dependencies
-WORKDIR /app/web
-RUN yarn --frozen-lockfile
-
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/web/node_modules ./web/node_modules
-COPY . .
-
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-ENV NEXT_TELEMETRY_DISABLED=1
-
-WORKDIR /app/web
+# Stage 3: Subgraph Build
+FROM contracts-builder AS subgraph-builder
+WORKDIR /app/subgraph
+COPY subgraph/ .
+RUN yarn install --frozen-lockfile
+RUN yarn codegen
 RUN yarn build
 
-# Production image, copy all the files and run next
+# Stage 4: Backend Build
+FROM subgraph-builder AS backend-builder
+WORKDIR /app/src
+COPY src/ .
+RUN yarn install --frozen-lockfile
+# Ensure the dist directory exists
+RUN mkdir -p dist
+RUN yarn build
+
+# Stage 5: Frontend Build
+FROM backend-builder AS frontend-builder
+WORKDIR /app/web
+COPY web/ .
+RUN yarn install --frozen-lockfile
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN yarn build
+
+# Stage 6: Production
 FROM base AS runner
 WORKDIR /app
 
+# Set production environment
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 pheme
 
-COPY --from=builder /app/web/public ./web/public
+# Copy built artifacts
+COPY --from=contracts-builder /app/contracts/artifacts ./contracts/artifacts
+COPY --from=contracts-builder /app/contracts/cache ./contracts/cache
+COPY --from=subgraph-builder /app/subgraph/build ./subgraph/build
+COPY --from=backend-builder /app/src/dist ./src/dist
+COPY --from=frontend-builder /app/web/.next ./web/.next
+COPY --from=frontend-builder /app/web/public ./web/public
+COPY --from=frontend-builder /app/web/package.json ./web/
+COPY --from=frontend-builder /app/web/yarn.lock ./web/
 
-# Set the correct permission for prerender cache
-RUN mkdir -p web/.next
-RUN chown nextjs:nodejs web/.next
+# Copy necessary configuration files
+COPY contracts/hardhat.config.ts ./contracts/
+COPY subgraph/subgraph.yaml ./subgraph/
+COPY src/tsconfig.json ./src/
+COPY web/next.config.js ./web/
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/web/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/web/.next/static ./web/.next/static
+# Set permissions
+RUN chown -R pheme:nodejs /app
 
-USER nextjs
+USER pheme
 
-EXPOSE 3000
+# Expose ports
+EXPOSE 3000 4000
 
+# Set environment variables
 ENV PORT=3000
-# set hostname to localhost
 ENV HOSTNAME="0.0.0.0"
 
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD ["node", "server.js"] 
+# Start the application
+WORKDIR /app/web
+RUN yarn install --frozen-lockfile
+CMD ["yarn", "start"] 
