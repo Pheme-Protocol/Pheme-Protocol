@@ -3,13 +3,16 @@
     "target": "ES2020",
     "module": "commonjs",
     "outDir": "./dist",
-    "rootDir": "./",
+    "rootDir": "./app",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "composite": true
   },
-  "include": ["*.ts"],
+  "include": ["app/**/*.ts", "prisma/**/*.ts"],
   "exclude": ["node_modules", "**/*.test.ts"]
 } 

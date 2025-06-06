@@ -65,49 +65,43 @@ export function Navigation() {
   }, [isOpen]);
 
   return (
-    <nav className="flex items-center gap-4" role="navigation">
-      {/* Desktop Navigation */}
-      <div className="hidden md:flex items-center gap-6">
-        {navigation.map((item) => (
-          <span
-            key={item.name}
-            className={`text-gray-600 dark:text-gray-300 text-sm font-medium ${
-              item.isComingSoon 
-                ? 'cursor-not-allowed opacity-60' 
-                : 'hover:text-gray-900 dark:hover:text-white transition-colors duration-200'
-            }`}
-            title={item.isComingSoon ? 'Coming Soon' : ''}
+    <>
+      <nav className="flex items-center gap-4" role="navigation">
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-6">
+          {navigation.map((item) => (
+            <span
+              key={item.name}
+              className={`text-gray-600 dark:text-gray-300 text-sm font-medium ${
+                item.isComingSoon 
+                  ? 'cursor-not-allowed opacity-60' 
+                  : 'hover:text-gray-900 dark:hover:text-white transition-colors duration-200'
+              }`}
+              title={item.isComingSoon ? 'Coming Soon' : ''}
+            >
+              {item.name}
+            </span>
+          ))}
+          <ThemeToggle />
+        </div>
+
+        {/* Mobile Navigation */}
+        <div className="md:hidden">
+          <button
+            ref={buttonRef}
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
           >
-            {item.name}
-          </span>
-        ))}
-        <ThemeToggle />
-      </div>
+            <MenuIcon className="h-6 w-6" />
+          </button>
+        </div>
+      </nav>
 
-      {/* Mobile Navigation */}
-      <div className="md:hidden">
-        <button
-          ref={buttonRef}
-          onClick={() => setIsOpen(!isOpen)}
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          aria-expanded={isOpen}
-          aria-haspopup="true"
-          aria-controls="mobile-menu"
-          aria-label="Open navigation menu"
-        >
-          <MenuIcon className="w-6 h-6" aria-hidden="true" />
-        </button>
-
-        {/* Dropdown Menu */}
+      {/* Mobile Menu */}
+      {isOpen && (
         <div
-          id="mobile-menu"
           ref={dropdownRef}
-          className={`absolute right-4 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 transition-all duration-200 ${
-            isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
-          }`}
-          role="menu"
-          aria-orientation="vertical"
-          aria-labelledby="mobile-menu-button"
+          className="absolute top-16 right-4 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50"
         >
           <div className="py-1" role="none">
             {navigation.map((item) => (
@@ -130,7 +124,7 @@ export function Navigation() {
             </div>
           </div>
         </div>
-      </div>
-    </nav>
+      )}
+    </>
   );
 } 

@@ -1,32 +1,99 @@
-# Install dependencies only when needed
-FROM node:20-alpine AS deps
+# Use Node.js LTS version as base
+FROM node:20-alpine AS base
+
+# Install common dependencies
+RUN apk add --no-cache libc6-compat python3 make g++ git
+
+# Stage 1: Dependencies
+FROM base AS deps
 WORKDIR /app
-COPY package.json yarn.lock ./
-COPY web/package.json web/yarn.lock ./web/
+
+# Copy all package files
+COPY package.json ./
+COPY yarn.lock ./
+COPY contracts/package.json ./contracts/
+COPY subgraph/package.json ./subgraph/
+COPY src/package.json ./src/
+COPY web/package.json ./web/
+
+# Install root dependencies
 RUN yarn install --frozen-lockfile
 
-# Copy all files for development
-FROM node:20-alpine AS dev
-WORKDIR /app
-COPY . .
+# Stage 2: Contracts Build
+FROM deps AS contracts-builder
+WORKDIR /app/contracts
+COPY contracts/ .
 RUN yarn install --frozen-lockfile
+RUN yarn compile
+# Create artifacts directory if it doesn't exist
+RUN mkdir -p artifacts
 
-# Build the Next.js app
-FROM node:20-alpine AS builder
+# Stage 3: Subgraph Build
+FROM contracts-builder AS subgraph-builder
+WORKDIR /app/subgraph
+COPY subgraph/ .
+RUN yarn install --frozen-lockfile
+RUN yarn codegen
+RUN yarn build
+
+# Stage 4: Backend Build
+FROM subgraph-builder AS backend-builder
+WORKDIR /app/src
+COPY src/ .
+RUN yarn install --frozen-lockfile
+# Ensure the dist directory exists
+RUN mkdir -p dist
+RUN yarn build
+
+# Stage 5: Frontend Build
+FROM backend-builder AS frontend-builder
+WORKDIR /app/web
+COPY web/ .
+RUN yarn install --frozen-lockfile
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN yarn build
+
+# Stage 6: Production
+FROM base AS runner
 WORKDIR /app
-COPY . .
-RUN yarn workspace @pheme-protocol/web build
 
-# Production image, copy only necessary files
-FROM node:20-alpine AS runner
-WORKDIR /app
-ENV NODE_ENV production
+# Set production environment
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
-# Copy built app and node_modules from builder
-COPY --from=builder /app/web/.next/standalone ./
-COPY --from=builder /app/web/.next/static ./web/.next/static
-COPY --from=builder /app/web/public ./web/public
-COPY --from=builder /app/web/package.json ./web/package.json
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 pheme
 
-EXPOSE 3000
-CMD ["yarn", "workspace", "@pheme-protocol/web", "dev"] 
+# Copy built artifacts
+COPY --from=contracts-builder /app/contracts/artifacts ./contracts/artifacts
+COPY --from=contracts-builder /app/contracts/cache ./contracts/cache
+COPY --from=subgraph-builder /app/subgraph/build ./subgraph/build
+COPY --from=backend-builder /app/src/dist ./src/dist
+COPY --from=frontend-builder /app/web/.next ./web/.next
+COPY --from=frontend-builder /app/web/public ./web/public
+COPY --from=frontend-builder /app/web/package.json ./web/
+COPY --from=frontend-builder /app/web/yarn.lock ./web/
+
+# Copy necessary configuration files
+COPY contracts/hardhat.config.ts ./contracts/
+COPY subgraph/subgraph.yaml ./subgraph/
+COPY src/tsconfig.json ./src/
+COPY web/next.config.js ./web/
+
+# Set permissions
+RUN chown -R pheme:nodejs /app
+
+USER pheme
+
+# Expose ports
+EXPOSE 3000 4000
+
+# Set environment variables
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Start the application
+WORKDIR /app/web
+RUN yarn install --frozen-lockfile
+CMD ["yarn", "start"] 
