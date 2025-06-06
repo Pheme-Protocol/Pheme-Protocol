@@ -1,47 +1,38 @@
-# Stage 1: Dependencies
-FROM node:20-alpine AS deps
-WORKDIR /app
-
-# Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
-
-# Stage 2: Builder
+# Build stage
 FROM node:20-alpine AS builder
+
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+
+# Copy package files
+COPY ../package.json ../yarn.lock ./
+COPY ../contracts/package.json ./contracts/
+COPY ../src/package.json ./src/
+
+# Install dependencies
+RUN yarn install --frozen-lockfile
+
+# Copy source code
+COPY .. .
 
 # Build the application
-RUN yarn build
+RUN yarn workspace @pheme-protocol/backend build
 
-# Stage 3: Runner
-FROM node:20-alpine AS runner
+# Production stage
+FROM node:20-alpine
+
 WORKDIR /app
 
-ENV NODE_ENV production
+# Copy built assets from builder
+COPY --from=builder /app/src/dist ./dist
+COPY --from=builder /app/src/node_modules ./node_modules
+COPY --from=builder /app/src/package.json ./
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 pheme
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=3000
 
-# Copy necessary files from builder
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-
-# Set proper permissions
-RUN chown -R pheme:nodejs /app
-
-USER pheme
-
+# Expose port
 EXPOSE 3000
 
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
-
+# Start the application
 CMD ["node", "dist/main.js"] 

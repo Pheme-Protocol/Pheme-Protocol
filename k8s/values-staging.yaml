@@ -1,0 +1,66 @@
+# Global settings
+global:
+  environment: staging
+  domain: staging.app.phemebot.xyz
+
+# Backend settings
+backend:
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+# Frontend settings
+frontend:
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+# Database settings
+database:
+  host: pheme-staging-db.cluster-123456789012.us-east-1.rds.amazonaws.com
+  port: 5432
+  name: pheme_staging
+  user: pheme_admin
+
+# Redis settings
+redis:
+  host: pheme-staging-redis.123456789012.us-east-1.cache.amazonaws.com
+  port: 6379
+
+# Ingress settings
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: staging.app.phemebot.xyz
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: pheme-staging-tls
+      hosts:
+        - staging.app.phemebot.xyz 

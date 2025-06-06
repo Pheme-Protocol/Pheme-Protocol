@@ -1,0 +1,7 @@
+environment = "staging"
+aws_region = "us-east-1"
+cluster_name = "pheme-staging"
+cluster_version = "1.28"
+vpc_cidr = "10.0.0.0/16"
+rds_instance_class = "db.t3.micro"
+github_repo = "pheme-protocol/Pheme-Protocol" 
