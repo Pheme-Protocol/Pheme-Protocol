@@ -16,8 +16,9 @@ const customJestConfig = {
     '^.+\\.(ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
   },
   transformIgnorePatterns: [
-    '/node_modules/(?!(@rainbow-me/rainbowkit|@reown|@walletconnect|wagmi|viem)/)',
+    '/node_modules/(?!(@rainbow-me/rainbowkit|@reown|@walletconnect|wagmi|viem|@wagmi)/)',
   ],
+  moduleDirectories: ['node_modules', '<rootDir>/'],
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

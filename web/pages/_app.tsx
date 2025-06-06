@@ -23,6 +23,7 @@ import { Inter } from 'next/font/google';
 import Head from 'next/head';
 import { Web3ModalProvider } from '../components/Web3ModalProvider';
 import { ThemeProvider } from '../contexts/ThemeContext';
+import { WalletProvider } from '../contexts/WalletContext';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -56,14 +57,16 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <ThemeProvider>
         <Web3ModalProvider>
-          <div className={`${inter.variable} font-sans antialiased`}>
-            <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-black">
-              Skip to main content
-            </a>
-            <main id="main-content" className="min-h-screen" role="main">
-              <Component {...pageProps} />
-            </main>
-          </div>
+          <WalletProvider>
+            <div className={`${inter.variable} font-sans antialiased`}>
+              <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-black">
+                Skip to main content
+              </a>
+              <main id="main-content" className="min-h-screen" role="main">
+                <Component {...pageProps} />
+              </main>
+            </div>
+          </WalletProvider>
         </Web3ModalProvider>
       </ThemeProvider>
     </>
