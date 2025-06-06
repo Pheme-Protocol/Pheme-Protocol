@@ -35,7 +35,7 @@ describe("PhemeVerification", function () {
     it("Should not allow non-owner to add verifier", async function () {
       await expect(
         phemeVerification.connect(user).addVerifier(verifier.address)
-      ).to.be.rejectedWith("Ownable: caller is not the owner");
+      ).to.be.rejectedWith(/OwnableUnauthorizedAccount/);
     });
 
     it("Should allow verifier to verify a skill", async function () {
