@@ -1,17 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { Menu as MenuIcon } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
-import { useAccount } from 'wagmi';
-import Link from 'next/link';
-import { useSkillWallet } from '../hooks/useSkillWallet';
-import { SkillWalletDropdown } from './SkillWalletDropdown';
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const { isConnected, address } = useAccount();
-  const { hasMinted } = useSkillWallet();
 
   const navigation = [
     { name: 'Tokenomics', href: '#', isComingSoon: true },
@@ -88,23 +82,6 @@ export function Navigation() {
               {item.name}
             </span>
           ))}
-          {isConnected && (
-            hasMinted ? (
-              <SkillWalletDropdown />
-            ) : (
-              <Link
-                href="/mint-skill-wallet"
-                className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200"
-              >
-                Mint Skill Wallet
-              </Link>
-            )
-          )}
-          {isConnected && address && (
-            <span className="hidden md:block text-sm font-medium text-gray-600 dark:text-gray-300">
-              {/* Desktop wallet address display removed */}
-            </span>
-          )}
           <ThemeToggle />
         </div>
 
@@ -142,27 +119,6 @@ export function Navigation() {
                 {item.name}
               </span>
             ))}
-            {isConnected && (
-              hasMinted ? (
-                <div className="px-4 py-2">
-                  <SkillWalletDropdown />
-                </div>
-              ) : (
-                <Link
-                  href="/mint-skill-wallet"
-                  className="block px-4 py-2 text-sm text-blue-600 dark:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  role="menuitem"
-                  tabIndex={isOpen ? 0 : -1}
-                >
-                  Mint Skill Wallet
-                </Link>
-              )
-            )}
-            {isConnected && address && (
-              <span className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200">
-                Connected: {address.slice(0, 2)}...{address.slice(-4)}
-              </span>
-            )}
             <div className="px-4 py-2" role="none">
               <ThemeToggle />
             </div>

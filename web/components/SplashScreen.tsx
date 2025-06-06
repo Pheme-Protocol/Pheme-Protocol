@@ -372,18 +372,8 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                     delay: i * 0.2,
                   }}
                 />
-              ))}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                className="w-32 h-32 mx-auto mb-8 relative z-10"
-              >
-                <svg viewBox="0 0 24 24" fill="none" className="w-full h-full text-primary-light dark:text-primary-dark">
-                  <circle cx="12" cy="12" r="12" fill="#222" />
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="#00ffe7"/>
-                  <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" fill="#fff"/>
-                </svg>
-              </motion.div>
+              ))}  
+              <div className="w-32 h-32 mx-auto mb-8 relative z-10"></div>
               <div className="w-full h-4 bg-gray-800 rounded-full overflow-hidden relative z-10">
                 <motion.div
                   className="h-full"

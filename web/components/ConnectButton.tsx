@@ -46,7 +46,7 @@ export function ConnectButton({ onError, onConnectClick, onClick }: ConnectButto
           onClick?.()
           onConnectClick?.()
         }}
-        className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-semibold"
+        className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-semibold border-2 border-blue-700"
       >
         Connect Wallet
       </button>
@@ -57,7 +57,6 @@ export function ConnectButton({ onError, onConnectClick, onClick }: ConnectButto
     <RainbowConnectButton.Custom>
       {({
         account,
-        chain,
         openConnectModal,
         mounted,
       }) => {
@@ -79,7 +78,7 @@ export function ConnectButton({ onError, onConnectClick, onClick }: ConnectButto
                   onError?.(error as Error);
                 }
               }}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-semibold"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-semibold border-2 border-blue-700"
             >
               Connect Wallet
             </button>
@@ -89,7 +88,7 @@ export function ConnectButton({ onError, onConnectClick, onClick }: ConnectButto
         return (
           <button
             onClick={() => disconnect()}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-semibold flex items-center gap-2"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-semibold flex items-center gap-2 border-2 border-blue-700"
           >
             <span>Disconnect</span>
             <span className="text-sm opacity-80">
