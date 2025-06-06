@@ -88,7 +88,7 @@ jobs:
 
       - name: Clean node_modules and yarn cache
         run: |
-          rm -rf node_modules yarn.lock
+          rm -rf node_modules 
           yarn cache clean
 
       - name: Install dependencies
