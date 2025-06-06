@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ConnectButton } from '../components/ConnectButton';
 import { useAccount, useDisconnect } from 'wagmi';
@@ -10,7 +10,6 @@ import { Navigation } from '../components/Navigation';
 import { Footer } from '../components/Footer';
 import { SupportChat } from '../components/SupportChat';
 import Head from 'next/head';
-import { ErrorBanner } from '../components/ErrorBanner';
 import { useRouter } from 'next/router';
 
 export default function Dashboard() {
@@ -139,7 +138,6 @@ export default function Dashboard() {
           onClick={() => setConnectClicked(true)}
           onConnectClick={() => setWalletConnectInitiated(true)}
           onError={(err: unknown) => {
-            console.log('Wallet connect error:', err);
             let msg = '';
             if (typeof err === 'string') {
               msg = err.toLowerCase();

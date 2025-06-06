@@ -1,14 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { Menu as MenuIcon } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
-import { useAccount } from 'wagmi';
-import Link from 'next/link';
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const { isConnected, address } = useAccount();
 
   const navigation = [
     { name: 'Tokenomics', href: '#', isComingSoon: true },
