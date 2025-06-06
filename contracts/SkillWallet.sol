@@ -41,6 +41,13 @@ contract SkillWallet is ERC721Enumerable, Ownable {
         return hasMinted[account];
     }
 
+    /// @notice Check if a token exists
+    /// @param tokenId The ID of the token to check
+    /// @return bool True if the token exists
+    function _exists(uint256 tokenId) internal view returns (bool) {
+        return _ownerOf(tokenId) != address(0);
+    }
+
     /// @notice Override transfer functions to make token soulbound
     /// @dev Prevents transfers between non-zero addresses
     /// @param from The address sending the token
