@@ -6,9 +6,16 @@ module.exports = {
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended"
   ],
-  ignorePatterns: ["generated/**/*"],
+  ignorePatterns: [
+    "generated/**/*",
+    "**/generated/**/*",
+    "**/generated/*"
+  ],
   rules: {
-    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-unused-vars": ["error", {
+      "varsIgnorePattern": "^_",
+      "argsIgnorePattern": "^_"
+    }],
     "prefer-const": "error"
   }
 }; 
