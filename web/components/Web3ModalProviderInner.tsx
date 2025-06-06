@@ -10,6 +10,16 @@ import '@rainbow-me/rainbowkit/styles.css'
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
 if (!projectId) throw new Error('Missing NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID')
 
+// Update base network configuration with required fees structure
+const updatedBase = {
+  ...base,
+  fees: {
+    defaultPriorityFee: BigInt(0),
+    defaultMaxFeePerGas: BigInt(0),
+    defaultMaxPriorityFeePerGas: BigInt(0),
+  },
+}
+
 const { wallets } = getDefaultWallets({
   appName: 'PHEME',
   projectId
@@ -25,9 +35,9 @@ const connectors = connectorsForWallets([
 })
 
 const config = createConfig({
-  chains: [base],
+  chains: [updatedBase],
   transports: {
-    [base.id]: http()
+    [updatedBase.id]: http()
   },
   connectors
 })
@@ -68,7 +78,7 @@ export default function Web3ModalProviderInner({ children }: Props) {
           }}
           modalSize="compact"
           showRecentTransactions={true}
-          initialChain={base}
+          initialChain={updatedBase}
         >
           {children}
         </RainbowKitProvider>
