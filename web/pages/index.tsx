@@ -535,9 +535,9 @@ export default function Home() {
                     <div className="mb-4 sm:mb-6 flex items-center justify-center w-12 sm:w-16 h-12 sm:h-16 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30">
                       <Wallet className="h-8 w-8 sm:h-10 sm:w-10 text-blue-700 dark:text-blue-300 transition-transform duration-300 group-hover:scale-110" strokeWidth={2} />
                     </div>
-                    <p className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-white dark:to-gray-300 bg-clip-text text-transparent tracking-wide">Skill Wallet</p>
+                    <p className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-gray-900 to-gray-800 dark:from-white dark:to-gray-300 bg-clip-text text-transparent tracking-wide">Onchain Identity</p>
                     <p className="text-sm sm:text-base text-gray-800 dark:text-gray-300 font-medium">
-                      A soulbound NFT that holds your validated skills, reputation scores, and achievements. Immutable and non-transferable, it represents your unique identity and proof-of-skill in the Pheme ecosystem.
+                      Your unique onchain identity that represents your contributions and achievements. Immutable and verifiable, it serves as your digital reputation in the Pheme ecosystem.
                     </p>
                   </div>
 
