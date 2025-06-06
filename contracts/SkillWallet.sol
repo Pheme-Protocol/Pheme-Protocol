@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 /// @title SkillWallet - Soulbound NFT for PHEME
@@ -55,5 +56,12 @@ contract SkillWallet is ERC721Enumerable, Ownable {
     ) internal override {
         require(from == address(0) || to == address(0), "Soulbound: non-transferable");
         super._beforeTokenTransfer(from, to, tokenId, batchSize);
+    }
+
+    /// @notice Override _exists to make it accessible
+    /// @param tokenId The ID of the token to check
+    /// @return bool True if the token exists
+    function _exists(uint256 tokenId) internal view override returns (bool) {
+        return super._exists(tokenId);
     }
 } 

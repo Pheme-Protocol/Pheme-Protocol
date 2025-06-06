@@ -103,10 +103,17 @@ jobs:
 
       - name: Build Bots
         if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
-        working-directory: bots
         run: |
+          if [ ! -d "bots" ]; then
+            echo "::error::Bots directory not found"
+            exit 1
+          fi
+          cd bots
+          echo "Installing dependencies..."
           yarn install --frozen-lockfile
+          echo "Running security audit..."
           yarn audit
+          echo "Building bots..."
           yarn build
         env:
           NODE_ENV: production
