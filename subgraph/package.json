@@ -23,5 +23,19 @@
   },
   "devDependencies": {
     "typescript": "^5.3.3"
+  },
+  "resolutions": {
+    "lodash.trim": "^4.5.0",
+    "lodash.trimend": "^4.5.0",
+    "gluegun/lodash.trim": "^4.5.0",
+    "gluegun/lodash.trimend": "^4.5.0"
+  },
+  "overrides": {
+    "lodash.trim": "^4.5.0",
+    "lodash.trimend": "^4.5.0",
+    "gluegun": {
+      "lodash.trim": "^4.5.0",
+      "lodash.trimend": "^4.5.0"
+    }
   }
 }
