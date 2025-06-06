@@ -2,6 +2,10 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 import { PhemeVerification } from "../typechain-types/contracts/PhemeVerification";
+import chaiAsPromised from "chai-as-promised";
+import chai from "chai";
+
+chai.use(chaiAsPromised);
 
 describe("PhemeVerification", function () {
   let phemeVerification: PhemeVerification;
@@ -52,7 +56,7 @@ describe("PhemeVerification", function () {
       
       await expect(
         phemeVerification.connect(user).verifySkill(user.address, skillId, verificationData)
-      ).to.be.rejectedWith("Not a verifier");
+      ).to.be.rejectedWith("NotVerifier()");
     });
   });
 }); 

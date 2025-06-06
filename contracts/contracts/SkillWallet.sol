@@ -14,10 +14,30 @@ contract SkillWallet is ERC721Enumerable, Ownable {
     /// @notice Counter for token IDs
     uint256 public nextTokenId;
 
+    /// @notice Structure to store skill information
+    struct Skill {
+        string name;
+        uint256 level;
+        uint256 timestamp;
+    }
+
+    /// @notice Mapping to store skills: tokenId => skillId => Skill
+    mapping(uint256 => mapping(uint256 => Skill)) public skills;
+    
+    /// @notice Counter for skills per token
+    mapping(uint256 => uint256) public skillCount;
+
     /// @notice Emitted when a new Skill Wallet is minted
     /// @param to The address that received the Skill Wallet
     /// @param tokenId The ID of the minted Skill Wallet
     event SkillWalletMinted(address indexed to, uint256 indexed tokenId);
+
+    /// @notice Emitted when a skill is added or updated
+    /// @param tokenId The ID of the Skill Wallet
+    /// @param skillId The ID of the skill
+    /// @param name The name of the skill
+    /// @param level The level of the skill
+    event SkillUpdated(uint256 indexed tokenId, uint256 indexed skillId, string name, uint256 level);
 
     /// @notice Constructor initializes the contract with name and symbol
     /// @dev Sets the contract deployer as the owner
@@ -32,6 +52,47 @@ contract SkillWallet is ERC721Enumerable, Ownable {
         _safeMint(msg.sender, tokenId);
         hasMinted[msg.sender] = true;
         emit SkillWalletMinted(msg.sender, tokenId);
+    }
+
+    /// @notice Add a new skill to a Skill Wallet
+    /// @param tokenId The ID of the Skill Wallet
+    /// @param name The name of the skill
+    /// @param level The level of the skill
+    function addSkill(uint256 tokenId, string memory name, uint256 level) external onlyOwner {
+        require(_exists(tokenId), "Token does not exist");
+        
+        uint256 skillId = skillCount[tokenId]++;
+        skills[tokenId][skillId] = Skill({
+            name: name,
+            level: level,
+            timestamp: block.timestamp
+        });
+        
+        emit SkillUpdated(tokenId, skillId, name, level);
+    }
+
+    /// @notice Update an existing skill in a Skill Wallet
+    /// @param tokenId The ID of the Skill Wallet
+    /// @param skillId The ID of the skill to update
+    /// @param newLevel The new level of the skill
+    function updateSkill(uint256 tokenId, uint256 skillId, uint256 newLevel) external onlyOwner {
+        require(_exists(tokenId), "Token does not exist");
+        require(skillId < skillCount[tokenId], "Skill does not exist");
+        
+        skills[tokenId][skillId].level = newLevel;
+        skills[tokenId][skillId].timestamp = block.timestamp;
+        
+        emit SkillUpdated(tokenId, skillId, skills[tokenId][skillId].name, newLevel);
+    }
+
+    /// @notice Get a skill from a Skill Wallet
+    /// @param tokenId The ID of the Skill Wallet
+    /// @param skillId The ID of the skill
+    /// @return The skill information
+    function getSkill(uint256 tokenId, uint256 skillId) external view returns (Skill memory) {
+        require(_exists(tokenId), "Token does not exist");
+        require(skillId < skillCount[tokenId], "Skill does not exist");
+        return skills[tokenId][skillId];
     }
 
     /// @notice Check if an address has minted a Skill Wallet
