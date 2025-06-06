@@ -16,6 +16,15 @@
     "lint": "yarn workspace @pheme-protocol/web lint",
     "test": "yarn workspace @pheme-protocol/web test"
   },
+  "resolutions": {
+    "lodash": "^4.17.21",
+    "axios": "^1.6.7",
+    "ejs": "^3.1.9",
+    "semver": "^7.5.2",
+    "cookie": "^0.7.0",
+    "cross-spawn": "^7.0.5",
+    "multer": "^2.0.1"
+  },
   "dependencies": {
     "@prisma/client": "^6.8.2",
     "@rainbow-me/rainbowkit": "^2.2.5",
@@ -69,9 +78,5 @@
     "tailwindcss": "^3.4.17",
     "typechain": "^8.3.2",
     "typescript": "^5"
-  },
-  "resolutions": {
-    "viem": "2.30.5",
-    "@reown/appkit": "1.7.7"
   }
 }
