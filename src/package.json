@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "node dist/main.js",
     "test": "jest",
-    "lint": "eslint \"app/**/*.ts\" --fix"
+    "test:ci": "jest --ci --coverage",
+    "lint": "eslint \"src/**/*.ts\" --fix"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.2",

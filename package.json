@@ -13,8 +13,9 @@
     "dev": "yarn workspace @pheme-protocol/web dev",
     "build": "yarn workspace @pheme-protocol/web build",
     "start": "yarn workspace @pheme-protocol/web start",
-    "lint": "yarn workspace @pheme-protocol/web lint && yarn workspace @pheme-protocol/backend lint",
-    "test": "yarn workspace @pheme-protocol/web test && yarn workspace @pheme-protocol/backend test",
+    "lint": "yarn workspace @pheme-protocol/web lint && yarn workspace @pheme-protocol/backend lint && yarn workspace @pheme-protocol/contracts compile",
+    "test": "yarn workspace @pheme-protocol/web test && yarn workspace @pheme-protocol/backend test && yarn workspace @pheme-protocol/contracts test",
+    "test:ci": "yarn workspace @pheme-protocol/web test:ci && yarn workspace @pheme-protocol/backend test:ci && yarn workspace @pheme-protocol/contracts test",
     "build:backend": "yarn workspace @pheme-protocol/backend build",
     "build:contracts": "yarn workspace @pheme-protocol/contracts compile"
   },
