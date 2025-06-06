@@ -7,11 +7,9 @@ import { PhemeChat } from '../components/PhemeChat';
 import { Wallet, UserCheck, Users } from 'lucide-react';
 import PhemeLogo from '../components/PhemeLogo';
 import { Navigation } from '../components/Navigation';
-import { Footer } from '../components/Footer';
 import { SupportChat } from '../components/SupportChat';
 import Head from 'next/head';
 import SplashScreen from "@/components/SplashScreen";
-import { ErrorBanner } from '../components/ErrorBanner';
 import { useRouter } from 'next/router';
 
 export default function Home() {
@@ -32,7 +30,6 @@ export default function Home() {
   const [walletConnectAttempted, setWalletConnectAttempted] = useState(false);
   const [walletConnectError, setWalletConnectError] = useState<string | null>(null);
   const [walletConnectInitiated, setWalletConnectInitiated] = useState(false);
-  const [connectClicked, setConnectClicked] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
@@ -92,7 +89,6 @@ export default function Home() {
     if (isConnected) {
       setWalletConnectError(null);
       setWalletConnectAttempted(false);
-      setConnectClicked(false);
     }
   }, [isConnected]);
 
@@ -198,107 +194,108 @@ export default function Home() {
   };
 
   // Main content component
-  const MainContent = () => (
-    <div className="card bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-800 shadow-2xl rounded-3xl p-10 transition-all duration-300">
-      {/* Headline and Tagline */}
-      <div className="my-24">
-        <h2 className="text-4xl lg:text-5xl font-bold mb-4 lg:mb-6 leading-tight text-gray-900 dark:text-white">Earn Trust Onchain</h2>
-        <p className="text-xl lg:text-2xl font-medium text-gray-800 dark:text-white mb-4 lg:mb-6">
-          The bridge between who you are and who you want to become.
-        </p>
-        <p className="text-base lg:text-lg text-gray-700 dark:text-gray-300 mb-6 lg:mb-8">
-          Pheme is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation.
-        </p>
-      </div>
+  const MainContent = () => {
+    return (
+      <div className="card bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-800 shadow-2xl rounded-3xl p-10 transition-all duration-300">
+        {/* Headline and Tagline */}
+        <div className="my-24">
+          <h2 className="text-4xl lg:text-5xl font-bold mb-4 lg:mb-6 leading-tight text-gray-900 dark:text-white">Earn Trust Onchain</h2>
+          <p className="text-xl lg:text-2xl font-medium text-gray-800 dark:text-white mb-4 lg:mb-6">
+            The bridge between who you are and who you want to become.
+          </p>
+          <p className="text-base lg:text-lg text-gray-700 dark:text-gray-300 mb-6 lg:mb-8">
+            Pheme is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation.
+          </p>
+        </div>
 
-      {/* Call-to-Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-8 lg:mb-12">
-        <ConnectButton 
-          onClick={() => setConnectClicked(true)}
-          onConnectClick={() => setWalletConnectInitiated(true)}
-          onError={(err: unknown) => {
-            console.log('Wallet connect error:', err);
-            let msg = '';
-            if (typeof err === 'string') {
-              msg = err.toLowerCase();
-            } else if (err && typeof err === 'object') {
-              if ('message' in err && typeof (err as { message?: unknown }).message === 'string') {
-                msg = ((err as { message: string }).message).toLowerCase();
-              } else if ('reason' in err && typeof (err as { reason?: unknown }).reason === 'string') {
-                msg = ((err as { reason: string }).reason).toLowerCase();
+        {/* Call-to-Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-8 lg:mb-12">
+          <ConnectButton 
+            onClick={() => setWalletConnectInitiated(true)}
+            onConnectClick={() => setWalletConnectInitiated(true)}
+            onError={(err: unknown) => {
+              let msg = '';
+              if (typeof err === 'string') {
+                msg = err.toLowerCase();
+              } else if (err && typeof err === 'object') {
+                if ('message' in err && typeof (err as { message?: unknown }).message === 'string') {
+                  msg = ((err as { message: string }).message).toLowerCase();
+                } else if ('reason' in err && typeof (err as { reason?: unknown }).reason === 'string') {
+                  msg = ((err as { reason: string }).reason).toLowerCase();
+                }
               }
-            }
-            if (
-              walletConnectInitiated &&
-              msg &&
-              (msg.includes('rejected') ||
-                msg.includes('user denied') ||
-                msg.includes('cancel') ||
-                msg.includes('user closed') ||
-                msg.includes('user closed modal'))
-            ) {
-              setWalletConnectError('You rejected the wallet connection. Please connect your wallet to continue.');
-            }
-            setWalletConnectInitiated(false);
-          }}
-        />
-        <button 
-          onClick={() => setShowWaitlistModal(true)}
-          className="btn-primary bg-white text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl border-2 border-blue-700 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Join Waitlist
-        </button>
-      </div>
+              if (
+                walletConnectInitiated &&
+                msg &&
+                (msg.includes('rejected') ||
+                  msg.includes('user denied') ||
+                  msg.includes('cancel') ||
+                  msg.includes('user closed') ||
+                  msg.includes('user closed modal'))
+              ) {
+                setWalletConnectError('You rejected the wallet connection. Please connect your wallet to continue.');
+              }
+              setWalletConnectInitiated(false);
+            }}
+          />
+          <button 
+            onClick={() => setShowWaitlistModal(true)}
+            className="btn-primary bg-white text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl border-2 border-blue-700 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Join Waitlist
+          </button>
+        </div>
 
-      {/* Blockchain Logos */}
-      <div className="flex flex-wrap justify-center sm:justify-start gap-6 sm:gap-8 items-center opacity-90 dark:opacity-100">
-        <Image 
-          src="/logos/base.svg" 
-          alt="base" 
-          width={32} 
-          height={32} 
-          className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
-        />
-        <Image 
-          src="/logos/polygon.svg" 
-          alt="polygon" 
-          width={32} 
-          height={32} 
-          className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
-        />
-        <Image 
-          src="/logos/ethereum.svg" 
-          alt="ethereum" 
-          width={32} 
-          height={32} 
-          className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
-        />
-        <Image 
-          src="/logos/optimism.png"
-          alt="Optimism" 
-          width={32}
-          height={32}
-          className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
-          style={{
-            transform: 'translateZ(0)',
-            willChange: 'transform',
-            imageRendering: 'crisp-edges'
-          }}
-        />
-        <Image 
-          src="/logos/binance.svg" 
-          alt="BNB Chain" 
-          width={32} 
-          height={32} 
-          className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
-          style={{
-            transform: 'translateZ(0)',
-            willChange: 'transform'
-          }}
-        />
+        {/* Blockchain Logos */}
+        <div className="flex flex-wrap justify-center sm:justify-start gap-6 sm:gap-8 items-center opacity-90 dark:opacity-100">
+          <Image 
+            src="/logos/base.svg" 
+            alt="base" 
+            width={32} 
+            height={32} 
+            className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
+          />
+          <Image 
+            src="/logos/polygon.svg" 
+            alt="polygon" 
+            width={32} 
+            height={32} 
+            className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
+          />
+          <Image 
+            src="/logos/ethereum.svg" 
+            alt="ethereum" 
+            width={32} 
+            height={32} 
+            className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
+          />
+          <Image 
+            src="/logos/optimism.png"
+            alt="Optimism" 
+            width={32}
+            height={32}
+            className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
+            style={{
+              transform: 'translateZ(0)',
+              willChange: 'transform',
+              imageRendering: 'crisp-edges'
+            }}
+          />
+          <Image 
+            src="/logos/binance.svg" 
+            alt="BNB Chain" 
+            width={32} 
+            height={32} 
+            className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
+            style={{
+              transform: 'translateZ(0)',
+              willChange: 'transform'
+            }}
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   // iPhone interface component
   const IPhoneInterface = () => {
@@ -494,16 +491,6 @@ export default function Home() {
           </div>
           <Navigation />
         </header>
-
-        {/* Error Banner for wallet connect - top center, not shown by default */}
-        {connectClicked && walletConnectError && !isConnected && (
-          <div className="w-full flex justify-center mt-2 z-50">
-            <div className="bg-yellow-200 text-yellow-900 px-4 py-3 rounded shadow-lg w-full max-w-md text-center flex justify-between items-center">
-              <span>{walletConnectError}</span>
-              <button onClick={() => { setConnectClicked(false); setWalletConnectError(null); }} className="ml-4 text-lg font-bold">&times;</button>
-            </div>
-          </div>
-        )}
 
         {/* Main Content */}
         <main id="main-content" className="flex-grow relative z-10">

@@ -57,7 +57,6 @@ export function ConnectButton({ onError, onConnectClick, onClick }: ConnectButto
     <RainbowConnectButton.Custom>
       {({
         account,
-        chain,
         openConnectModal,
         mounted,
       }) => {
