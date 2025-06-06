@@ -194,108 +194,106 @@ export default function Home() {
   };
 
   // Main content component
-  const MainContent = () => {
-    return (
-      <div className="card bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-800 shadow-2xl rounded-3xl p-10 transition-all duration-300">
-        {/* Headline and Tagline */}
-        <div className="my-24">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4 lg:mb-6 leading-tight text-gray-900 dark:text-white">Earn Trust Onchain</h2>
-          <p className="text-xl lg:text-2xl font-medium text-gray-800 dark:text-white mb-4 lg:mb-6">
-            The bridge between who you are and who you want to become.
-          </p>
-          <p className="text-base lg:text-lg text-gray-700 dark:text-gray-300 mb-6 lg:mb-8">
-            Pheme is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation.
-          </p>
-        </div>
-
-        {/* Call-to-Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8 lg:mb-12">
-          <ConnectButton 
-            onClick={() => setWalletConnectInitiated(true)}
-            onConnectClick={() => setWalletConnectInitiated(true)}
-            onError={(err: unknown) => {
-              let msg = '';
-              if (typeof err === 'string') {
-                msg = err.toLowerCase();
-              } else if (err && typeof err === 'object') {
-                if ('message' in err && typeof (err as { message?: unknown }).message === 'string') {
-                  msg = ((err as { message: string }).message).toLowerCase();
-                } else if ('reason' in err && typeof (err as { reason?: unknown }).reason === 'string') {
-                  msg = ((err as { reason: string }).reason).toLowerCase();
-                }
-              }
-              if (
-                walletConnectInitiated &&
-                msg &&
-                (msg.includes('rejected') ||
-                  msg.includes('user denied') ||
-                  msg.includes('cancel') ||
-                  msg.includes('user closed') ||
-                  msg.includes('user closed modal'))
-              ) {
-                setWalletConnectError('You rejected the wallet connection. Please connect your wallet to continue.');
-              }
-              setWalletConnectInitiated(false);
-            }}
-          />
-          <button 
-            onClick={() => setShowWaitlistModal(true)}
-            className="btn-primary bg-white text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl border-2 border-blue-700 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            Join Waitlist
-          </button>
-        </div>
-
-        {/* Blockchain Logos */}
-        <div className="flex flex-wrap justify-center sm:justify-start gap-6 sm:gap-8 items-center opacity-90 dark:opacity-100">
-          <Image 
-            src="/logos/base.svg" 
-            alt="base" 
-            width={32} 
-            height={32} 
-            className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
-          />
-          <Image 
-            src="/logos/polygon.svg" 
-            alt="polygon" 
-            width={32} 
-            height={32} 
-            className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
-          />
-          <Image 
-            src="/logos/ethereum.svg" 
-            alt="ethereum" 
-            width={32} 
-            height={32} 
-            className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
-          />
-          <Image 
-            src="/logos/optimism.png"
-            alt="Optimism" 
-            width={32}
-            height={32}
-            className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
-            style={{
-              transform: 'translateZ(0)',
-              willChange: 'transform',
-              imageRendering: 'crisp-edges'
-            }}
-          />
-          <Image 
-            src="/logos/binance.svg" 
-            alt="BNB Chain" 
-            width={32} 
-            height={32} 
-            className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
-            style={{
-              transform: 'translateZ(0)',
-              willChange: 'transform'
-            }}
-          />
-        </div>
+  const MainContent = () => (
+    <div className="card bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-800 shadow-2xl rounded-3xl p-10 transition-all duration-300">
+      {/* Headline and Tagline */}
+      <div className="my-24">
+        <h2 className="text-4xl lg:text-5xl font-bold mb-4 lg:mb-6 leading-tight text-gray-900 dark:text-white">Earn Trust Onchain</h2>
+        <p className="text-xl lg:text-2xl font-medium text-gray-800 dark:text-white mb-4 lg:mb-6">
+          The bridge between who you are and who you want to become.
+        </p>
+        <p className="text-base lg:text-lg text-gray-700 dark:text-gray-300 mb-6 lg:mb-8">
+          Pheme is a peer-to-peer AI validator network that verifies real contributions and builds onchain reputation.
+        </p>
       </div>
-    );
-  };
+
+      {/* Call-to-Action Buttons */}
+      <div className="flex flex-col sm:flex-row gap-4 mb-8 lg:mb-12">
+        <ConnectButton 
+          onClick={() => setWalletConnectInitiated(true)}
+          onConnectClick={() => setWalletConnectInitiated(true)}
+          onError={(err: unknown) => {
+            let msg = '';
+            if (typeof err === 'string') {
+              msg = err.toLowerCase();
+            } else if (err && typeof err === 'object') {
+              if ('message' in err && typeof (err as { message?: unknown }).message === 'string') {
+                msg = ((err as { message: string }).message).toLowerCase();
+              } else if ('reason' in err && typeof (err as { reason?: unknown }).reason === 'string') {
+                msg = ((err as { reason: string }).reason).toLowerCase();
+              }
+            }
+            if (
+              walletConnectInitiated &&
+              msg &&
+              (msg.includes('rejected') ||
+                msg.includes('user denied') ||
+                msg.includes('cancel') ||
+                msg.includes('user closed') ||
+                msg.includes('user closed modal'))
+            ) {
+              setWalletConnectError('You rejected the wallet connection. Please connect your wallet to continue.');
+            }
+            setWalletConnectInitiated(false);
+          }}
+        />
+        <button 
+          onClick={() => setShowWaitlistModal(true)}
+          className="btn-primary bg-white text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl border-2 border-blue-700 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Join Waitlist
+        </button>
+      </div>
+
+      {/* Blockchain Logos */}
+      <div className="flex flex-wrap justify-center sm:justify-start gap-6 sm:gap-8 items-center opacity-90 dark:opacity-100">
+        <Image 
+          src="/logos/base.svg" 
+          alt="base" 
+          width={32} 
+          height={32} 
+          className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
+        />
+        <Image 
+          src="/logos/polygon.svg" 
+          alt="polygon" 
+          width={32} 
+          height={32} 
+          className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
+        />
+        <Image 
+          src="/logos/ethereum.svg" 
+          alt="ethereum" 
+          width={32} 
+          height={32} 
+          className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
+        />
+        <Image 
+          src="/logos/optimism.png"
+          alt="Optimism" 
+          width={32}
+          height={32}
+          className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
+          style={{
+            transform: 'translateZ(0)',
+            willChange: 'transform',
+            imageRendering: 'crisp-edges'
+          }}
+        />
+        <Image 
+          src="/logos/binance.svg" 
+          alt="BNB Chain" 
+          width={32} 
+          height={32} 
+          className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
+          style={{
+            transform: 'translateZ(0)',
+            willChange: 'transform'
+          }}
+        />
+      </div>
+    </div>
+  );
 
   // iPhone interface component
   const IPhoneInterface = () => {
