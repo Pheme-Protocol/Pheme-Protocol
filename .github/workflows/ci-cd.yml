@@ -28,12 +28,25 @@ jobs:
       - name: Clean install dependencies
         run: |
           yarn cache clean
-          yarn install --frozen-lockfile
+          yarn install --frozen-lockfile --verbose
       
-      - name: Run ESLint and Tests
+      - name: Run ESLint
         run: |
-          yarn lint
-          yarn test:ci
+          echo "Running ESLint on web..."
+          yarn workspace @pheme-protocol/web lint
+          echo "Running ESLint on backend..."
+          yarn workspace @pheme-protocol/backend lint
+          echo "Compiling contracts..."
+          yarn workspace @pheme-protocol/contracts compile
+      
+      - name: Run Tests
+        run: |
+          echo "Running web tests..."
+          yarn workspace @pheme-protocol/web test:ci
+          echo "Running backend tests..."
+          yarn workspace @pheme-protocol/backend test:ci
+          echo "Running contract tests..."
+          yarn workspace @pheme-protocol/contracts test
 
   solidity-scan:
     name: Solidity Security Scan
@@ -49,10 +62,14 @@ jobs:
           cache: 'yarn'
       
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: |
+          yarn cache clean
+          yarn install --frozen-lockfile --verbose
       
       - name: Compile contracts
-        run: yarn workspace @pheme-protocol/contracts compile
+        run: |
+          cd contracts
+          yarn hardhat compile
       
       - name: Run Slither
         uses: crytic/slither-action@v0.2.0
@@ -73,16 +90,24 @@ jobs:
           cache: 'yarn'
       
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: |
+          yarn cache clean
+          yarn install --frozen-lockfile --verbose
       
       - name: Compile contracts
-        run: yarn workspace @pheme-protocol/contracts compile
+        run: |
+          cd contracts
+          yarn hardhat compile
       
       - name: Build backend
-        run: yarn workspace @pheme-protocol/backend build
+        run: |
+          cd src
+          yarn build
       
       - name: Build frontend
-        run: yarn workspace @pheme-protocol/web build
+        run: |
+          cd web
+          yarn build
 
   docker-build-push:
     name: Docker Build & Push
