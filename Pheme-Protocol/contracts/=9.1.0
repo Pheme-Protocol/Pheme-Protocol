@@ -1,0 +1,91 @@
+yarn add v1.22.22
+[1/4] Resolving packages...
+[2/4] Fetching packages...
+[3/4] Linking dependencies...
+[4/4] Building fresh packages...
+success Saved lockfile.
+success Saved 81 new dependencies.
+info Direct dependencies
+info All dependencies
+├─ @ethersproject/contracts@5.8.0
+├─ @ethersproject/json-wallets@5.8.0
+├─ @ethersproject/providers@5.8.0
+├─ @ethersproject/solidity@5.8.0
+├─ @ethersproject/units@5.8.0
+├─ @ethersproject/wallet@5.8.0
+├─ @nomicfoundation/hardhat-chai-matchers@2.0.8
+├─ @nomicfoundation/hardhat-ethers@3.0.8
+├─ @nomicfoundation/hardhat-ignition-ethers@0.15.11
+├─ @nomicfoundation/hardhat-network-helpers@1.0.12
+├─ @solidity-parser/parser@0.20.1
+├─ @typechain/ethers-v6@0.5.1
+├─ @typechain/hardhat@9.1.0
+├─ @types/chai-as-promised@7.1.8
+├─ @types/chai@4.3.20
+├─ @types/deep-eql@4.0.2
+├─ @types/glob@7.2.0
+├─ @types/minimatch@5.1.2
+├─ @types/mocha@10.0.10
+├─ @types/prettier@2.7.3
+├─ abbrev@1.0.9
+├─ aes-js@4.0.0-beta.5
+├─ amdefine@1.0.1
+├─ antlr4ts@0.5.0-alpha.4
+├─ array-back@3.1.0
+├─ array-uniq@1.0.3
+├─ assertion-error@1.1.0
+├─ async@1.5.2
+├─ bech32@1.1.4
+├─ chai-as-promised@7.1.2
+├─ chai@4.5.0
+├─ charenc@0.0.2
+├─ check-error@1.0.3
+├─ cli-table3@0.5.1
+├─ command-line-args@5.2.1
+├─ command-line-usage@6.1.3
+├─ crypt@0.0.2
+├─ death@1.1.0
+├─ deep-eql@4.1.4
+├─ deep-extend@0.6.0
+├─ difflib@0.2.4
+├─ escodegen@1.8.1
+├─ eth-gas-reporter@0.2.27
+├─ ethers@6.14.3
+├─ find-replace@3.0.0
+├─ fs-readdir-recursive@1.1.0
+├─ get-func-name@2.0.2
+├─ ghost-testrpc@0.0.2
+├─ global-modules@2.0.0
+├─ global-prefix@3.0.0
+├─ handlebars@4.7.8
+├─ hardhat-gas-reporter@1.0.10
+├─ heap@0.2.7
+├─ ini@1.3.8
+├─ interpret@1.4.0
+├─ jsonschema@1.5.0
+├─ lodash.isequal@4.5.0
+├─ loupe@2.3.7
+├─ markdown-table@1.1.3
+├─ neo-async@2.6.2
+├─ nopt@3.0.6
+├─ ordinal@1.0.3
+├─ pathval@1.1.1
+├─ pify@4.0.1
+├─ prettier@2.8.8
+├─ rechoir@0.6.2
+├─ recursive-readdir@2.2.3
+├─ reduce-flatten@2.0.0
+├─ req-cwd@2.0.0
+├─ req-from@2.0.0
+├─ sc-istanbul@0.4.6
+├─ shelljs@0.8.5
+├─ solidity-coverage@0.8.16
+├─ string-format@2.0.0
+├─ table-layout@1.0.2
+├─ ts-command-line-args@2.5.1
+├─ type-detect@4.1.0
+├─ typechain@8.3.2
+├─ uglify-js@3.19.3
+├─ web3-utils@1.10.4
+└─ wordwrapjs@4.0.1
+Done in 41.69s.

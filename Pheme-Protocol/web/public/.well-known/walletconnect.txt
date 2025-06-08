@@ -1,0 +1,3 @@
+# This file should contain your WalletConnect project ID
+# Replace PROJECTID with your actual project ID from WalletConnect Cloud
+PROJECTID 

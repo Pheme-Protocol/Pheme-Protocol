@@ -1,0 +1,41 @@
+{
+  "name": "@pheme-protocol/subgraph",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PHEME - Subgraph Implementation",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ pheme-protocol/pheme",
+    "create-local": "graph create --node http://localhost:8020/ pheme-protocol/pheme",
+    "remove-local": "graph remove --node http://localhost:8020/ pheme-protocol/pheme",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 pheme-protocol/pheme",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.97.1",
+    "@graphprotocol/graph-ts": "^0.32.0",
+    "axios": "^1.9.0",
+    "cross-spawn": "^7.0.6",
+    "ejs": "^3.1.10",
+    "parse-duration": "^2.1.4",
+    "semver": "^7.7.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "resolutions": {
+    "lodash.trim": "^4.5.0",
+    "lodash.trimend": "^4.5.0",
+    "gluegun/lodash.trim": "^4.5.0",
+    "gluegun/lodash.trimend": "^4.5.0"
+  },
+  "overrides": {
+    "lodash.trim": "^4.5.0",
+    "lodash.trimend": "^4.5.0",
+    "gluegun": {
+      "lodash.trim": "^4.5.0",
+      "lodash.trimend": "^4.5.0"
+    }
+  }
+}
