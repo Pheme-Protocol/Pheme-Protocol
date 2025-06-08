@@ -1,0 +1,33 @@
+# ---- Base Node Image ----
+FROM node:20-alpine AS base
+WORKDIR /app
+
+# ---- Install dependencies ----
+COPY package.json yarn.lock ./
+COPY src/package.json ./src/package.json
+RUN yarn install --frozen-lockfile --production=false
+
+# ---- Copy backend source ----
+COPY src/. .
+
+# ---- Prisma generate ----
+RUN yarn prisma generate || :
+
+# ---- Build TypeScript ----
+RUN yarn build
+
+# ---- Production image ----
+FROM node:20-alpine AS prod
+WORKDIR /app
+
+# Copy only the built app and node_modules
+COPY --from=base /app/dist ./dist
+COPY --from=base /app/node_modules ./node_modules
+COPY --from=base /app/package.json ./package.json
+COPY --from=base /app/prisma ./prisma
+
+# Copy .env.local if present (handled at runtime via environment variables in CI/CD)
+# (No COPY for .env.local; use GitHub Secrets or runtime env injection)
+
+EXPOSE 3001
+CMD ["node", "dist/main.js"] 
