@@ -196,6 +196,7 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
       <div 
         ref={messagesContainerRef}
         className="flex-1 min-h-0 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-800"
+        style={{ maxHeight: 'calc(100vh - 200px)' }}
       >
         {messages.length === 0 ? (
           <div className="text-center p-6 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
@@ -272,7 +273,7 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
 
       <form 
         onSubmit={handleSend} 
-        className="p-4 border-t dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg"
+        className="sticky bottom-0 p-4 border-t dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg"
         role="form"
         aria-label="Chat message input"
       >
@@ -287,11 +288,12 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
             placeholder="Talk to PHEME..."
             disabled={isLoading}
             className="flex-1 px-4 py-3 text-base rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ minHeight: '48px' }}
           />
           <button
             type="submit"
             disabled={isLoading || !localInput.trim()}
-            className="px-4 py-2 bg-primary-light hover:bg-primary-light/90 dark:bg-primary-dark dark:hover:bg-primary-dark/90 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-primary-light hover:bg-primary-light/90 dark:bg-primary-dark dark:hover:bg-primary-dark/90 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px]"
           >
             {isLoading ? 'Sending...' : 'Send'}
           </button>
