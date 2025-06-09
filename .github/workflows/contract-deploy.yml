@@ -1,0 +1,41 @@
+name: Smart Contract Deployment
+
+on:
+  push:
+    paths:
+      - 'contracts/**'
+    branches:
+      - main
+      - develop
+
+jobs:
+  deploy-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      - name: Compile Contracts
+        working-directory: contracts
+        run: yarn compile
+      - name: Run Tests
+        working-directory: contracts
+        run: yarn test
+      - name: Deploy to Base Testnet
+        if: github.ref == 'refs/heads/develop'
+        working-directory: contracts
+        run: |
+          npx hardhat run scripts/deploy.ts --network base-testnet
+        env:
+          PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+      - name: Deploy to Base Mainnet
+        if: github.ref == 'refs/heads/main'
+        working-directory: contracts
+        run: |
+          npx hardhat run scripts/deploy.ts --network base-mainnet
+        env:
+          PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }} 
