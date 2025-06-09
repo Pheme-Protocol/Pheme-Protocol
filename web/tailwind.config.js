@@ -10,7 +10,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-inter)'],
+        orbitron: ['var(--font-orbitron)'],
+        mono: ['var(--font-fira-mono)'],
       },
       colors: {
         primary: {
@@ -60,7 +62,11 @@ module.exports = {
         border: {
           light: '#e5e7eb',
           dark: '#1f2937',
-        }
+        },
+        'primary-light': '#3B82F6',
+        'primary-dark': '#60A5FA',
+        'background-light': '#FFFFFF',
+        'background-dark': '#1A1A1A',
       },
       animation: {
         'gradient': 'gradient 8s linear infinite',

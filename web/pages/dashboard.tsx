@@ -29,16 +29,24 @@ export default function Dashboard() {
   const [walletConnectInitiated, setWalletConnectInitiated] = useState(false);
   const [connectClicked, setConnectClicked] = useState(false);
 
+  // Redirect to home if not connected
+  useEffect(() => {
+    if (!isConnected && router.isReady) {
+      router.replace('/');
+    }
+  }, [isConnected, router.isReady, router]);
+
   // Check if the page was loaded via reload
   useEffect(() => {
     const navigationEntries = performance.getEntriesByType('navigation');
     if (navigationEntries.length > 0) {
       const navEntry = navigationEntries[0] as PerformanceNavigationTiming;
-      if (navEntry.type === 'reload') {
+      if (navEntry.type === 'reload' && !isConnected) {
+        // Only redirect if user is not connected
         router.replace('/');
       }
     }
-  }, [router]);
+  }, [router, isConnected]);
 
   useEffect(() => {
     // Check if device is mobile
