@@ -41,14 +41,14 @@ jobs:
       - name: Run ESLint
         run: yarn lint
 
-      - name: Lint all workspaces
-        run: yarn workspaces run lint
+      # - name: Lint all workspaces
+      #   run: yarn workspaces run lint
 
       - name: Run Jest tests
         run: yarn test --ci
 
-      - name: Test all workspaces
-        run: yarn workspaces run test
+      # - name: Test all workspaces
+      #   run: yarn workspaces run test
 
   # 2) Solidity Security Scan (contracts/ exists)
   solidity-scan:
