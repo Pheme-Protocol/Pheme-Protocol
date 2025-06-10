@@ -105,12 +105,21 @@ jobs:
           yarn build
 
   # 4) Docker Build & Push
-  docker:
+    docker:
     name: "🐳 Build & Push Docker Images"
     runs-on: ubuntu-latest
     needs: build
-    # only run this job if both secrets are present
-    if: ${{ secrets.DOCKER_USERNAME && secrets.DOCKER_PASSWORD }}
+
+    # bring your secrets into env so you can reference them in if:
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      DOCKER_REGISTRY: ${{ env.DOCKER_REGISTRY }}
+      DOCKER_NAMESPACE: ${{ env.DOCKER_NAMESPACE }}
+
+    # only run the job if both are non-empty
+    if: ${{ env.DOCKER_USERNAME != '' && env.DOCKER_PASSWORD != '' }}
+
     steps:
       - uses: actions/checkout@v3
 
@@ -124,8 +133,8 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ${{ env.DOCKER_REGISTRY }}
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
 
       - name: Build & Push Backend Image
         uses: docker/build-push-action@v5
@@ -148,6 +157,7 @@ jobs:
           context: bots
           push: true
           tags: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/pheme-bots:${{ github.sha }}
+
 
   # # 5) Deploy to Staging
   # deploy:
