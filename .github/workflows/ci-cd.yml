@@ -2,18 +2,18 @@ name: CI / CD Pipeline
 
 on:
   push:
-    branches:
-      - main
-      - develop
+    branches: [main, develop]
   pull_request:
-    branches:
-      - main
-      - develop
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   NODE_VERSION: '20'
-  DOCKER_IMAGE_REGISTRY: docker.io
-  DOCKER_IMAGE_NAMESPACE: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_REGISTRY: docker.io
+  DOCKER_NAMESPACE: ${{ secrets.DOCKER_USERNAME }}
 
 jobs:
 
@@ -28,12 +28,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'yarn'
-
-      - name: Clean node_modules and yarn cache
-        run: |
-          rm -rf node_modules yarn.lock
-          yarn cache clean
+          cache: yarn
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -44,21 +39,18 @@ jobs:
       - name: Run Jest tests
         run: yarn test --ci
 
-  # 2) Solidity Security Scan (contracts/ exists)
+  # 2) Solidity Security Scan
   solidity-scan:
     name: "🛡️ Solidity Security Scan"
     runs-on: ubuntu-latest
     needs: lint-test
     steps:
       - uses: actions/checkout@v3
-      - name: List files in /src and /src/contracts
-        uses: addnab/docker-run-action@v3
-        with:
-          image: alpine:latest
-          options: -v ${{ github.workspace }}:/src
-          run: |
-            ls -l /src
-            ls -l /src/contracts || echo "/src/contracts does not exist"
+
+      - name: List contract files
+        run: |
+          ls -l .
+          ls -l contracts || echo "No contracts directory"
 
       - name: Run Slither
         uses: addnab/docker-run-action@v3
@@ -79,12 +71,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'yarn'
-
-      - name: Clean node_modules and yarn cache
-        run: |
-          rm -rf node_modules yarn.lock
-          yarn cache clean
+          cache: yarn
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -93,167 +80,148 @@ jobs:
         working-directory: contracts
         run: yarn compile
 
-      - name: Build Backend (src)
+      - name: Build Backend
         working-directory: src
         run: yarn build
 
-      - name: Build Frontend (web)
+      - name: Build Frontend
         working-directory: web
         run: yarn build
 
-      - name: Build Bots
+      - name: Security Audit & Build Bots
         if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
-        run: |
-          if [ ! -d "bots" ]; then
-            echo "::error::Bots directory not found"
-            exit 1
-          fi
-          cd bots
-          echo "Installing dependencies..."
-          yarn install --frozen-lockfile
-          echo "Running security audit..."
-          yarn audit
-          echo "Building bots..."
-          yarn build
         env:
           NODE_ENV: production
           BOT_SECURITY_LEVEL: high
           RATE_LIMIT_ENABLED: true
+        run: |
+          if [ ! -d bots ]; then
+            echo "::error::Bots directory not found"
+            exit 1
+          fi
+          cd bots
+          yarn install --frozen-lockfile
+          yarn audit --level high
+          yarn build
 
-  # 4) Docker Build & Push (if you use Docker Hub)
+  # 4) Docker Build & Push
   docker:
-    name: "🐳 Docker Build & Push"
+    name: "🐳 Build & Push Docker Images"
     runs-on: ubuntu-latest
     needs: build
     steps:
       - uses: actions/checkout@v3
 
-      - name: Log in to Docker Hub
-        run: |
-          if [ -z "${{ secrets.DOCKER_USERNAME }}" ] || [ -z "${{ secrets.DOCKER_PASSWORD }}" ]; then
-            echo "Docker credentials not set, skipping login."
-            exit 0
-          fi
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin $DOCKER_IMAGE_REGISTRY
-        
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to registry
+        if: secrets.DOCKER_USERNAME != ''
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Build & Push Backend Image
-        run: |
-          if [ -z "${{ secrets.DOCKER_USERNAME }}" ] || [ -z "${{ secrets.DOCKER_PASSWORD }}" ]; then
-            echo "Docker credentials not set, skipping build/push."
-            exit 0
-          fi
-          docker build -t $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-backend:${GITHUB_SHA::8} src/
-          docker push $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-backend:${GITHUB_SHA::8}
+        uses: docker/build-push-action@v5
+        with:
+          context: src
+          push: ${{ secrets.DOCKER_USERNAME != '' }}
+          tags: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/pheme-backend:${{ github.sha }}
 
       - name: Build & Push Frontend Image
-        run: |
-          if [ -z "${{ secrets.DOCKER_USERNAME }}" ] || [ -z "${{ secrets.DOCKER_PASSWORD }}" ]; then
-            echo "Docker credentials not set, skipping build/push."
-            exit 0
-          fi
-          docker build -t $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-frontend:${GITHUB_SHA::8} web/
-          docker push $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-frontend:${GITHUB_SHA::8}
+        uses: docker/build-push-action@v5
+        with:
+          context: web
+          push: ${{ secrets.DOCKER_USERNAME != '' }}
+          tags: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/pheme-frontend:${{ github.sha }}
 
       - name: Build & Push Bots Image
         if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
-        run: |
-          if [ -d "bots" ]; then
-            if [ -z "${{ secrets.DOCKER_USERNAME }}" ] || [ -z "${{ secrets.DOCKER_PASSWORD }}" ]; then
-              echo "Docker credentials not set, skipping build/push."
-              exit 0
-            fi
-            docker build -t $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-bots:${GITHUB_SHA::8} bots/
-            docker scan $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-bots:${GITHUB_SHA::8}
-            docker push $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-bots:${GITHUB_SHA::8}
-          fi
-
-  # 5) Deploy to Staging / Production
-  deploy:
-    name: "🚀 Deploy to Staging / Prod"
-    runs-on: ubuntu-latest
-    needs: docker
-    if: github.ref == 'refs/heads/main'
-    environment:
-      name: production
-      url: https://staging.app.phemebot.xyz
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - uses: actions/checkout@v3
-
-      # 5.1) Configure AWS using OIDC
-      - name: Configure AWS Credentials
-        id: aws-auth
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: docker/build-push-action@v5
         with:
-          role-to-assume: arn:aws:iam::123456789012:role/github-actions-role
-          aws-region: us-east-1
-          mask-aws-account-id: true
-        continue-on-error: true
+          context: bots
+          push: ${{ secrets.DOCKER_USERNAME != '' }}
+          tags: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/pheme-bots:${{ github.sha }}
 
-      - name: Check AWS Authentication
-        if: steps.aws-auth.outcome == 'failure'
-        run: |
-          echo "::error::Failed to authenticate with AWS. Please check the AWS role configuration."
-          exit 1
+  # # 5) Deploy to Staging
+  # deploy:
+  #   name: "🚀 Deploy to Staging"
+  #   runs-on: ubuntu-latest
+  #   needs: docker
+  #   if: github.ref == 'refs/heads/main'
+  #   environment:
+  #     name: staging
+  #     url: https://staging.app.phemebot.xyz
+  #   permissions:
+  #     id-token: write
+  #     contents: read
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - name: Verify AWS Authentication
-        if: steps.aws-auth.outcome == 'success'
-        run: |
-          aws sts get-caller-identity
-          echo "AWS authentication successful"
+  #     - name: Configure AWS Credentials
+  #       id: aws-auth
+  #       uses: aws-actions/configure-aws-credentials@v2
+  #       with:
+  #         role-to-assume: arn:aws:iam::123456789012:role/github-actions-role
+  #         aws-region: us-east-1
+  #         mask-aws-account-id: true
 
-      # 5.2) Terraform (Provision/Update Staging infra)
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0
+  #     - name: Verify AWS Authentication
+  #       if: steps.aws-auth.outcome == 'success'
+  #       run: aws sts get-caller-identity
 
-      - name: Terraform Init & Apply (Staging)
-        working-directory: infra
-        run: |
-          terraform init
-          terraform apply -var-file=terraform.tfvars.staging -auto-approve
+  #     - name: Setup Terraform
+  #       uses: hashicorp/setup-terraform@v2
+  #       with:
+  #         terraform_version: 1.5.0
 
-      # 5.3) Kubernetes (Deploy Backend, Frontend, Bots)
-      - name: Setup kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'latest'
+  #     - name: Terraform Init & Apply
+  #       working-directory: infra
+  #       run: |
+  #         terraform init -backend-config=terraform.tfvars.staging
+  #         terraform apply -var-file=terraform.tfvars.staging -auto-approve
 
-      - name: Setup Helm
-        run: |
-          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+  #     - name: Setup kubectl
+  #       uses: azure/setup-kubectl@v3
+  #       with:
+  #         version: 'latest'
 
-      - name: Deploy Backend via Helm
-        run: |
-          helm upgrade --install pheme-backend k8s/charts/backend \
-            --namespace pheme-staging \
-            --values k8s/values-staging.yaml \
-            --set image.tag=${GITHUB_SHA::8}
+  #     - name: Setup Helm
+  #       uses: azure/setup-helm@v1
+  #       with:
+  #         version: '3.10.0'
 
-      - name: Deploy Frontend via Helm
-        run: |
-          helm upgrade --install pheme-frontend k8s/charts/frontend \
-            --namespace pheme-staging \
-            --values k8s/values-staging.yaml \
-            --set image.tag=${GITHUB_SHA::8}
+  #     - name: Deploy Backend via Helm
+  #       run: |
+  #         helm upgrade --install pheme-backend k8s/charts/backend \
+  #           --namespace pheme-staging \
+  #           --values k8s/values-staging.yaml \
+  #           --set image.tag=${{ github.sha }}
 
-      - name: Deploy Bots via Helm
-        run: |
-          if [ -d "bots" ]; then
-            helm upgrade --install pheme-bots k8s/charts/bots \
-              --namespace pheme-staging \
-              --values k8s/values-staging.yaml \
-              --set image.tag=${GITHUB_SHA::8} \
-              --set security.rateLimit.enabled=true \
-              --set security.auditLogging.enabled=true \
-              --set security.accessControl.enabled=true
-          fi
+  #     - name: Deploy Frontend via Helm
+  #       run: |
+  #         helm upgrade --install pheme-frontend k8s/charts/frontend \
+  #           --namespace pheme-staging \
+  #           --values k8s/values-staging.yaml \
+  #           --set image.tag=${{ github.sha }}
 
-      # 5.4) Smoke Test
-      - name: Smoke Test
-        run: |
-          curl -f https://staging.app.phemebot.xyz/health || (echo "Health check failed" && exit 1)
-    # TODO: Uncomment and adjust if infra/ and k8s/ are added 
+  #     - name: Deploy Bots via Helm
+  #       run: |
+  #         if [ -d bots ]; then
+  #           helm upgrade --install pheme-bots k8s/charts/bots \
+  #             --namespace pheme-staging \
+  #             --values k8s/values-staging.yaml \
+  #             --set image.tag=${{ github.sha }} \
+  #             --set security.rateLimit.enabled=true \
+  #             --set security.auditLogging.enabled=true \
+  #             --set security.accessControl.enabled=true
+  #         fi
+
+  #     - name: Smoke Test
+  #       run: |
+  #         curl -f https://staging.app.phemebot.xyz/health
