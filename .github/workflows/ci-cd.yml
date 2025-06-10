@@ -105,19 +105,19 @@ jobs:
           yarn build
 
   # 4) Docker Build & Push
-    docker:
+  docker:
     name: "🐳 Build & Push Docker Images"
     runs-on: ubuntu-latest
     needs: build
 
-    # bring your secrets into env so you can reference them in if:
+    # pull secrets into env so we can use them in the job-level if:
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       DOCKER_REGISTRY: ${{ env.DOCKER_REGISTRY }}
       DOCKER_NAMESPACE: ${{ env.DOCKER_NAMESPACE }}
 
-    # only run the job if both are non-empty
+    # only run this job when both Docker creds are set
     if: ${{ env.DOCKER_USERNAME != '' && env.DOCKER_PASSWORD != '' }}
 
     steps:
@@ -158,81 +158,80 @@ jobs:
           push: true
           tags: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/pheme-bots:${{ github.sha }}
 
-
-  # # 5) Deploy to Staging
-  # deploy:
-  #   name: "🚀 Deploy to Staging"
-  #   runs-on: ubuntu-latest
-  #   needs: docker
-  #   if: github.ref == 'refs/heads/main'
-  #   environment:
-  #     name: staging
-  #     url: https://staging.app.phemebot.xyz
-  #   permissions:
-  #     id-token: write
-  #     contents: read
-  #   steps:
-  #     - uses: actions/checkout@v3
-
-  #     - name: Configure AWS Credentials
-  #       id: aws-auth
-  #       uses: aws-actions/configure-aws-credentials@v2
-  #       with:
-  #         role-to-assume: arn:aws:iam::123456789012:role/github-actions-role
-  #         aws-region: us-east-1
-  #         mask-aws-account-id: true
-
-  #     - name: Verify AWS Authentication
-  #       if: steps.aws-auth.outcome == 'success'
-  #       run: aws sts get-caller-identity
-
-  #     - name: Setup Terraform
-  #       uses: hashicorp/setup-terraform@v2
-  #       with:
-  #         terraform_version: 1.5.0
-
-  #     - name: Terraform Init & Apply
-  #       working-directory: infra
-  #       run: |
-  #         terraform init -backend-config=terraform.tfvars.staging
-  #         terraform apply -var-file=terraform.tfvars.staging -auto-approve
-
-  #     - name: Setup kubectl
-  #       uses: azure/setup-kubectl@v3
-  #       with:
-  #         version: 'latest'
-
-  #     - name: Setup Helm
-  #       uses: azure/setup-helm@v1
-  #       with:
-  #         version: '3.10.0'
-
-  #     - name: Deploy Backend via Helm
-  #       run: |
-  #         helm upgrade --install pheme-backend k8s/charts/backend \
-  #           --namespace pheme-staging \
-  #           --values k8s/values-staging.yaml \
-  #           --set image.tag=${{ github.sha }}
-
-  #     - name: Deploy Frontend via Helm
-  #       run: |
-  #         helm upgrade --install pheme-frontend k8s/charts/frontend \
-  #           --namespace pheme-staging \
-  #           --values k8s/values-staging.yaml \
-  #           --set image.tag=${{ github.sha }}
-
-  #     - name: Deploy Bots via Helm
-  #       run: |
-  #         if [ -d bots ]; then
-  #           helm upgrade --install pheme-bots k8s/charts/bots \
-  #             --namespace pheme-staging \
-  #             --values k8s/values-staging.yaml \
-  #             --set image.tag=${{ github.sha }} \
-  #             --set security.rateLimit.enabled=true \
-  #             --set security.auditLogging.enabled=true \
-  #             --set security.accessControl.enabled=true
-  #         fi
-
-  #     - name: Smoke Test
-  #       run: |
-  #         curl -f https://staging.app.phemebot.xyz/health
+#  # 5) Deploy to Staging
+#  deploy:
+#    name: "🚀 Deploy to Staging"
+#    runs-on: ubuntu-latest
+#    needs: docker
+#    if: github.ref == 'refs/heads/main'
+#    environment:
+#      name: staging
+#      url: https://staging.app.phemebot.xyz
+#    permissions:
+#      id-token: write
+#      contents: read
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Configure AWS Credentials
+#        id: aws-auth
+#        uses: aws-actions/configure-aws-credentials@v2
+#        with:
+#          role-to-assume: arn:aws:iam::123456789012:role/github-actions-role
+#          aws-region: us-east-1
+#          mask-aws-account-id: true
+#
+#      - name: Verify AWS Authentication
+#        if: steps.aws-auth.outcome == 'success'
+#        run: aws sts get-caller-identity
+#
+#      - name: Setup Terraform
+#        uses: hashicorp/setup-terraform@v2
+#        with:
+#          terraform_version: 1.5.0
+#
+#      - name: Terraform Init & Apply
+#        working-directory: infra
+#        run: |
+#          terraform init -backend-config=terraform.tfvars.staging
+#          terraform apply -var-file=terraform.tfvars.staging -auto-approve
+#
+#      - name: Setup kubectl
+#        uses: azure/setup-kubectl@v3
+#        with:
+#          version: 'latest'
+#
+#      - name: Setup Helm
+#        uses: azure/setup-helm@v1
+#        with:
+#          version: '3.10.0'
+#
+#      - name: Deploy Backend via Helm
+#        run: |
+#          helm upgrade --install pheme-backend k8s/charts/backend \
+#            --namespace pheme-staging \
+#            --values k8s/values-staging.yaml \
+#            --set image.tag=${{ github.sha }}
+#
+#      - name: Deploy Frontend via Helm
+#        run: |
+#          helm upgrade --install pheme-frontend k8s/charts/frontend \
+#            --namespace pheme-staging \
+#            --values k8s/values-staging.yaml \
+#            --set image.tag=${{ github.sha }}
+#
+#      - name: Deploy Bots via Helm
+#        run: |
+#          if [ -d bots ]; then
+#            helm upgrade --install pheme-bots k8s/charts/bots \
+#              --namespace pheme-staging \
+#              --values k8s/values-staging.yaml \
+#              --set image.tag=${{ github.sha }} \
+#              --set security.rateLimit.enabled=true \
+#              --set security.auditLogging.enabled=true \
+#              --set security.accessControl.enabled=true
+#          fi
+#
+#      - name: Smoke Test
+#        run: |
+#          curl -f https://staging.app.phemebot.xyz/health
