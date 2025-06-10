@@ -7,9 +7,6 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "test": "jest",
-    "test:ci": "jest --ci",
     "generate-favicon": "node scripts/generate-favicon.js",
     "format-text": "echo '<b>Bold text</b> and <i>italic text</i> demonstration'"
   },

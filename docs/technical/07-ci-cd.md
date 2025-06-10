@@ -44,13 +44,11 @@ jobs:
           
       - name: Lint
         run: |
-          npm run lint
-          npm run prettier:check
+          yarn lint
           
       - name: Test
         run: |
-          npm run test
-          npm run test:integration
+          yarn test
           
       - name: Build
         run: npm run build
@@ -539,3 +537,6 @@ kubectl logs -l app=pheme-api --tail=100
    * Least privilege access
    * Regular security audits
    * Monitoring and alerting
+
+## Note:
+This project uses Yarn workspaces. Linting and testing are run from the root and apply to all packages.

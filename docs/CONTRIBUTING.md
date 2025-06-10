@@ -47,7 +47,7 @@ We use GitHub issues to track public bugs. Report a bug by [opening a new issue]
 
 * Use TypeScript for type safety
 * 2 spaces for indentation rather than tabs
-* You can try running `npm run lint` for style unification
+* You can try running `yarn lint` for style unification
 
 ## License
 By contributing, you agree that your contributions will be licensed under its GNU AGPL-3.0 License.

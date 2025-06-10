@@ -80,5 +80,18 @@ Pheme Protocol is a decentralized skill verification platform that enables users
 
 ### Local Development
 ```bash
+yarn install
+yarn dev
+```
+
+### Linting & Testing (Monorepo)
+To lint and test all workspaces, run:
+```bash
+yarn lint
+yarn test
+```
+These commands will run lint and test scripts across all packages using Yarn workspaces.
+
+```bash
 npm install
 npm run dev

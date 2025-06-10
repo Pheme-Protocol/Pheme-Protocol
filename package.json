@@ -11,10 +11,10 @@
   "description": "PHEME - onchain skill and reputation protocol",
   "scripts": {
     "dev": "yarn workspace @pheme-protocol/web dev",
-    "build": "yarn workspace @pheme-protocol/web build",
+    "build": "yarn workspaces foreach run build",
     "start": "yarn workspace @pheme-protocol/web start",
-    "lint": "yarn workspace @pheme-protocol/web lint",
-    "test": "yarn workspace @pheme-protocol/web test"
+    "lint": "yarn workspaces foreach run lint",
+    "test": "yarn workspaces foreach run test"
   },
   "resolutions": {
     "lodash": "^4.17.21",
