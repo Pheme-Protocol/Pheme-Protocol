@@ -109,17 +109,6 @@ jobs:
     name: "🐳 Build & Push Docker Images"
     runs-on: ubuntu-latest
     needs: build
-
-    # pull secrets into env so we can use them in the job-level if:
-    env:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      DOCKER_REGISTRY: ${{ env.DOCKER_REGISTRY }}
-      DOCKER_NAMESPACE: ${{ env.DOCKER_NAMESPACE }}
-
-    # only run this job when both Docker creds are set
-    if: ${{ env.DOCKER_USERNAME != '' && env.DOCKER_PASSWORD != '' }}
-
     steps:
       - uses: actions/checkout@v3
 
@@ -130,13 +119,15 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Log in to registry
+        if: ${{ secrets.DOCKER_USERNAME && secrets.DOCKER_PASSWORD }}
         uses: docker/login-action@v2
         with:
           registry: ${{ env.DOCKER_REGISTRY }}
-          username: ${{ env.DOCKER_USERNAME }}
-          password: ${{ env.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build & Push Backend Image
+        if: ${{ secrets.DOCKER_USERNAME && secrets.DOCKER_PASSWORD }}
         uses: docker/build-push-action@v5
         with:
           context: src
@@ -144,6 +135,7 @@ jobs:
           tags: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/pheme-backend:${{ github.sha }}
 
       - name: Build & Push Frontend Image
+        if: ${{ secrets.DOCKER_USERNAME && secrets.DOCKER_PASSWORD }}
         uses: docker/build-push-action@v5
         with:
           context: web
@@ -151,7 +143,7 @@ jobs:
           tags: ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_NAMESPACE }}/pheme-frontend:${{ github.sha }}
 
       - name: Build & Push Bots Image
-        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+        if: ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && secrets.DOCKER_USERNAME && secrets.DOCKER_PASSWORD }}
         uses: docker/build-push-action@v5
         with:
           context: bots
