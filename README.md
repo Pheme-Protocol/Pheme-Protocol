@@ -95,3 +95,19 @@ These commands will run lint and test scripts across all packages using Yarn wor
 ```bash
 npm install
 npm run dev
+```
+
+## Docker Builds (Monorepo)
+
+To build a Docker image for a specific service, use:
+
+```sh
+# For frontend (web)
+docker build -f Dockerfile.app --build-arg SERVICE=web --build-arg PORT=3000 -t pheme-web .
+
+# For backend (src)
+docker build -f Dockerfile.app --build-arg SERVICE=src --build-arg PORT=3001 -t pheme-backend .
+
+# For bots
+docker build -f Dockerfile.app --build-arg SERVICE=bots --build-arg PORT=3002 -t pheme-bots .
+```
