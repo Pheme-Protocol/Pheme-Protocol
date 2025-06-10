@@ -1,4 +1,5 @@
 {
+  // All workspace tsconfig.json files should extend this base config for shared TypeScript settings
   "compilerOptions": {
     "strict": true,
     "esModuleInterop": true,
