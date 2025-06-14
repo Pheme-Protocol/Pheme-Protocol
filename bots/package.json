@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/main.ts",
     "build": "tsc",
-    "start": "node dist/main.js",
-    "test": "jest"
+    "start": "node dist/main.js"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.2",

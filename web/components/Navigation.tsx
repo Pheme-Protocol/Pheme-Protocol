@@ -101,7 +101,11 @@ export function Navigation() {
       {isOpen && (
         <div
           ref={dropdownRef}
-          className="absolute top-16 right-4 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50"
+          className="fixed top-16 right-4 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50 transform transition-all duration-200 ease-in-out"
+          style={{
+            opacity: isOpen ? 1 : 0,
+            transform: isOpen ? 'translateY(0)' : 'translateY(-10px)'
+          }}
         >
           <div className="py-1" role="none">
             {navigation.map((item) => (
