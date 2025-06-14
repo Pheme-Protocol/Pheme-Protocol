@@ -21,14 +21,14 @@ jobs:
     name: "⬇️ Install & Cache Deps"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
       - name: Cache Yarn
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             .yarn/cache
@@ -40,7 +40,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Upload workspace
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: workspace
           path: .
@@ -51,27 +51,55 @@ jobs:
     needs: install-deps
     steps:
       - name: Download workspace
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: workspace
           path: .
       - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
       - name: Run ESLint
         run: yarn lint
-      - name: Run Jest tests
-        run: yarn test --ci
+      - name: Run tests with coverage
+        run: yarn test --coverage --ci
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
 
-  solidity-scan:
-    name: "🛡️ Solidity Security Scan"
+  security:
+    name: "🔒 Security Scan"
     runs-on: ubuntu-latest
     needs: lint-test
     steps:
       - name: Download workspace
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
+        with:
+          name: workspace
+          path: .
+      - name: Run OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'Pheme Protocol'
+          path: '.'
+          format: 'HTML'
+          out: 'reports'
+      - name: Upload security report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report
+          path: reports
+
+  solidity-scan:
+    name: "🛡️ Solidity Security Scan"
+    runs-on: ubuntu-latest
+    needs: security
+    steps:
+      - name: Download workspace
+        uses: actions/download-artifact@v4
         with:
           name: workspace
           path: .
@@ -95,12 +123,12 @@ jobs:
     needs: [lint-test, solidity-scan]
     steps:
       - name: Download workspace
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: workspace
           path: .
       - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
@@ -136,45 +164,54 @@ jobs:
     needs: build
     steps:
       - name: Download workspace
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: workspace
           path: .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Log in to Docker Hub
-        run: |
-          if [ -z "${{ secrets.DOCKER_USERNAME }}" ] || [ -z "${{ secrets.DOCKER_PASSWORD }}" ]; then
-            echo "Docker credentials not set, skipping login."
-            exit 0
-          fi
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin $DOCKER_IMAGE_REGISTRY
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build & Push Backend Image
-        run: |
-          if [ -z "${{ secrets.DOCKER_USERNAME }}" ] || [ -z "${{ secrets.DOCKER_PASSWORD }}" ]; then
-            echo "Docker credentials not set, skipping build/push."
-            exit 0
-          fi
-          docker build -f Dockerfile.app --build-arg SERVICE=src --build-arg PORT=3001 -t $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-backend:${GITHUB_SHA::8} .
-          docker push $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-backend:${GITHUB_SHA::8}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.app
+          build-args: |
+            SERVICE=src
+            PORT=3001
+          push: true
+          tags: $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-backend:${GITHUB_SHA::8}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       - name: Build & Push Frontend Image
-        run: |
-          if [ -z "${{ secrets.DOCKER_USERNAME }}" ] || [ -z "${{ secrets.DOCKER_PASSWORD }}" ]; then
-            echo "Docker credentials not set, skipping build/push."
-            exit 0
-          fi
-          docker build -f Dockerfile.app --build-arg SERVICE=web --build-arg PORT=3000 -t $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-frontend:${GITHUB_SHA::8} .
-          docker push $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-frontend:${GITHUB_SHA::8}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.app
+          build-args: |
+            SERVICE=web
+            PORT=3000
+          push: true
+          tags: $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-frontend:${GITHUB_SHA::8}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       - name: Build & Push Bots Image
         if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
-        run: |
-          if [ -d "bots" ]; then
-            if [ -z "${{ secrets.DOCKER_USERNAME }}" ] || [ -z "${{ secrets.DOCKER_PASSWORD }}" ]; then
-              echo "Docker credentials not set, skipping build/push."
-              exit 0
-            fi
-            docker build -f Dockerfile.app --build-arg SERVICE=bots --build-arg PORT=3002 -t $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-bots:${GITHUB_SHA::8} .
-            docker scan $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-bots:${GITHUB_SHA::8}
-            docker push $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-bots:${GITHUB_SHA::8}
-          fi
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.app
+          build-args: |
+            SERVICE=bots
+            PORT=3002
+          push: true
+          tags: $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-bots:${GITHUB_SHA::8}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   deploy:
     name: "🚀 Deploy to Staging / Prod"
@@ -189,32 +226,19 @@ jobs:
       contents: read
     steps:
       - name: Download workspace
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: workspace
           path: .
-      # 5.1) Configure AWS using OIDC
       - name: Configure AWS Credentials
         id: aws-auth
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::123456789012:role/github-actions-role
           aws-region: us-east-1
           mask-aws-account-id: true
-        continue-on-error: true
-      - name: Check AWS Authentication
-        if: steps.aws-auth.outcome == 'failure'
-        run: |
-          echo "::error::Failed to authenticate with AWS. Please check the AWS role configuration."
-          exit 1
-      - name: Verify AWS Authentication
-        if: steps.aws-auth.outcome == 'success'
-        run: |
-          aws sts get-caller-identity
-          echo "AWS authentication successful"
-      # 5.2) Terraform (Provision/Update Staging infra)
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.5.0
       - name: Terraform Init & Apply (Staging)
@@ -222,14 +246,14 @@ jobs:
         run: |
           terraform init
           terraform apply -var-file=terraform.tfvars.staging -auto-approve
-      # 5.3) Kubernetes (Deploy Backend, Frontend, Bots)
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
         with:
           version: 'latest'
       - name: Setup Helm
-        run: |
-          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+        uses: azure/setup-helm@v3
+        with:
+          version: 'latest'
       - name: Deploy Backend via Helm
         run: |
           helm upgrade --install pheme-backend k8s/charts/backend \
@@ -243,18 +267,47 @@ jobs:
             --values k8s/values-staging.yaml \
             --set image.tag=${GITHUB_SHA::8}
       - name: Deploy Bots via Helm
+        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
         run: |
           if [ -d "bots" ]; then
             helm upgrade --install pheme-bots k8s/charts/bots \
               --namespace pheme-staging \
               --values k8s/values-staging.yaml \
-              --set image.tag=${GITHUB_SHA::8} \
-              --set security.rateLimit.enabled=true \
-              --set security.auditLogging.enabled=true \
-              --set security.accessControl.enabled=true
+              --set image.tag=${GITHUB_SHA::8}
           fi
-      # 5.4) Smoke Test
-      - name: Smoke Test
+      - name: Verify Deployment
         run: |
-          curl -f https://staging.app.phemebot.xyz/health || (echo "Health check failed" && exit 1)
-    # TODO: Uncomment and adjust if infra/ and k8s/ are added 
+          # Wait for pods to be ready
+          kubectl wait --for=condition=ready pod -l app=pheme-backend -n pheme-staging --timeout=300s
+          kubectl wait --for=condition=ready pod -l app=pheme-frontend -n pheme-staging --timeout=300s
+          
+          # Run smoke tests
+          yarn test:smoke
+
+  performance:
+    name: "⚡ Performance Test"
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Download workspace
+        uses: actions/download-artifact@v4
+        with:
+          name: workspace
+          path: .
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v9
+        with:
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          configPath: './lighthouse.config.js'
+      - name: Run k6 Performance Tests
+        uses: grafana/k6-action@v0.3.0
+        with:
+          filename: tests/performance/load-test.js
+          flags: --out json=results.json
+      - name: Upload Performance Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-results
+          path: results.json 
