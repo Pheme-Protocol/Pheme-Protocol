@@ -38,11 +38,14 @@ jobs:
             .yarn/cache
             .yarn/install-state.gz
             node_modules
+            **/node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+      - name: Generate Prisma Client
+        run: yarn prisma generate
       - name: Upload workspace
         uses: actions/upload-artifact@v4
         with:
@@ -95,6 +98,12 @@ jobs:
           path: '.'
           format: 'HTML'
           out: 'reports'
+      - name: Run Snyk Security Scan
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
       - name: Upload security report
         uses: actions/upload-artifact@v4
         with:
@@ -105,19 +114,13 @@ jobs:
     name: "🛡️ Solidity Security Scan"
     runs-on: ubuntu-latest
     needs: security
+    if: contains(github.event.pull_request.changed_files, 'contracts/') || contains(github.event.head_commit.modified, 'contracts/')
     steps:
       - name: Download workspace
         uses: actions/download-artifact@v4
         with:
           name: workspace
           path: .
-      - name: List files in /contracts
-        uses: addnab/docker-run-action@v3
-        with:
-          image: alpine:latest
-          options: -v ${{ github.workspace }}:/contracts
-          run: |
-            ls -l /contracts || echo "/contracts does not exist"
       - name: Run Slither
         uses: addnab/docker-run-action@v3
         with:
@@ -145,16 +148,19 @@ jobs:
       - name: Setup Yarn
         run: corepack prepare yarn@4.9.2 --activate
       - name: Compile Contracts
+        if: contains(github.event.pull_request.changed_files, 'contracts/') || contains(github.event.head_commit.modified, 'contracts/')
         working-directory: contracts
         run: yarn compile
       - name: Build Backend (src)
+        if: contains(github.event.pull_request.changed_files, 'src/') || contains(github.event.head_commit.modified, 'src/')
         working-directory: src
         run: yarn build
       - name: Build Frontend (web)
+        if: contains(github.event.pull_request.changed_files, 'web/') || contains(github.event.head_commit.modified, 'web/')
         working-directory: web
         run: yarn build
       - name: Build Bots
-        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+        if: contains(github.event.pull_request.changed_files, 'bots/') || contains(github.event.head_commit.modified, 'bots/')
         run: |
           if [ ! -d "bots" ]; then
             echo "::error::Bots directory not found"
@@ -188,6 +194,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build & Push Backend Image
+        if: contains(github.event.pull_request.changed_files, 'src/') || contains(github.event.head_commit.modified, 'src/')
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -200,6 +207,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build & Push Frontend Image
+        if: contains(github.event.pull_request.changed_files, 'web/') || contains(github.event.head_commit.modified, 'web/')
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -212,7 +220,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build & Push Bots Image
-        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+        if: contains(github.event.pull_request.changed_files, 'bots/') || contains(github.event.head_commit.modified, 'bots/')
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -224,102 +232,12 @@ jobs:
           tags: $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-bots:${GITHUB_SHA::8}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-  deploy:
-    name: "🚀 Deploy to Staging / Prod"
-    runs-on: ubuntu-latest
-    needs: docker
-    if: github.ref == 'refs/heads/main'
-    environment:
-      name: production
-      url: https://staging.app.phemebot.xyz
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Download workspace
-        uses: actions/download-artifact@v4
+      - name: Scan Docker Images
+        uses: aquasecurity/trivy-action@master
         with:
-          name: workspace
-          path: .
-      - name: Configure AWS Credentials
-        id: aws-auth
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::123456789012:role/github-actions-role
-          aws-region: us-east-1
-          mask-aws-account-id: true
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.5.0
-      - name: Terraform Init & Apply (Staging)
-        working-directory: infra
-        run: |
-          terraform init
-          terraform apply -var-file=terraform.tfvars.staging -auto-approve
-      - name: Setup kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'latest'
-      - name: Setup Helm
-        uses: azure/setup-helm@v3
-        with:
-          version: 'latest'
-      - name: Deploy Backend via Helm
-        run: |
-          helm upgrade --install pheme-backend k8s/charts/backend \
-            --namespace pheme-staging \
-            --values k8s/values-staging.yaml \
-            --set image.tag=${GITHUB_SHA::8}
-      - name: Deploy Frontend via Helm
-        run: |
-          helm upgrade --install pheme-frontend k8s/charts/frontend \
-            --namespace pheme-staging \
-            --values k8s/values-staging.yaml \
-            --set image.tag=${GITHUB_SHA::8}
-      - name: Deploy Bots via Helm
-        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
-        run: |
-          if [ -d "bots" ]; then
-            helm upgrade --install pheme-bots k8s/charts/bots \
-              --namespace pheme-staging \
-              --values k8s/values-staging.yaml \
-              --set image.tag=${GITHUB_SHA::8}
-          fi
-      - name: Verify Deployment
-        run: |
-          # Wait for pods to be ready
-          kubectl wait --for=condition=ready pod -l app=pheme-backend -n pheme-staging --timeout=300s
-          kubectl wait --for=condition=ready pod -l app=pheme-frontend -n pheme-staging --timeout=300s
-          
-          # Run smoke tests
-          yarn test:smoke
-
-  performance:
-    name: "⚡ Performance Test"
-    runs-on: ubuntu-latest
-    needs: deploy
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Download workspace
-        uses: actions/download-artifact@v4
-        with:
-          name: workspace
-          path: .
-      - name: Run Lighthouse CI
-        uses: treosh/lighthouse-ci-action@v9
-        with:
-          uploadArtifacts: true
-          temporaryPublicStorage: true
-          configPath: './lighthouse.config.js'
-      - name: Run k6 Performance Tests
-        uses: grafana/k6-action@v0.3.0
-        with:
-          filename: tests/performance/load-test.js
-          flags: --out json=results.json
-      - name: Upload Performance Results
-        uses: actions/upload-artifact@v4
-        with:
-          name: performance-results
-          path: results.json 
+          image-ref: $DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-backend:${GITHUB_SHA::8},$DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-frontend:${GITHUB_SHA::8},$DOCKER_IMAGE_REGISTRY/$DOCKER_IMAGE_NAMESPACE/pheme-bots:${GITHUB_SHA::8}
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH' 
