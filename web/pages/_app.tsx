@@ -17,18 +17,27 @@
  */
 
 // pages/_app.tsx
-import '../styles/globals.css';
+import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
-import { Inter } from 'next/font/google';
+import { Web3ModalProvider } from '@/components/Web3ModalProvider';
+import { Inter, Orbitron, Fira_Mono } from 'next/font/google';
 import Head from 'next/head';
-import { Web3ModalProvider } from '../components/Web3ModalProvider';
 import { ThemeProvider } from '../contexts/ThemeContext';
 
-const inter = Inter({
+const inter = Inter({ 
   subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-  weight: ['400', '500', '600', '700'],
+  variable: '--font-inter'
+});
+
+const orbitron = Orbitron({ 
+  subsets: ['latin'],
+  variable: '--font-orbitron'
+});
+
+const firaMono = Fira_Mono({ 
+  weight: ['400', '700'], 
+  subsets: ['latin'],
+  variable: '--font-fira-mono'
 });
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -56,14 +65,14 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <ThemeProvider>
         <Web3ModalProvider>
-          <div className={`${inter.variable} font-sans antialiased`}>
+          <main className={`${inter.variable} ${orbitron.variable} ${firaMono.variable} font-sans antialiased`}>
             <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-black">
               Skip to main content
             </a>
             <main id="main-content" className="min-h-screen" role="main">
               <Component {...pageProps} />
             </main>
-          </div>
+          </main>
         </Web3ModalProvider>
       </ThemeProvider>
     </>

@@ -9,7 +9,8 @@
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ pheme-protocol/pheme",
     "create-local": "graph create --node http://localhost:8020/ pheme-protocol/pheme",
     "remove-local": "graph remove --node http://localhost:8020/ pheme-protocol/pheme",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 pheme-protocol/pheme"
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 pheme-protocol/pheme",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "^0.97.1",
@@ -22,5 +23,19 @@
   },
   "devDependencies": {
     "typescript": "^5.3.3"
+  },
+  "resolutions": {
+    "lodash.trim": "^4.5.0",
+    "lodash.trimend": "^4.5.0",
+    "gluegun/lodash.trim": "^4.5.0",
+    "gluegun/lodash.trimend": "^4.5.0"
+  },
+  "overrides": {
+    "lodash.trim": "^4.5.0",
+    "lodash.trimend": "^4.5.0",
+    "gluegun": {
+      "lodash.trim": "^4.5.0",
+      "lodash.trimend": "^4.5.0"
+    }
   }
 }

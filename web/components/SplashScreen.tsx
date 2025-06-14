@@ -35,11 +35,19 @@ const formulas = [
 ];
 
 const verificationMessages = [
-  "Verifying submission...",
-  "AI review in progress...",
+  "Initializing neural network...",
   "Analyzing contribution patterns...",
+  "Validating skill assertions...",
   "Calculating trust metrics...",
-  "Scoring complete..."
+  "Building reputation graph..."
+];
+
+const aiProcessingSteps = [
+  "Data Collection",
+  "Pattern Recognition",
+  "Trust Validation",
+  "Reputation Scoring",
+  "Skill Verification"
 ];
 
 export default function SplashScreen({ onComplete }: SplashScreenProps) {
@@ -58,6 +66,8 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isSkipped, setIsSkipped] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [processingStep, setProcessingStep] = useState(0);
+  const [neuralNodes, setNeuralNodes] = useState<{ x: number; y: number; active: boolean; layer: number }[]>([]);
 
   // Ensure component is mounted before any client-side operations
   useEffect(() => {
@@ -74,18 +84,25 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
 
   // Generate particles and connecting lines for mesh
   useEffect(() => {
-    const particleCount = isMobile ? 16 : 32;
+    const particleCount = isMobile ? 8 : 12;
     const newParticles = Array.from({ length: particleCount }, () => ({
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: Math.random() * 6 + 3
+      size: Math.random() * 8 + 4
     }));
     setParticles(newParticles);
-    // Connect each particle to 2-3 others
+    
+    // Connect particles only if they're within range
     const newLines: { x1: number; y1: number; x2: number; y2: number }[] = [];
+    const MAX_DISTANCE = 35;
+    
     for (let i = 0; i < newParticles.length; i++) {
       for (let j = i + 1; j < newParticles.length; j++) {
-        if (Math.random() > 0.85) {
+        const dx = newParticles[i].x - newParticles[j].x;
+        const dy = newParticles[i].y - newParticles[j].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < MAX_DISTANCE && Math.random() > 0.92) {
           newLines.push({
             x1: newParticles[i].x,
             y1: newParticles[i].y,
@@ -103,6 +120,25 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
       active: false
     }));
     setValidatorNodes(nodes);
+  }, [isMobile]);
+
+  // Generate neural network nodes
+  useEffect(() => {
+    const layers = 3;
+    const nodesPerLayer = isMobile ? 4 : 6;
+    const nodes: { x: number; y: number; active: boolean; layer: number }[] = [];
+    
+    for (let layer = 0; layer < layers; layer++) {
+      for (let i = 0; i < nodesPerLayer; i++) {
+        nodes.push({
+          x: (layer + 1) * (100 / (layers + 1)),
+          y: (i + 1) * (100 / (nodesPerLayer + 1)),
+          active: false,
+          layer
+        });
+      }
+    }
+    setNeuralNodes(nodes);
   }, [isMobile]);
 
   useEffect(() => {
@@ -219,48 +255,65 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
     fontFamily: 'Orbitron, Fira Mono, monospace',
     fontWeight: 700,
     fontSize: isMobile ? '1.2rem' : '2rem',
-    color: '#fff',
-    textShadow: '0 0 12pxrgb(0, 51, 255), 0 0 24px #3a1c71',
+    color: '#ffffff',
+    textShadow: '0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.4)',
     letterSpacing: '0.04em',
   };
 
   const renderSequence = () => {
     switch (currentSequence) {
-      case 0: // Animated Mesh
+      case 0: // Neural Network Visualization
         return (
           <motion.div className="absolute inset-0 flex items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <div ref={meshRef} className="relative w-full h-full">
-              {/* SVG mesh lines */}
+            <div className="w-full h-full relative">
+              {/* Neural Network Connections */}
               <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
-                {lines.map((line, i) => (
-                  <motion.line
-                    key={i}
-                    x1={`${line.x1}%`} y1={`${line.y1}%`} x2={`${line.x2}%`} y2={`${line.y2}%`}
-                    stroke="#00ffe7"
-                    strokeWidth={1.2}
-                    initial={{ opacity: 0.2 }}
-                    animate={{ opacity: [0.2, 0.7, 0.2] }}
-                    transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.05 }}
-                  />
-                ))}
+                {neuralNodes.map((node, i) => {
+                  return neuralNodes.slice(i + 1).map((targetNode, j) => {
+                    if (targetNode.layer > node.layer) {
+                      return (
+                        <motion.line
+                          key={`${i}-${j}`}
+                          x1={`${node.x}%`}
+                          y1={`${node.y}%`}
+                          x2={`${targetNode.x}%`}
+                          y2={`${targetNode.y}%`}
+                          stroke="#00ffe7"
+                          strokeWidth={0.8}
+                          initial={{ opacity: 0.05 }}
+                          animate={{ 
+                            opacity: node.active && targetNode.active ? [0.05, 0.3, 0.05] : [0.05, 0.1, 0.05]
+                          }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        />
+                      );
+                    }
+                    return null;
+                  });
+                })}
               </svg>
-              {/* Glowing mesh particles */}
-              {particles.map((particle, i) => (
+              
+              {/* Neural Nodes */}
+              {neuralNodes.map((node, i) => (
                 <motion.div
                   key={i}
-                  className="absolute rounded-full shadow-lg"
+                  className="absolute rounded-full"
                   style={{
-                    left: `${particle.x}%`,
-                    top: `${particle.y}%`,
-                    width: particle.size,
-                    height: particle.size,
-                    background: 'radial-gradient(circle, rgb(0, 13, 255) 0%, #3a1c71 100%)',
-                    boxShadow: '0 0 16px 4pxrgb(0, 89, 255)',
+                    left: `${node.x}%`,
+                    top: `${node.y}%`,
+                    width: 8,
+                    height: 8,
+                    background: node.active 
+                      ? 'radial-gradient(circle, rgba(0, 255, 231, 0.4) 0%, rgba(0, 255, 231, 0.1) 100%)'
+                      : 'radial-gradient(circle, rgba(0, 255, 231, 0.2) 0%, rgba(0, 255, 231, 0.05) 100%)',
+                    boxShadow: node.active
+                      ? '0 0 12px 3px rgba(0, 255, 231, 0.2)'
+                      : '0 0 8px 2px rgba(0, 255, 231, 0.1)',
                     zIndex: 2,
                   }}
                   animate={{
-                    scale: [1, 1.3, 1],
-                    opacity: [0.7, 1, 0.7],
+                    scale: node.active ? [1, 1.2, 1] : 1,
+                    opacity: node.active ? [0.4, 0.6, 0.4] : [0.2, 0.3, 0.2],
                   }}
                   transition={{
                     duration: 2,
@@ -269,153 +322,91 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                   }}
                 />
               ))}
-              {/* Spinning floating formulas */}
-              {Array.from({ length: isMobile ? 5 : 10 }).map((_, i) => {
-                const formula = formulas[i % formulas.length];
-                // Random position and animation params
-                const left = Math.random() * 80 + 5;
-                const top = Math.random() * 70 + 10;
-                const rotateDir = Math.random() > 0.5 ? 1 : -1;
-                const floatY = Math.random() * 30 - 15;
-                return (
-                  <motion.div
-                    key={i}
-                    style={{
-                      position: 'absolute',
-                      left: `${left}%`,
-                      top: `${top}%`,
-                      ...formulaStyle,
-                      zIndex: 5,
-                      pointerEvents: 'none',
-                    }}
-                    initial={{ opacity: 0, rotate: 0, y: 0 }}
-                    animate={{
-                      opacity: [0, 1, 1, 0],
-                      rotate: [0, rotateDir * 360],
-                      y: [0, floatY, 0],
-                    }}
-                    transition={{
-                      duration: 2.5,
-                      repeat: Infinity,
-                      delay: i * 0.15,
-                      ease: 'easeInOut',
-                    }}
-                  >
-                    {formula}
-                  </motion.div>
-                );
-              })}
-              {/* Animated formula stream */}
-              <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 3 }}>
-                {formulaStream.map((formula, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ x: '100vw', opacity: 0 }}
-                    animate={{ x: '-60vw', opacity: [0, 1, 0] }}
-                    transition={{ duration: 4, ease: 'linear', delay: i * 0.5 }}
-                    style={{ ...formulaStyle, position: 'absolute', top: `${20 + i * 15}%` }}
-                  >
-                    {formula}
-                  </motion.div>
-                ))}
-              </div>
+
               <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 4 }}>
-                <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={taglineStyle}>
+                <motion.p 
+                  initial={{ opacity: 0, y: 20 }} 
+                  animate={{ 
+                    opacity: [0.9, 1, 0.9],
+                    y: 0 
+                  }}
+                  transition={{
+                    opacity: {
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    },
+                    y: {
+                      duration: 1,
+                      ease: "easeOut"
+                    }
+                  }}
+                  style={taglineStyle}
+                >
                   Reputation is earned, not assumed.
                 </motion.p>
               </div>
             </div>
           </motion.div>
         );
-      case 1: // AI + Reputation with Validator Nodes
+      case 1: // AI Processing Steps
         return (
           <motion.div className="absolute inset-0 flex items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <div className="w-full max-w-md p-8 relative">
-              {/* Validator Nodes Orbit with glowing trails */}
-              <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
-                {validatorNodes.map((node, i) => (
-                  <motion.circle
-                    key={i}
-                    cx={`50%`} cy={`50%`}
-                    r={150}
-                    fill="none"
-                    stroke="#00ffe7"
-                    strokeWidth={0.5}
-                    initial={{ opacity: 0.08 }}
-                    animate={{ opacity: [0.08, 0.18, 0.08] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
-                  />
+              <div className="space-y-4">
+                {aiProcessingSteps.map((step, index) => (
+                  <motion.div
+                    key={step}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ 
+                      opacity: processingStep >= index ? 1 : 0.3,
+                      x: processingStep >= index ? 0 : -20
+                    }}
+                    transition={{ delay: index * 0.2 }}
+                    className="flex items-center space-x-3"
+                  >
+                    <div className={`w-2 h-2 rounded-full ${processingStep >= index ? 'bg-[#00ffe7]' : 'bg-gray-600'}`} />
+                    <span className="text-white font-mono">{step}</span>
+                    {processingStep === index && (
+                      <motion.div
+                        className="w-4 h-4"
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      >
+                        <div className="w-full h-full border-2 border-[#00ffe7] border-t-transparent rounded-full" />
+                      </motion.div>
+                    )}
+                  </motion.div>
                 ))}
-              </svg>
-              {validatorNodes.map((node, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute w-6 h-6 rounded-full"
-                  style={{
-                    left: `calc(50% + ${node.x}px - 12px)`,
-                    top: `calc(50% + ${node.y}px - 12px)`,
-                    background: node.active
-                      ? 'radial-gradient(circle, rgb(0, 13, 255) 0%, #3a1c71 100%)'
-                      : 'radial-gradient(circle, #3a1c71 60%, #222 100%)',
-                    boxShadow: node.active
-                      ? '0 0 24px 8pxrgb(0, 98, 255), 0 0 8px 2px #fff'
-                      : '0 0 8px 2px #3a1c71',
-                    zIndex: 2,
-                  }}
-                  animate={{
-                    scale: node.active ? [1, 1.3, 1] : 1,
-                    opacity: node.active ? [0.7, 1, 0.7] : 0.5,
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    delay: i * 0.2,
-                  }}
-                />
-              ))}  
-              <div className="w-32 h-32 mx-auto mb-8 relative z-10"></div>
-              <div className="w-full h-4 bg-gray-800 rounded-full overflow-hidden relative z-10">
-                <motion.div
-                  className="h-full"
-                  style={{ background: 'linear-gradient(90deg,rgb(0, 13, 255) 0%, #3a1c71 100%)' }}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${reputationScore}%` }}
-                  transition={{ duration: 0.5 }}
-                />
               </div>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                style={taglineStyle}
-                className="mt-4 relative z-10"
-              >
-                AI-validated. Community-trusted.
-              </motion.p>
             </div>
           </motion.div>
         );
-      case 2: // Skill Wallet with Matrix Effect
+      case 2: // Skill Verification
         return (
           <motion.div className="absolute inset-0 flex items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <div className="w-full max-w-md p-8">
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="bg-gray-800 rounded-xl p-6 shadow-xl"
+                className="bg-gray-800/50 rounded-xl p-6 shadow-xl"
               >
-                {/* Matrix-style skill tags with fly-in bounce */}
                 <div className="flex flex-wrap gap-2 mb-4">
                   {skillTags.map((skill, index) => (
                     <motion.div
                       key={skill}
                       initial={{ opacity: 0, y: 30, scale: 0.7 }}
-                      animate={{ opacity: 1, y: 0, scale: [0.7, 1.1, 1] }}
+                      animate={{ 
+                        opacity: 1, 
+                        y: 0, 
+                        scale: [0.7, 1.1, 1],
+                        backgroundColor: index % 2 === 0 ? 'rgba(0, 255, 231, 0.1)' : 'rgba(58, 28, 113, 0.1)'
+                      }}
                       transition={{ delay: index * 0.12, type: 'tween', duration: 0.7 }}
-                      className="px-3 py-1 bg-primary-light/20 dark:bg-primary-dark/20 rounded-full text-primary-light dark:text-primary-dark text-sm shadow-md"
+                      className="px-3 py-1 rounded-full text-[#00ffe7] text-sm shadow-md"
                       style={{
                         fontFamily: 'Orbitron, Fira Mono, monospace',
                         fontWeight: 600,
-                        color: '#00ffe7',
                         textShadow: '0 0 8px #00ffe7',
                         letterSpacing: '0.03em',
                       }}
@@ -424,11 +415,10 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                     </motion.div>
                   ))}
                 </div>
-                {/* Verification progress */}
-                <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden mb-4">
+                <div className="w-full h-2 bg-gray-700/50 rounded-full overflow-hidden mb-4">
                   <motion.div
                     className="h-full"
-                    style={{ background: 'linear-gradient(90deg,rgb(0, 13, 255) 0%, #3a1c71 100%)' }}
+                    style={{ background: 'linear-gradient(90deg, #00ffe7 0%, #3a1c71 100%)' }}
                     initial={{ width: 0 }}
                     animate={{ width: `${verificationProgress}%` }}
                     transition={{ duration: 0.5 }}
@@ -445,7 +435,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
             </div>
           </motion.div>
         );
-      case 3: // Taglines
+      case 3: // Final Taglines
         return (
           <motion.div className="absolute inset-0 flex items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <motion.p

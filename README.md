@@ -1,112 +1,113 @@
-# Pheme Protocol
+# Pheme Protocol Documentation
 
-A Web3-enabled chat application with wallet integration that helps users earn trust onchain.
+Welcome to the official documentation for **Pheme**, a decentralized, AI-powered protocol for skill verification and onchain reputation.
 
-## ⚠️ Important Notice: AI Usage Restrictions
+---
 
-This repository does not permit the use of its code or content by Generative AI systems. See [NO_AI.md](NO_AI.md) for detailed restrictions and policies regarding AI usage.
+## Overview
 
-## Environment Setup
+Pheme Protocol is a decentralized skill verification platform that enables users to prove their abilities and build verifiable reputation using AI validation and Web3 infrastructure.
 
-1. Copy the environment template:
-```bash
-cp env.template .env.local
-```
+---
 
-2. Fill in the required environment variables:
+## Documentation Structure
 
-Required variables:
-- `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`: Get from [WalletConnect Cloud](https://cloud.walletconnect.com/)
-- `OPENAI_API_KEY`: Get from [OpenAI API Keys](https://platform.openai.com/api-keys)
+- **Overview**: Introduction, key concepts, and community guides  
+- **Get Started**: Installation and environment setup  
+- **Technical Details**: Smart contracts, frontend/backend architecture  
+- **Developer Guide**: Integration guides and implementation  
+- **Governance**: Token-based decision making and platform control  
+- **Ecosystem**: Use cases, partners, and FAQs  
 
-Optional variables:
-- `NEXT_PUBLIC_SITE_URL`: Your production site URL
-- `NODE_ENV`: development/production/test
-- `NEXT_PUBLIC_ANALYTICS_ENABLED`: Enable analytics tracking
-- `RATE_LIMIT_REQUESTS`: Rate limit requests per minute
-- `RATE_LIMIT_WINDOW_MS`: Rate limit window in milliseconds
+---
+
+## Core Components
+
+### 1. Skill Wallet
+- Soulbound NFT (SBT) representing verifiable skills  
+- Immutable, onchain skill attestations  
+- Owned by the user, non-transferable by design  
+
+### 2. Reputation Oracle
+- AI-powered validation engine  
+- Transparent contribution scoring  
+- Publicly queryable onchain reputation  
+
+### 3. Community Governance
+- Token-based proposal and voting mechanism  
+- Decentralized protocol updates and decision making  
+- Transparent and auditable governance process  
+
+---
+
+## Technical Architecture
+
+### Smart Contracts
+- Skill Badge NFTs (SBTs)  
+- Contribution tracking and scoring  
+- Governance logic and parameter control  
+
+### Frontend
+- React + Next.js application  
+- Web3 wallet integration (e.g. MetaMask)  
+- Real-time chat interface with AI validation  
+
+### Backend
+- AI validation engine  
+- API endpoints for chat, wallet, and verification  
+- Data persistence and audit logs  
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js 18+  
+- Git  
+- Web3 wallet (MetaMask recommended)  
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Installation
+1. Clone the repository  
+2. Install dependencies  
+3. Configure environment variables  
+4. Run the development server  
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+📖 See the [Environment Setup Guide](../README.md#environment-setup) for full details.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-## Features
-
-- Secure wallet connection/disconnection
-- Real-time chat interface
-- Modern, responsive UI
-- Web3 integration
-
-## License
-
-This project is licensed under the **GNU AGPLv3** License.
-
-🛡️ No use of this codebase is permitted in training, fine-tuning, or prompting of generative AI models.
-
-For commercial use, attribution and AGPL compliance are required.
-
-See the [LICENSE](LICENSE) file and [NO_AI.md](NO_AI.md) for full details.
-
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
-
-## AI Policy
-
-This project strictly prohibits the use of its code and content for AI training or generation. See [NO_AI.md](NO_AI.md) for complete details.
-
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+---
 
 ## Development
 
+### Local Development
 ```bash
-# Install dependencies
-npm install
+yarn install
+yarn dev
+```
 
-# Run development server
+### Linting & Testing (Monorepo)
+To lint and test all workspaces, run:
+```bash
+yarn lint
+yarn test
+```
+These commands will run lint and test scripts across all packages using Yarn workspaces.
+
+```bash
+npm install
 npm run dev
 ```
 
-## Production Deployment
+## Docker Builds (Monorepo)
 
-1. Set up environment variables in your Vercel project
-2. Configure DNS settings for your domain
-3. Deploy to production
+To build a Docker image for a specific service, use:
 
-```bash
-npm run build
-npm start
+```sh
+# For frontend (web)
+docker build -f Dockerfile.app --build-arg SERVICE=web --build-arg PORT=3000 -t pheme-web .
+
+# For backend (src)
+docker build -f Dockerfile.app --build-arg SERVICE=src --build-arg PORT=3001 -t pheme-backend .
+
+# For bots
+docker build -f Dockerfile.app --build-arg SERVICE=bots --build-arg PORT=3002 -t pheme-bots .
 ```

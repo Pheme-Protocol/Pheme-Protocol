@@ -7,8 +7,8 @@ import { base } from '@reown/appkit/networks'
 import { ReactNode, useEffect, useState } from 'react'
 import '@rainbow-me/rainbowkit/styles.css'
 
-const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
-if (!projectId) throw new Error('Missing NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID')
+// Use a default project ID for development
+const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'YOUR_PROJECT_ID'
 
 // Update base network configuration with required fees structure
 const updatedBase = {
@@ -50,12 +50,22 @@ interface Props {
 
 export default function Web3ModalProviderInner({ children }: Props) {
   const [isTestMode, setIsTestMode] = useState(false)
+  const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
     // Check if we're in test mode
     const testMode = localStorage.getItem('__TEST__') === 'true'
     setIsTestMode(testMode)
+    setIsReady(true)
   }, [])
+
+  if (!isReady) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-black text-white">
+        <p>Loading application...</p>
+      </div>
+    )
+  }
 
   if (isTestMode) {
     // In test mode, render children without RainbowKit

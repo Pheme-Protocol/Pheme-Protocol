@@ -26,6 +26,7 @@ export default function Home() {
   const [messages, setMessages] = useState<{ sender: string; text: string; id: string }[]>([]);
   const [showSplash, setShowSplash] = useState(true);
   const [hasSeenSplash, setHasSeenSplash] = useState(false);
+  const [isSplashReady, setIsSplashReady] = useState(false);
   const hasDisconnected = useRef(false);
   const [walletConnectAttempted, setWalletConnectAttempted] = useState(false);
   const [walletConnectError, setWalletConnectError] = useState<string | null>(null);
@@ -34,18 +35,29 @@ export default function Home() {
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    // Check if we're coming from the mint page
-    if (router.isReady) {
-      const fromMint = router.query.from === 'mint';
-      setShowSplash(!fromMint);
-    }
-  }, [router.isReady, router.query.from]);
+    // Always show splash screen on first load
+    setShowSplash(true);
+    const hasSeenSplashBefore = localStorage.getItem('hasSeenSplash') === 'true';
+    setHasSeenSplash(hasSeenSplashBefore);
+  }, []);
 
   const handleSplashComplete = () => {
     setShowSplash(false);
     setHasSeenSplash(true);
+    setIsSplashReady(true);
     localStorage.setItem('hasSeenSplash', 'true');
   };
+
+  useEffect(() => {
+    // Check if we're coming from the mint page
+    if (router.isReady) {
+      const fromMint = router.query.from === 'mint';
+      const hasSeenSplashBefore = localStorage.getItem('hasSeenSplash') === 'true';
+      // Always show splash screen on first load
+      setShowSplash(true);
+      setHasSeenSplash(hasSeenSplashBefore);
+    }
+  }, [router.isReady, router.query.from]);
 
   useEffect(() => {
     // Only disconnect once, on first mount, if connected
@@ -455,7 +467,8 @@ export default function Home() {
     );
   };
 
-  if (showSplash && !hasSeenSplash) {
+  // Don't render main content until splash screen is ready
+  if (!isSplashReady) {
     return <SplashScreen onComplete={handleSplashComplete} />;
   }
 
