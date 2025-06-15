@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import prisma from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 
 // Validation schema for waitlist submission
 const waitlistSchema = z.object({
@@ -15,44 +16,62 @@ export async function POST(request: Request) {
     // Validate request body
     const validatedData = waitlistSchema.parse(body)
     
-    // Check if email or wallet is already registered
-    const existingEntry = await prisma.waitlist.findFirst({
-      where: {
-        OR: [
-          { email: validatedData.email },
-          { walletAddress: validatedData.walletAddress }
-        ]
-      }
-    })
+    try {
+      // Check if email or wallet is already registered
+      const existingEntry = await prisma.waitlist.findFirst({
+        where: {
+          OR: [
+            { email: validatedData.email },
+            { walletAddress: validatedData.walletAddress }
+          ]
+        }
+      })
 
-    if (existingEntry) {
+      if (existingEntry) {
+        return NextResponse.json(
+          { error: 'Email or wallet address already registered' },
+          { status: 400 }
+        )
+      }
+
+      // Create new waitlist entry
+      const entry = await prisma.waitlist.create({
+        data: {
+          email: validatedData.email,
+          walletAddress: validatedData.walletAddress,
+          joinedAt: new Date(),
+        }
+      })
+
       return NextResponse.json(
-        { error: 'Email or wallet address already registered' },
-        { status: 400 }
+        { 
+          message: 'Successfully joined waitlist',
+          data: {
+            id: entry.id,
+            email: entry.email,
+            walletAddress: entry.walletAddress,
+            joinedAt: entry.joinedAt
+          }
+        },
+        { status: 201 }
+      )
+    } catch (dbError) {
+      if (dbError instanceof Prisma.PrismaClientKnownRequestError) {
+        // Handle unique constraint violations
+        if (dbError.code === 'P2002') {
+          return NextResponse.json(
+            { error: 'Email or wallet address already registered' },
+            { status: 400 }
+          )
+        }
+      }
+      
+      console.error('Database error:', dbError)
+      return NextResponse.json(
+        { error: 'Database error occurred' },
+        { status: 500 }
       )
     }
-
-    // Create new waitlist entry
-    const entry = await prisma.waitlist.create({
-      data: {
-        email: validatedData.email,
-        walletAddress: validatedData.walletAddress,
-        joinedAt: new Date(),
-      }
-    })
-
-    return NextResponse.json(
-      { 
-        message: 'Successfully joined waitlist',
-        data: {
-          id: entry.id,
-          email: entry.email,
-          walletAddress: entry.walletAddress,
-          joinedAt: entry.joinedAt
-        }
-      },
-      { status: 201 }
-    )
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
