@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -73,4 +76,15 @@ model GUILD_MEMBERS {
   user  User  @relation(fields: [user_id], references: [id])
 
   @@id([guild_id, user_id])
+}
+
+model Waitlist {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  walletAddress String   @unique
+  joinedAt      DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([email])
+  @@index([walletAddress])
 } 

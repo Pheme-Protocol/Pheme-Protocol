@@ -3,7 +3,6 @@ import Image from 'next/image';
 import { ConnectButton } from '../components/ConnectButton';
 import { useAccount, useDisconnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { PhemeChat } from '../components/PhemeChat';
 import { Wallet, UserCheck, Users } from 'lucide-react';
 import PhemeLogo from '../components/PhemeLogo';
 import { Navigation } from '../components/Navigation';
@@ -11,6 +10,8 @@ import { Footer } from '../components/Footer';
 import { SupportChat } from '../components/SupportChat';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import PhemeChat from '../components/PhemeChat';
+import { Message } from '../types/Message';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function Dashboard() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [messages, setMessages] = useState<{ sender: string; text: string; id: string }[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [walletConnectAttempted, setWalletConnectAttempted] = useState(false);
   const [walletConnectError, setWalletConnectError] = useState<string | null>(null);
   const [walletConnectInitiated, setWalletConnectInitiated] = useState(false);

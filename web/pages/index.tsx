@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { ConnectButton } from '../components/ConnectButton';
 import { useAccount, useDisconnect } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { PhemeChat } from '../components/PhemeChat';
+import PhemeChat from '../components/PhemeChat';
 import { Wallet, UserCheck, Users } from 'lucide-react';
 import PhemeLogo from '../components/PhemeLogo';
 import { Navigation } from '../components/Navigation';
@@ -11,6 +11,7 @@ import { SupportChat } from '../components/SupportChat';
 import Head from 'next/head';
 import SplashScreen from "@/components/SplashScreen";
 import { useRouter } from 'next/router';
+import { Message } from '../types/Message';
 
 export default function Home() {
   const router = useRouter();
@@ -21,9 +22,9 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [waitlistStatus, setWaitlistStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
-  const [isLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [messages, setMessages] = useState<{ sender: string; text: string; id: string }[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [showSplash, setShowSplash] = useState(true);
   const [hasSeenSplash, setHasSeenSplash] = useState(false);
   const [isSplashReady, setIsSplashReady] = useState(false);
@@ -33,6 +34,7 @@ export default function Home() {
   const [walletConnectInitiated, setWalletConnectInitiated] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const [input, setInput] = useState('');
 
   useEffect(() => {
     // Always show splash screen on first load
@@ -202,6 +204,45 @@ export default function Home() {
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : 'Failed to join waitlist');
       setWaitlistStatus('error');
+    }
+  };
+
+  const handleSend = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      sender: 'user',
+      text: input.trim(),
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      // TODO: Implement actual chat API call
+      // For now, just echo the message
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        sender: 'bot',
+        text: `I received your message: "${input.trim()}"`,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, botMessage]);
+    } catch (error) {
+      console.error('Chat error:', error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        sender: 'bot',
+        text: 'Sorry, I encountered an error. Please try again.',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
     }
   };
 

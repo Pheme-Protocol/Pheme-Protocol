@@ -1,59 +1,48 @@
-# Use Node.js LTS version as base
+# Stage 1: Base
 FROM node:20-alpine AS base
-
-# Install common dependencies
 RUN apk add --no-cache libc6-compat python3 make g++ git
+WORKDIR /app
 
-# Stage 1: Dependencies
+# Enable Corepack and prepare Yarn
+RUN corepack enable && corepack prepare yarn@4.9.2 --activate
+
+# Stage 2: Dependencies
 FROM base AS deps
 WORKDIR /app
 
 # Copy all package files
-COPY package.json ./
-COPY yarn.lock ./
+COPY package.json yarn.lock .yarnrc.yml ./
+COPY .yarn ./.yarn
 COPY contracts/package.json ./contracts/
 COPY subgraph/package.json ./subgraph/
 COPY src/package.json ./src/
 COPY web/package.json ./web/
 
-# Install root dependencies
-RUN yarn install --frozen-lockfile
+# Install dependencies
+RUN yarn install
 
-# Stage 2: Contracts Build
-FROM deps AS contracts-builder
-WORKDIR /app/contracts
-COPY contracts/ .
-RUN yarn install --frozen-lockfile
-RUN yarn compile
-# Create artifacts directory if it doesn't exist
-RUN mkdir -p artifacts
+# Stage 2: Web Builder
+FROM base AS web-builder
+WORKDIR /app
 
-# Stage 3: Subgraph Build
-FROM contracts-builder AS subgraph-builder
-WORKDIR /app/subgraph
-COPY subgraph/ .
-RUN yarn install --frozen-lockfile
-RUN yarn codegen
-RUN yarn build
+# Copy only package.json files and yarn files for dependency install
+COPY package.json yarn.lock .yarnrc.yml ./
+COPY .yarn ./.yarn
+COPY contracts/package.json ./contracts/
+COPY subgraph/package.json ./subgraph/
+COPY src/package.json ./src/
+COPY web/package.json ./web/
 
-# Stage 4: Backend Build
-FROM subgraph-builder AS backend-builder
-WORKDIR /app/src
-COPY src/ .
-RUN yarn install --frozen-lockfile
-# Ensure the dist directory exists
-RUN mkdir -p dist
-RUN yarn build
+# Install dependencies
+RUN yarn install
 
-# Stage 5: Frontend Build
-FROM backend-builder AS frontend-builder
-WORKDIR /app/web
-COPY web/ .
-RUN yarn install --frozen-lockfile
-ENV NEXT_TELEMETRY_DISABLED=1
-RUN yarn build
+# Now copy the rest of the web directory
+COPY web ./web
 
-# Stage 6: Production
+# Build web
+RUN cd web && yarn build
+
+# Stage 4: Production
 FROM base AS runner
 WORKDIR /app
 
@@ -66,19 +55,11 @@ RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 pheme
 
 # Copy built artifacts
-COPY --from=contracts-builder /app/contracts/artifacts ./contracts/artifacts
-COPY --from=contracts-builder /app/contracts/cache ./contracts/cache
-COPY --from=subgraph-builder /app/subgraph/build ./subgraph/build
-COPY --from=backend-builder /app/src/dist ./src/dist
-COPY --from=frontend-builder /app/web/.next ./web/.next
-COPY --from=frontend-builder /app/web/public ./web/public
-COPY --from=frontend-builder /app/web/package.json ./web/
-COPY --from=frontend-builder /app/web/yarn.lock ./web/
+COPY --from=web-builder /app/web/dist ./web/dist
+COPY --from=web-builder /app/web/package.json ./web/
+COPY --from=web-builder /app/web/yarn.lock ./web/
 
 # Copy necessary configuration files
-COPY contracts/hardhat.config.ts ./contracts/
-COPY subgraph/subgraph.yaml ./subgraph/
-COPY src/tsconfig.json ./src/
 COPY web/next.config.js ./web/
 
 # Set permissions
@@ -86,8 +67,8 @@ RUN chown -R pheme:nodejs /app
 
 USER pheme
 
-# Expose ports
-EXPOSE 3000 4000
+# Expose port
+EXPOSE 3000
 
 # Set environment variables
 ENV PORT=3000

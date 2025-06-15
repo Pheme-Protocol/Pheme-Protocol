@@ -7,98 +7,73 @@
 ARG SERVICE=web
 ARG PORT=3000
 
-# Base stage for dependencies
+# Stage 1: Base
 FROM node:20-alpine AS base
+RUN apk add --no-cache libc6-compat python3 make g++ git
 WORKDIR /app
 
-# Install system dependencies
-RUN apk add --no-cache bash curl
-
 # Enable Corepack and prepare Yarn
-RUN corepack enable && corepack prepare yarn@stable --activate
+RUN corepack enable && corepack prepare yarn@4.9.2 --activate
 
-# Copy package files
+# Stage 2: Dependencies
+FROM base AS deps
+WORKDIR /app
+
+# Copy all package files
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY .yarn ./.yarn
+COPY tsconfig.base.json ./
+COPY contracts/package.json ./contracts/
+COPY subgraph/package.json ./subgraph/
+COPY src/package.json ./src/
+COPY web/package.json ./web/
 
-# Install dependencies with caching
-RUN --mount=type=cache,target=/app/.yarn/cache \
-    yarn install
+# Install dependencies
+RUN yarn install
 
-# Builder stage
-FROM base AS builder
+# Stage 3: Backend Build
+FROM deps AS backend-builder
 WORKDIR /app
 
-# Copy source code
-COPY . .
+# Copy source code and configuration
+COPY src ./src
+COPY tsconfig.base.json ./
+COPY --from=deps /app/node_modules ./node_modules
 
-# Build the web service
-RUN cd web && \
-    yarn install && \
+# Generate Prisma client and build backend
+RUN cd src && \
+    yarn prisma generate && \
     yarn build
 
-# Runner stage
-FROM node:20-alpine AS runner
+# Stage 4: Production
+FROM base AS runner
 WORKDIR /app
 
-# Create a non-root user
+# Set production environment
+ENV NODE_ENV=production
+
+# Create non-root user
 RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nextjs
+    adduser --system --uid 1001 pheme
 
-# Enable Corepack and prepare Yarn
-RUN corepack enable && corepack prepare yarn@stable --activate
+# Copy built artifacts
+COPY --from=backend-builder /app/src/dist ./src/dist
+COPY --from=backend-builder /app/src/package.json ./src/
+COPY --from=backend-builder /app/src/prisma ./src/prisma
 
-# Copy package files and workspace configuration
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/yarn.lock ./yarn.lock
-COPY --from=builder /app/.yarnrc.yml ./.yarnrc.yml
-COPY --from=builder /app/.yarn ./.yarn
+# Set permissions
+RUN chown -R pheme:nodejs /app
 
-# Copy web service files
-COPY --from=builder /app/web ./web
+USER pheme
 
-# Copy Next.js standalone output
-RUN if [ -d "/app/web/.next/standalone" ]; then \
-    cp -r /app/web/.next/standalone/* ./; \
-fi
-
-# Copy Next.js static files
-RUN if [ -d "/app/web/.next/static" ]; then \
-    mkdir -p .next/static && \
-    cp -r /app/web/.next/static/* .next/static/; \
-fi
-
-# Copy public directory
-RUN if [ -d "/app/web/public" ]; then \
-    cp -r /app/web/public ./public; \
-else \
-    mkdir -p public; \
-fi
-
-# Copy next.config.js
-RUN if [ -f "/app/web/next.config.js" ]; then \
-    cp /app/web/next.config.js ./next.config.js; \
-fi
-
-# Install production dependencies
-RUN yarn install --production
-
-# Set proper permissions
-RUN chown -R nextjs:nodejs /app
+# Expose port
+EXPOSE 3001
 
 # Set environment variables
-ENV PORT=${PORT}
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3001
+ENV HOSTNAME="0.0.0.0"
 
-# Switch to non-root user
-USER nextjs
-
-# Change working directory to the web app
-WORKDIR /app/web
-
-# Expose the port
-EXPOSE ${PORT}
-
-# Start the application using the standalone server
-CMD ["node", ".next/standalone/server.js"] 
+# Start the application
+WORKDIR /app/src
+RUN yarn install --frozen-lockfile
+CMD ["yarn", "start"] 

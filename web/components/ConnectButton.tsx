@@ -18,7 +18,7 @@
 
 'use client'
 
-import { useDisconnect } from 'wagmi'
+import { useDisconnect, useAccount } from 'wagmi'
 import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
 import { useEffect, useState } from 'react'
 
@@ -26,10 +26,12 @@ interface ConnectButtonProps {
   onError?: (error: Error) => void
   onConnectClick?: () => void
   onClick?: () => void
+  className?: string
 }
 
-export function ConnectButton({ onError, onConnectClick, onClick }: ConnectButtonProps) {
+export function ConnectButton({ onError, onConnectClick, onClick, className = '' }: ConnectButtonProps) {
   const { disconnect } = useDisconnect()
+  const { isConnecting } = useAccount()
   const [isTestMode, setIsTestMode] = useState(false)
 
   useEffect(() => {
@@ -46,7 +48,7 @@ export function ConnectButton({ onError, onConnectClick, onClick }: ConnectButto
           onClick?.()
           onConnectClick?.()
         }}
-        className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-semibold border-2 border-blue-700"
+        className={`bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-semibold border-2 border-blue-700 ${className}`}
       >
         Connect Wallet
       </button>
@@ -59,6 +61,7 @@ export function ConnectButton({ onError, onConnectClick, onClick }: ConnectButto
         account,
         openConnectModal,
         mounted,
+        chain,
       }) => {
         const ready = mounted
 
@@ -78,9 +81,10 @@ export function ConnectButton({ onError, onConnectClick, onClick }: ConnectButto
                   onError?.(error as Error);
                 }
               }}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-semibold border-2 border-blue-700"
+              disabled={isConnecting}
+              className={`bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-semibold border-2 border-blue-700 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
             >
-              Connect Wallet
+              {isConnecting ? 'Connecting...' : 'Connect Wallet'}
             </button>
           )
         }
@@ -88,12 +92,17 @@ export function ConnectButton({ onError, onConnectClick, onClick }: ConnectButto
         return (
           <button
             onClick={() => disconnect()}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-semibold flex items-center gap-2 border-2 border-blue-700"
+            className={`bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md font-semibold flex items-center gap-2 border-2 border-blue-700 ${className}`}
           >
             <span>Disconnect</span>
             <span className="text-sm opacity-80">
               ({account.displayName})
             </span>
+            {chain && (
+              <span className="text-xs bg-blue-700 px-2 py-1 rounded-full">
+                {chain.name}
+              </span>
+            )}
           </button>
         )
       }}

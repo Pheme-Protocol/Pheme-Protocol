@@ -17,283 +17,140 @@
  */
 
 // components/PhemeChat.tsx
-import { useState, useEffect, useRef, useCallback } from 'react';
+'use client'
+
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import TypingAnimation from './TypingAnimation';
 import { useAccount } from 'wagmi';
-
-interface Message {
-  sender: string;
-  text: string;
-  id: string;
-}
+import { ConnectButton } from './ConnectButton';
+import { Message } from '../types/Message';
 
 interface PhemeChatProps {
   messages: Message[];
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 }
 
-export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
-  const [localInput, setLocalInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const lastMessageRef = useRef<HTMLDivElement>(null);
+const PhemeChat: React.FC<PhemeChatProps> = ({ messages, setMessages }) => {
   const { isConnected } = useAccount();
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to message function with delay
-  const scrollToMessage = (element: HTMLDivElement | null) => {
-    if (element && messagesContainerRef.current) {
-      // Small delay to ensure DOM is updated
-      setTimeout(() => {
-        const container = messagesContainerRef.current;
-        if (!container) return;
-        
-        const elementTop = element.offsetTop;
-        const containerHeight = container.clientHeight;
-        const scrollPosition = elementTop - (containerHeight / 4);
-        
-        // Force a reflow to ensure accurate measurements
-        container.style.scrollBehavior = 'auto';
-        container.scrollTop = scrollPosition;
-        
-        // Reset scroll behavior after position is set
-        requestAnimationFrame(() => {
-          container.style.scrollBehavior = 'smooth';
-        });
-      }, 50);
-    }
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Scroll to new message when messages change
   useEffect(() => {
-    if (lastMessageRef.current) {
-      scrollToMessage(lastMessageRef.current);
-    }
+    scrollToBottom();
   }, [messages]);
 
-  // Scroll to bottom when loading state changes
+  // Add welcome message when connected
   useEffect(() => {
-    if (isLoading && messagesContainerRef.current) {
-      const container = messagesContainerRef.current;
-      container.scrollTop = container.scrollHeight;
+    if (isConnected && messages.length === 0) {
+      setMessages([
+        {
+          id: 'welcome',
+          sender: 'bot',
+          text: 'Welcome to PHEME! I\'m here to help you verify your skills. What would you like to do?',
+          timestamp: new Date()
+        }
+      ]);
     }
-  }, [isLoading]);
+  }, [isConnected, messages.length, setMessages]);
 
-  // Generate unique ID for messages
-  const generateMessageId = () => `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-
-  const handleSend = useCallback(async (e: React.FormEvent) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    if (!input.trim() || isLoading) return;
 
-    const messageText = localInput.trim();
-    if (!messageText) return;
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      sender: 'user',
+      text: input.trim(),
+      timestamp: new Date()
+    };
 
-    // Clear input field and save to localStorage
-    setLocalInput('');
-    localStorage.setItem('pheme-chat-input', '');
-
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
     setIsLoading(true);
-    const userMessageId = generateMessageId();
-    const typingIndicatorId = generateMessageId();
 
     try {
-      // Add message to UI first
-      setMessages((prev) => [...prev, { 
-        sender: 'You', 
-        text: messageText, 
-        id: userMessageId 
-      }]);
-
-      // Add typing indicator message
-      setMessages((prev) => [...prev, {
-        sender: 'PHEME',
-        text: '<typing>',
-        id: typingIndicatorId
-      }]);
-
-      // Make API request
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: messageText }),
-      });
-
-      const data = await res.json();
-      
-      if (!res.ok) {
-        throw new Error(data.error || data.details || 'Failed to get response');
-      }
-
-      // Remove typing indicator and add bot response
-      setMessages((prev) => prev.filter(msg => msg.id !== typingIndicatorId).concat({
-        sender: 'PHEME',
-        text: data.reply,
-        id: generateMessageId()
-      }));
-
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to send message. Please try again.';
-      setError(errorMessage);
-      // Remove both the user's message and typing indicator
-      setMessages((prev) => prev.filter(msg => msg.id !== userMessageId && msg.id !== typingIndicatorId));
+      // TODO: Implement actual chat API call
+      // For now, just echo the message
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        sender: 'bot',
+        text: `I received your message: "${input.trim()}"`,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, botMessage]);
+    } catch (error) {
+      console.error('Chat error:', error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        sender: 'bot',
+        text: 'Sorry, I encountered an error. Please try again.',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
-  }, [localInput, setMessages]);
+  };
 
-  // Handle keyboard shortcuts
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      // Submit on Ctrl/Cmd + Enter
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        e.preventDefault();
-        if (localInput.trim() && !isLoading) {
-          handleSend(e as unknown as React.FormEvent);
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [localInput, isLoading, handleSend]);
+  if (!isConnected) {
+    return (
+      <div className="flex flex-col items-center justify-center p-6 bg-white dark:bg-gray-900 rounded-lg shadow-lg">
+        <h2 className="text-xl font-semibold mb-4">Connect Your Wallet</h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-6 text-center">
+          Please connect your wallet to start chatting with the AI validator.
+        </p>
+        <ConnectButton />
+      </div>
+    );
+  }
 
   return (
-    <div className={`flex flex-col h-full ${isConnected ? 'bg-white dark:bg-gray-900 rounded-[40px] text-gray-900 dark:text-white p-3 shadow-[0_0_60px_-15px_rgba(0,0,0,0.2)] dark:shadow-[0_0_60px_-15px_rgba(255,255,255,0.1)] border-[12px] border-gray-900 dark:border-gray-950 relative overflow-hidden ring-2 ring-gray-900/30 dark:ring-white/20' : ''}`}>
-      {isConnected && (
-        <>
-          {/* Device Frame Details */}
-          <div 
-            className="absolute inset-0 bg-gradient-to-b from-gray-800/20 to-transparent pointer-events-none" 
-            aria-hidden="true"
-            tabIndex={-1}
-          ></div>
-          <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-gray-200/40 to-transparent"></div>
-          
-          {/* iPhone Notch */}
-          <div className="bg-gray-950 h-6 w-40 rounded-b-2xl mx-auto mb-2 relative shadow-xl">
-            <div className="absolute left-1/2 transform -translate-x-1/2 top-1 w-16 h-3 bg-black rounded-full flex items-center justify-center">
-              <div className="w-2 h-2 bg-gray-800 rounded-full absolute left-3"></div>
-              <div className="w-1.5 h-1.5 bg-gray-700 rounded-full absolute right-3"></div>
-            </div>
-          </div>
-        </>
-      )}
-
-      <div className="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md">
-        <Image
-          src="/Pheme_wave.svg"
-          alt="PHEME Logo"
-          width={64}
-          height={64}
-          className="rounded-full"
-        />
-        <h3 className="font-bold text-lg">PHEME Chat</h3>
-      </div>
-
-      <div 
-        ref={messagesContainerRef}
-        className="flex-1 min-h-0 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-800"
-        style={{ maxHeight: 'calc(100vh - 200px)' }}
-      >
-        {messages.length === 0 ? (
-          <div className="text-center p-6 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
-            <p className="text-lg font-medium mb-2">Welcome to PHEME Chat!</p>
-            <p className="text-base text-gray-600 dark:text-gray-400">Ask me to verify your skills or learn more about the PHEME protocol.</p>
-          </div>
-        ) : (
-          messages.map((msg, index) => (
+    <div className="flex flex-col h-[600px] bg-white dark:bg-gray-900 rounded-lg shadow-lg">
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {messages.map(message => (
+          <div
+            key={message.id}
+            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
             <div
-              key={msg.id}
-              ref={index === messages.length - 1 ? lastMessageRef : null}
-              className={`flex ${msg.sender === 'You' ? 'justify-start' : 'justify-end'} mb-4`}
-              role="article"
-              aria-label={`Message from ${msg.sender === 'You' ? 'you' : 'PHEME Support'}`}
+              className={`max-w-[80%] rounded-lg p-3 ${
+                message.sender === 'user'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white'
+              }`}
             >
-              <div
-                className={`max-w-[80%] p-3 rounded-2xl shadow-md border ${
-                  msg.sender === 'You'
-                    ? 'bg-primary-light dark:bg-primary-dark text-white rounded-tr-sm border-primary-light/50 dark:border-primary-dark/50'
-                    : 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-tl-sm border-gray-200 dark:border-gray-700'
-                }`}
-              >
-                {msg.text === '<typing>' ? (
-                  <TypingAnimation />
-                ) : (
-                  <div className="prose prose-sm dark:prose-invert max-w-none">
-                    {msg.text.split('\n\n').map((paragraph, index) => (
-                      <div key={index} className={`${index > 0 ? 'mt-4' : ''}`}>
-                        {paragraph.startsWith('- ') ? (
-                          <ul className="list-disc list-inside space-y-2 ml-2">
-                            {paragraph.split('\n').map((item, i) => (
-                              <li key={i} className="text-base">
-                                <span dangerouslySetInnerHTML={{ 
-                                  __html: item.replace('- ', '')
-                                }} />
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <p className="text-base leading-relaxed">
-                            <span dangerouslySetInnerHTML={{ __html: paragraph }} />
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))
-        )}
-        {error && (
-          <div 
-            className="p-3 rounded-lg bg-error-light/10 dark:bg-error-dark/10 text-error-text-light dark:text-error-text-dark text-center animate-fade-in text-base"
-            role="alert"
-            aria-live="assertive"
-          >
-            {error}
-          </div>
-        )}
-        {isLoading && (
-          <div 
-            className="flex justify-end mb-4"
-            role="status" 
-            aria-label="PHEME is processing your request"
-          >
-            <div className="bg-white dark:bg-gray-900 p-3 rounded-2xl rounded-tr-sm border border-gray-200 dark:border-gray-700 shadow-md max-w-[80%]">
-              <TypingAnimation />
+              <p>{message.text}</p>
+              <span className="text-xs opacity-70 mt-1 block">
+                {message.timestamp.toLocaleTimeString()}
+              </span>
             </div>
           </div>
-        )}
+        ))}
         <div ref={messagesEndRef} />
       </div>
 
-      <form 
-        onSubmit={handleSend} 
-        className="sticky bottom-0 p-4 border-t dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg"
-        role="form"
-        aria-label="Chat message input"
-      >
+      {/* Input */}
+      <form onSubmit={handleSend} className="p-4 border-t border-gray-200 dark:border-gray-700">
         <div className="flex gap-2">
           <input
             type="text"
-            value={localInput}
-            onChange={(e) => {
-              setLocalInput(e.target.value);
-              localStorage.setItem('pheme-chat-input', e.target.value);
-            }}
-            placeholder="Talk to PHEME..."
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            placeholder="Type your message..."
+            className="flex-1 p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={isLoading}
-            className="flex-1 px-4 py-3 text-base rounded-lg border dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ minHeight: '48px' }}
           />
           <button
             type="submit"
-            disabled={isLoading || !localInput.trim()}
-            className="px-4 py-2 bg-primary-light hover:bg-primary-light/90 dark:bg-primary-dark dark:hover:bg-primary-dark/90 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px]"
+            disabled={isLoading || !input.trim()}
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {isLoading ? 'Sending...' : 'Send'}
           </button>
@@ -301,4 +158,6 @@ export function PhemeChat({ messages, setMessages }: PhemeChatProps) {
       </form>
     </div>
   );
-}
+};
+
+export default PhemeChat;
