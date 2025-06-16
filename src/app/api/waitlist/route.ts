@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import prisma from '@/lib/prisma'
-import { Prisma } from '@prisma/client'
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 
 // Validation schema for waitlist submission
 const waitlistSchema = z.object({
@@ -11,13 +11,17 @@ const waitlistSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    console.log('Received waitlist submission request')
     const body = await request.json()
+    console.log('Request body:', body)
     
     // Validate request body
     const validatedData = waitlistSchema.parse(body)
+    console.log('Validated data:', validatedData)
     
     try {
       // Check if email or wallet is already registered
+      console.log('Checking for existing entries...')
       const existingEntry = await prisma.waitlist.findFirst({
         where: {
           OR: [
@@ -28,6 +32,7 @@ export async function POST(request: Request) {
       })
 
       if (existingEntry) {
+        console.log('Found existing entry:', existingEntry)
         return NextResponse.json(
           { error: 'Email or wallet address already registered' },
           { status: 400 }
@@ -35,6 +40,7 @@ export async function POST(request: Request) {
       }
 
       // Create new waitlist entry
+      console.log('Creating new waitlist entry...')
       const entry = await prisma.waitlist.create({
         data: {
           email: validatedData.email,
@@ -42,6 +48,7 @@ export async function POST(request: Request) {
           joinedAt: new Date(),
         }
       })
+      console.log('Created entry:', entry)
 
       return NextResponse.json(
         { 
@@ -55,8 +62,15 @@ export async function POST(request: Request) {
         },
         { status: 201 }
       )
-    } catch (dbError) {
-      if (dbError instanceof Prisma.PrismaClientKnownRequestError) {
+    } catch (dbError: unknown) {
+      console.error('Database error details:', {
+        name: dbError instanceof Error ? dbError.name : 'unknown',
+        message: dbError instanceof Error ? dbError.message : 'unknown error',
+        code: dbError instanceof PrismaClientKnownRequestError ? dbError.code : 'unknown',
+        stack: dbError instanceof Error ? dbError.stack : undefined
+      })
+
+      if (dbError instanceof PrismaClientKnownRequestError) {
         // Handle unique constraint violations
         if (dbError.code === 'P2002') {
           return NextResponse.json(
@@ -66,13 +80,18 @@ export async function POST(request: Request) {
         }
       }
       
-      console.error('Database error:', dbError)
       return NextResponse.json(
-        { error: 'Database error occurred' },
+        { error: 'Database error occurred', details: dbError instanceof Error ? dbError.message : 'Unknown error' },
         { status: 500 }
       )
     }
-  } catch (error) {
+  } catch (error: unknown) {
+    console.error('Waitlist submission error details:', {
+      name: error instanceof Error ? error.name : 'unknown',
+      message: error instanceof Error ? error.message : 'unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    })
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Invalid input data', details: error.errors },
@@ -80,9 +99,8 @@ export async function POST(request: Request) {
       )
     }
 
-    console.error('Waitlist submission error:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }
