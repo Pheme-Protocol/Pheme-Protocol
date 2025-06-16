@@ -251,12 +251,22 @@ export default function Home() {
       fetch(`/api/waitlist?walletAddress=${address}`)
         .then(res => {
           if (res.ok) return res.json();
-          throw new Error('Not found');
+          if (res.status === 404) return { exists: false };
+          throw new Error('Failed to check waitlist status');
         })
         .then(data => {
-          if (data.exists) setWaitlistStatus('success');
+          if (data.exists) {
+            setWaitlistStatus('success');
+          } else {
+            setWaitlistStatus('idle');
+          }
         })
-        .catch(() => {});
+        .catch(error => {
+          console.error('Error checking waitlist status:', error);
+          setWaitlistStatus('idle');
+        });
+    } else {
+      setWaitlistStatus('idle');
     }
   }, [address]);
 
@@ -316,21 +326,21 @@ export default function Home() {
 
       {/* Blockchain Logos */}
       <div className="flex flex-wrap justify-center sm:justify-start gap-6 sm:gap-8 items-center opacity-90 dark:opacity-100">
-        <Image 
+        <Image
           src="/logos/base.svg" 
           alt="base" 
           width={32} 
           height={32} 
           className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
         />
-        <Image 
+        <Image
           src="/logos/polygon.svg" 
           alt="polygon" 
           width={32} 
           height={32} 
           className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
         />
-        <Image 
+        <Image
           src="/logos/ethereum.svg" 
           alt="ethereum" 
           width={32} 
@@ -339,7 +349,7 @@ export default function Home() {
         />
         <Image 
           src="/logos/optimism.png"
-          alt="Optimism" 
+          alt="Optimism"
           width={32}
           height={32}
           className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"

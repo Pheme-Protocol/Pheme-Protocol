@@ -94,6 +94,20 @@ export default function Dashboard() {
     }
   }, [walletConnectAttempted, walletConnectError, isConnected]);
 
+  useEffect(() => {
+    if (address) {
+      fetch(`/api/waitlist?walletAddress=${address}`)
+        .then(res => {
+          if (res.ok) return res.json();
+          throw new Error('Not found');
+        })
+        .then(data => {
+          if (data.exists) setWaitlistStatus('success');
+        })
+        .catch(() => {});
+    }
+  }, [address]);
+
   const handleWaitlist = async (e: React.FormEvent) => {
     e.preventDefault();
     setWaitlistStatus('loading');
