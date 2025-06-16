@@ -171,12 +171,14 @@ export default function Dashboard() {
             setWalletConnectInitiated(false);
           }}
         />
-        <button 
-          onClick={() => setShowWaitlistModal(true)}
-          className="btn-primary bg-white text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl border-2 border-blue-700 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Join Waitlist
-        </button>
+        {waitlistStatus !== 'success' && (
+          <button 
+            onClick={() => setShowWaitlistModal(true)}
+            className="btn-primary bg-white text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl border-2 border-blue-700 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Join Waitlist
+          </button>
+        )}
       </div>
 
       {/* Blockchain Logos */}
