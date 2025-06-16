@@ -246,6 +246,20 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    if (address) {
+      fetch(`/api/waitlist?walletAddress=${address}`)
+        .then(res => {
+          if (res.ok) return res.json();
+          throw new Error('Not found');
+        })
+        .then(data => {
+          if (data.exists) setWaitlistStatus('success');
+        })
+        .catch(() => {});
+    }
+  }, [address]);
+
   // Main content component
   const MainContent = () => (
     <div className="card bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-800 shadow-2xl rounded-3xl p-10 transition-all duration-300">

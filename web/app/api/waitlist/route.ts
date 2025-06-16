@@ -111,4 +111,31 @@ export async function POST(request: Request) {
       { status: 500 }
     )
   }
+}
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const walletAddress = searchParams.get('walletAddress');
+
+  if (!walletAddress) {
+    return NextResponse.json({ error: 'walletAddress query param required' }, { status: 400 });
+  }
+
+  // Validate wallet address format
+  if (!/^0x[a-fA-F0-9]{40}$/.test(walletAddress)) {
+    return NextResponse.json({ error: 'Invalid wallet address' }, { status: 400 });
+  }
+
+  try {
+    const entry = await prisma.waitlist.findUnique({
+      where: { walletAddress },
+    });
+    if (entry) {
+      return NextResponse.json({ exists: true, entry }, { status: 200 });
+    } else {
+      return NextResponse.json({ exists: false }, { status: 404 });
+    }
+  } catch (error) {
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
 } 
