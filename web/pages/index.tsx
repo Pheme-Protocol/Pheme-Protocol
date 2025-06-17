@@ -192,7 +192,7 @@ export default function Home() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to join waitlist');
+        throw new Error(data.error || 'Failed to join waitlist');
       }
 
       setWaitlistStatus('success');
@@ -246,6 +246,30 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    if (address) {
+      fetch(`/api/waitlist?walletAddress=${address}`)
+        .then(res => {
+          if (res.ok) return res.json();
+          if (res.status === 404) return { exists: false };
+          throw new Error('Failed to check waitlist status');
+        })
+        .then(data => {
+          if (data.exists) {
+            setWaitlistStatus('success');
+          } else {
+            setWaitlistStatus('idle');
+          }
+        })
+        .catch(error => {
+          console.error('Error checking waitlist status:', error);
+          setWaitlistStatus('idle');
+        });
+    } else {
+      setWaitlistStatus('idle');
+    }
+  }, [address]);
+
   // Main content component
   const MainContent = () => (
     <div className="card bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-800 shadow-2xl rounded-3xl p-10 transition-all duration-300">
@@ -290,31 +314,33 @@ export default function Home() {
             setWalletConnectInitiated(false);
           }}
         />
-        <button 
-          onClick={() => setShowWaitlistModal(true)}
-          className="btn-primary bg-white text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl border-2 border-blue-700 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Join Waitlist
-        </button>
+        {waitlistStatus !== 'success' && (
+          <button 
+            onClick={() => setShowWaitlistModal(true)}
+            className="btn-primary bg-white text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl border-2 border-blue-700 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Join Waitlist
+          </button>
+        )}
       </div>
 
       {/* Blockchain Logos */}
       <div className="flex flex-wrap justify-center sm:justify-start gap-6 sm:gap-8 items-center opacity-90 dark:opacity-100">
-        <Image 
+        <Image
           src="/logos/base.svg" 
           alt="base" 
           width={32} 
           height={32} 
           className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
         />
-        <Image 
+        <Image
           src="/logos/polygon.svg" 
           alt="polygon" 
           width={32} 
           height={32} 
           className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"
         />
-        <Image 
+        <Image
           src="/logos/ethereum.svg" 
           alt="ethereum" 
           width={32} 
@@ -323,7 +349,7 @@ export default function Home() {
         />
         <Image 
           src="/logos/optimism.png"
-          alt="Optimism" 
+          alt="Optimism"
           width={32}
           height={32}
           className="hover:opacity-80 hover:scale-110 transform transition-all duration-300 hover:brightness-110"

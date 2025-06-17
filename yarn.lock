@@ -2852,49 +2852,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/hashes@npm:1.2.0, @noble/hashes@npm:~1.2.0":
-  version: 1.2.0
-  resolution: "@noble/hashes@npm:1.2.0"
-  checksum: 10c0/8bd3edb7bb6a9068f806a9a5a208cc2144e42940a21c049d8e9a0c23db08bef5cf1cfd844a7e35489b5ab52c6fa6299352075319e7f531e0996d459c38cfe26a
-  languageName: node
-  linkType: hard
-
-"@noble/hashes@npm:1.3.2":
-  version: 1.3.2
-  resolution: "@noble/hashes@npm:1.3.2"
-  checksum: 10c0/2482cce3bce6a596626f94ca296e21378e7a5d4c09597cbc46e65ffacc3d64c8df73111f2265444e36a3168208628258bbbaccba2ef24f65f58b2417638a20e7
-  languageName: node
-  linkType: hard
-
-"@noble/hashes@npm:1.4.0, @noble/hashes@npm:~1.4.0":
-  version: 1.4.0
-  resolution: "@noble/hashes@npm:1.4.0"
-  checksum: 10c0/8c3f005ee72e7b8f9cff756dfae1241485187254e3f743873e22073d63906863df5d4f13d441b7530ea614b7a093f0d889309f28b59850f33b66cb26a779a4a5
-  languageName: node
-  linkType: hard
-
-"@noble/hashes@npm:1.7.0":
-  version: 1.7.0
-  resolution: "@noble/hashes@npm:1.7.0"
-  checksum: 10c0/1ef0c985ebdb5a1bd921ea6d959c90ba826af3ae05b40b459a703e2a5e9b259f190c6e92d6220fb3800e2385521e4159e238415ad3f6b79c52f91dd615e491dc
-  languageName: node
-  linkType: hard
-
-"@noble/hashes@npm:1.7.1":
-  version: 1.7.1
-  resolution: "@noble/hashes@npm:1.7.1"
-  checksum: 10c0/2f8ec0338ccc92b576a0f5c16ab9c017a3a494062f1fbb569ae641c5e7eab32072f9081acaa96b5048c0898f972916c818ea63cbedda707886a4b5ffcfbf94e3
-  languageName: node
-  linkType: hard
-
-"@noble/hashes@npm:1.7.2, @noble/hashes@npm:~1.7.1":
-  version: 1.7.2
-  resolution: "@noble/hashes@npm:1.7.2"
-  checksum: 10c0/b1411eab3c0b6691d847e9394fe7f1fcd45eeb037547c8f97e7d03c5068a499b4aef188e8e717eee67389dca4fee17d69d7e0f58af6c092567b0b76359b114b2
-  languageName: node
-  linkType: hard
-
-"@noble/hashes@npm:1.8.0, @noble/hashes@npm:^1.3.1, @noble/hashes@npm:^1.4.0, @noble/hashes@npm:^1.5.0, @noble/hashes@npm:^1.8.0, @noble/hashes@npm:~1.8.0":
+"@noble/hashes@npm:^1.3.0":
   version: 1.8.0
   resolution: "@noble/hashes@npm:1.8.0"
   checksum: 10c0/06a0b52c81a6fa7f04d67762e08b2c476a00285858150caeaaff4037356dd5e119f45b2a530f638b77a5eeca013168ec1b655db41bae3236cb2e9d511484fc77
@@ -5671,81 +5629,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/core@npm:2.20.2":
-  version: 2.20.2
-  resolution: "@walletconnect/core@npm:2.20.2"
-  dependencies:
-    "@walletconnect/heartbeat": "npm:1.2.2"
-    "@walletconnect/jsonrpc-provider": "npm:1.0.14"
-    "@walletconnect/jsonrpc-types": "npm:1.0.4"
-    "@walletconnect/jsonrpc-utils": "npm:1.0.8"
-    "@walletconnect/jsonrpc-ws-connection": "npm:1.0.16"
-    "@walletconnect/keyvaluestorage": "npm:1.1.1"
-    "@walletconnect/logger": "npm:2.1.2"
-    "@walletconnect/relay-api": "npm:1.0.11"
-    "@walletconnect/relay-auth": "npm:1.1.0"
-    "@walletconnect/safe-json": "npm:1.0.2"
-    "@walletconnect/time": "npm:1.0.2"
-    "@walletconnect/types": "npm:2.20.2"
-    "@walletconnect/utils": "npm:2.20.2"
-    "@walletconnect/window-getters": "npm:1.0.1"
-    es-toolkit: "npm:1.33.0"
-    events: "npm:3.3.0"
-    uint8arrays: "npm:3.1.0"
-  checksum: 10c0/2ed3737b4cfc22df5fbca5d8c551f82eb5811865300f8990ee5b035fde0e90894c0a63172b021736ebc97ed7913f39e89e1c87bfaccae34db18eb5bf4dd4fd92
-  languageName: node
-  linkType: hard
-
-"@walletconnect/core@npm:2.21.0":
-  version: 2.21.0
-  resolution: "@walletconnect/core@npm:2.21.0"
-  dependencies:
-    "@walletconnect/heartbeat": "npm:1.2.2"
-    "@walletconnect/jsonrpc-provider": "npm:1.0.14"
-    "@walletconnect/jsonrpc-types": "npm:1.0.4"
-    "@walletconnect/jsonrpc-utils": "npm:1.0.8"
-    "@walletconnect/jsonrpc-ws-connection": "npm:1.0.16"
-    "@walletconnect/keyvaluestorage": "npm:1.1.1"
-    "@walletconnect/logger": "npm:2.1.2"
-    "@walletconnect/relay-api": "npm:1.0.11"
-    "@walletconnect/relay-auth": "npm:1.1.0"
-    "@walletconnect/safe-json": "npm:1.0.2"
-    "@walletconnect/time": "npm:1.0.2"
-    "@walletconnect/types": "npm:2.21.0"
-    "@walletconnect/utils": "npm:2.21.0"
-    "@walletconnect/window-getters": "npm:1.0.1"
-    es-toolkit: "npm:1.33.0"
-    events: "npm:3.3.0"
-    uint8arrays: "npm:3.1.0"
-  checksum: 10c0/4b4915221baa2f2f4157594dccb8184e98a503a852c675d49ed59b698d19315f3a976ef01f4021ac97623f2406c55a96a3a991296fcf9cf6b3745991ac68fb41
-  languageName: node
-  linkType: hard
-
-"@walletconnect/core@npm:2.21.1":
-  version: 2.21.1
-  resolution: "@walletconnect/core@npm:2.21.1"
-  dependencies:
-    "@walletconnect/heartbeat": "npm:1.2.2"
-    "@walletconnect/jsonrpc-provider": "npm:1.0.14"
-    "@walletconnect/jsonrpc-types": "npm:1.0.4"
-    "@walletconnect/jsonrpc-utils": "npm:1.0.8"
-    "@walletconnect/jsonrpc-ws-connection": "npm:1.0.16"
-    "@walletconnect/keyvaluestorage": "npm:1.1.1"
-    "@walletconnect/logger": "npm:2.1.2"
-    "@walletconnect/relay-api": "npm:1.0.11"
-    "@walletconnect/relay-auth": "npm:1.1.0"
-    "@walletconnect/safe-json": "npm:1.0.2"
-    "@walletconnect/time": "npm:1.0.2"
-    "@walletconnect/types": "npm:2.21.1"
-    "@walletconnect/utils": "npm:2.21.1"
-    "@walletconnect/window-getters": "npm:1.0.1"
-    es-toolkit: "npm:1.33.0"
-    events: "npm:3.3.0"
-    uint8arrays: "npm:3.1.0"
-  checksum: 10c0/78664ab17591cd023dfe497e89db2e1d330354ce1b88fe4a75a700ee5a581eaa1ad0a61549b0c269587cc5d8d932155ff01ce98d74b506c41b9c172ca2ec252e
-  languageName: node
-  linkType: hard
-
 "@walletconnect/core@npm:2.21.2, @walletconnect/core@npm:^2.20.3":
   version: 2.21.2
   resolution: "@walletconnect/core@npm:2.21.2"
@@ -5780,9 +5663,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/ethereum-provider@npm:2.21.1":
-  version: 2.21.1
-  resolution: "@walletconnect/ethereum-provider@npm:2.21.1"
+"@walletconnect/ethereum-provider@npm:^2.9.0":
+  version: 2.21.2
+  resolution: "@walletconnect/ethereum-provider@npm:2.21.2"
   dependencies:
     "@reown/appkit": "npm:1.7.8"
     "@walletconnect/jsonrpc-http-connection": "npm:1.0.8"
@@ -5790,12 +5673,12 @@ __metadata:
     "@walletconnect/jsonrpc-types": "npm:1.0.4"
     "@walletconnect/jsonrpc-utils": "npm:1.0.8"
     "@walletconnect/keyvaluestorage": "npm:1.1.1"
-    "@walletconnect/sign-client": "npm:2.21.1"
-    "@walletconnect/types": "npm:2.21.1"
-    "@walletconnect/universal-provider": "npm:2.21.1"
-    "@walletconnect/utils": "npm:2.21.1"
+    "@walletconnect/sign-client": "npm:2.21.2"
+    "@walletconnect/types": "npm:2.21.2"
+    "@walletconnect/universal-provider": "npm:2.21.2"
+    "@walletconnect/utils": "npm:2.21.2"
     events: "npm:3.3.0"
-  checksum: 10c0/91247045202a7f040338f7588d7c323cc845ac47c6ca8749f38ab07ac30a219a1ef6698ee03b97f5d48ca57e3fa1e1863c9fbc1371a1471501b5843014cacd18
+  checksum: 10c0/5193bdcb2ef4db5b20a4183b630de9afb2b64f7031c1617b2fa41c4d9343feb6f66bd8e541b593696ea3e4e714effe95a027861bc7f1df6191185fd9b24eee33
   languageName: node
   linkType: hard
 
@@ -5933,58 +5816,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/sign-client@npm:2.20.2":
-  version: 2.20.2
-  resolution: "@walletconnect/sign-client@npm:2.20.2"
-  dependencies:
-    "@walletconnect/core": "npm:2.20.2"
-    "@walletconnect/events": "npm:1.0.1"
-    "@walletconnect/heartbeat": "npm:1.2.2"
-    "@walletconnect/jsonrpc-utils": "npm:1.0.8"
-    "@walletconnect/logger": "npm:2.1.2"
-    "@walletconnect/time": "npm:1.0.2"
-    "@walletconnect/types": "npm:2.20.2"
-    "@walletconnect/utils": "npm:2.20.2"
-    events: "npm:3.3.0"
-  checksum: 10c0/12c27037591179553b9d5fc374dfe9980c10a04ec6d5d8418ebfd7e72c466577e88295b209da9fd429c648a7ee8a8cc64a9e1a2c320e8aa55f21e65b85714e31
-  languageName: node
-  linkType: hard
-
-"@walletconnect/sign-client@npm:2.21.0":
-  version: 2.21.0
-  resolution: "@walletconnect/sign-client@npm:2.21.0"
-  dependencies:
-    "@walletconnect/core": "npm:2.21.0"
-    "@walletconnect/events": "npm:1.0.1"
-    "@walletconnect/heartbeat": "npm:1.2.2"
-    "@walletconnect/jsonrpc-utils": "npm:1.0.8"
-    "@walletconnect/logger": "npm:2.1.2"
-    "@walletconnect/time": "npm:1.0.2"
-    "@walletconnect/types": "npm:2.21.0"
-    "@walletconnect/utils": "npm:2.21.0"
-    events: "npm:3.3.0"
-  checksum: 10c0/72cca06c99a2cf49aeaefaa13783fa01505d358a578f4b18c1742b790505fb95bf4d9d80a89092531a16e257f16b2d73c3bc6846c3ff0ecafbaf5394dbe0519f
-  languageName: node
-  linkType: hard
-
-"@walletconnect/sign-client@npm:2.21.1":
-  version: 2.21.1
-  resolution: "@walletconnect/sign-client@npm:2.21.1"
-  dependencies:
-    "@walletconnect/core": "npm:2.21.1"
-    "@walletconnect/events": "npm:1.0.1"
-    "@walletconnect/heartbeat": "npm:1.2.2"
-    "@walletconnect/jsonrpc-utils": "npm:1.0.8"
-    "@walletconnect/logger": "npm:2.1.2"
-    "@walletconnect/time": "npm:1.0.2"
-    "@walletconnect/types": "npm:2.21.1"
-    "@walletconnect/utils": "npm:2.21.1"
-    events: "npm:3.3.0"
-  checksum: 10c0/ed33f8150a4d9966ca80c6455557fb2aa8f396c48ca4e4f56ff0bd0f97d53dafcc3609073d7c31f54d3ea87392045ddfbca2d7a0b8544eaa5c618a3a92f90b66
-  languageName: node
-  linkType: hard
-
-"@walletconnect/sign-client@npm:2.21.2":
+"@walletconnect/sign-client@npm:^2.6.0":
   version: 2.21.2
   resolution: "@walletconnect/sign-client@npm:2.21.2"
   dependencies:
@@ -6035,20 +5867,6 @@ __metadata:
     "@walletconnect/logger": "npm:2.1.2"
     events: "npm:3.3.0"
   checksum: 10c0/1b969b045b77833315c56ae6948e551c175b6496e894be7b19db88a376d16a662a8b728ec753e01336053262ca16567ae36eed48f6dfe32cdf8d01cf66211588
-  languageName: node
-  linkType: hard
-
-"@walletconnect/types@npm:2.21.1":
-  version: 2.21.1
-  resolution: "@walletconnect/types@npm:2.21.1"
-  dependencies:
-    "@walletconnect/events": "npm:1.0.1"
-    "@walletconnect/heartbeat": "npm:1.2.2"
-    "@walletconnect/jsonrpc-types": "npm:1.0.4"
-    "@walletconnect/keyvaluestorage": "npm:1.1.1"
-    "@walletconnect/logger": "npm:2.1.2"
-    events: "npm:3.3.0"
-  checksum: 10c0/60468f50ea7c95ac5269a9e53a0417d50302978a927c042a0376d4dcb0d336f2187a129e8c602a173ccf020a193a4dde50f3f9f74d5b8da0a9801aa9d672458e
   languageName: node
   linkType: hard
 
@@ -6103,26 +5921,6 @@ __metadata:
     es-toolkit: "npm:1.33.0"
     events: "npm:3.3.0"
   checksum: 10c0/856fa961926b15bd91e6a35a2f7f3db832d7a81fdb04ee0553ac882ac8c307a42bdeb439b2b6bb4ca0b834953e933f4d380883d1ad73cbbc7e88568091fa8aab
-  languageName: node
-  linkType: hard
-
-"@walletconnect/universal-provider@npm:2.21.1":
-  version: 2.21.1
-  resolution: "@walletconnect/universal-provider@npm:2.21.1"
-  dependencies:
-    "@walletconnect/events": "npm:1.0.1"
-    "@walletconnect/jsonrpc-http-connection": "npm:1.0.8"
-    "@walletconnect/jsonrpc-provider": "npm:1.0.14"
-    "@walletconnect/jsonrpc-types": "npm:1.0.4"
-    "@walletconnect/jsonrpc-utils": "npm:1.0.8"
-    "@walletconnect/keyvaluestorage": "npm:1.1.1"
-    "@walletconnect/logger": "npm:2.1.2"
-    "@walletconnect/sign-client": "npm:2.21.1"
-    "@walletconnect/types": "npm:2.21.1"
-    "@walletconnect/utils": "npm:2.21.1"
-    es-toolkit: "npm:1.33.0"
-    events: "npm:3.3.0"
-  checksum: 10c0/75e97c9a52025b18c05d2e029384492c8a9f82044971be6fef1856962984ff6dc48805fc732d1cd748979ab19a6eb688c9e8ed7a0944f57efd384d1ab6375252
   languageName: node
   linkType: hard
 
@@ -6193,31 +5991,6 @@ __metadata:
     uint8arrays: "npm:3.1.0"
     viem: "npm:2.23.2"
   checksum: 10c0/2a091072aba6351f1576e459056e54b6af14a900fe0bc0dcff06df7abb58fb7f4ed2637905d62ae2e85188dfecc65867ced3b28b3475bd7c1327a276745cb25e
-  languageName: node
-  linkType: hard
-
-"@walletconnect/utils@npm:2.21.1":
-  version: 2.21.1
-  resolution: "@walletconnect/utils@npm:2.21.1"
-  dependencies:
-    "@noble/ciphers": "npm:1.2.1"
-    "@noble/curves": "npm:1.8.1"
-    "@noble/hashes": "npm:1.7.1"
-    "@walletconnect/jsonrpc-utils": "npm:1.0.8"
-    "@walletconnect/keyvaluestorage": "npm:1.1.1"
-    "@walletconnect/relay-api": "npm:1.0.11"
-    "@walletconnect/relay-auth": "npm:1.1.0"
-    "@walletconnect/safe-json": "npm:1.0.2"
-    "@walletconnect/time": "npm:1.0.2"
-    "@walletconnect/types": "npm:2.21.1"
-    "@walletconnect/window-getters": "npm:1.0.1"
-    "@walletconnect/window-metadata": "npm:1.0.1"
-    bs58: "npm:6.0.0"
-    detect-browser: "npm:5.3.0"
-    query-string: "npm:7.1.3"
-    uint8arrays: "npm:3.1.0"
-    viem: "npm:2.23.2"
-  checksum: 10c0/367cf46f2534805fd4555564f2b1056fcc927464b9f1b9be495e1f1c599ec43cf5cc75ea1f01bec92a0e85fba029b6298a77820b1e9e61a7bf7e1bbde3525811
   languageName: node
   linkType: hard
 
@@ -15304,6 +15077,8 @@ __metadata:
     "@typescript-eslint/parser": "npm:^7.0.0"
     "@wagmi/core": "npm:^2.5.5"
     "@walletconnect/core": "npm:^2.20.3"
+    "@walletconnect/ethereum-provider": "npm:^2.9.0"
+    "@walletconnect/sign-client": "npm:^2.6.0"
     "@walletconnect/utils": "npm:^2.20.3"
     autoprefixer: "npm:^10.4.21"
     axios: "npm:^1.6.7"

@@ -94,6 +94,20 @@ export default function Dashboard() {
     }
   }, [walletConnectAttempted, walletConnectError, isConnected]);
 
+  useEffect(() => {
+    if (address) {
+      fetch(`/api/waitlist?walletAddress=${address}`)
+        .then(res => {
+          if (res.ok) return res.json();
+          throw new Error('Not found');
+        })
+        .then(data => {
+          if (data.exists) setWaitlistStatus('success');
+        })
+        .catch(() => {});
+    }
+  }, [address]);
+
   const handleWaitlist = async (e: React.FormEvent) => {
     e.preventDefault();
     setWaitlistStatus('loading');
@@ -171,12 +185,14 @@ export default function Dashboard() {
             setWalletConnectInitiated(false);
           }}
         />
-        <button 
-          onClick={() => setShowWaitlistModal(true)}
-          className="btn-primary bg-white text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl border-2 border-blue-700 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Join Waitlist
-        </button>
+        {waitlistStatus !== 'success' && (
+          <button 
+            onClick={() => setShowWaitlistModal(true)}
+            className="btn-primary bg-white text-gray-900 font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl border-2 border-blue-700 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Join Waitlist
+          </button>
+        )}
       </div>
 
       {/* Blockchain Logos */}
