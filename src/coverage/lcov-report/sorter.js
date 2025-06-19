@@ -85,13 +85,20 @@ var addSorting = (function() {
         for (i = 0; i < tableCols.length; i += 1) {
             colNode = tableCols[i];
             col = cols[i];
-            val = colNode.getAttribute('data-value');
+            val = sanitize(colNode.getAttribute('data-value'));
             if (col.type === 'number') {
                 val = Number(val);
             }
             data[col.key] = val;
         }
         return data;
+    }
+
+    // Utility function to sanitize input
+    function sanitize(input) {
+        const div = document.createElement('div');
+        div.textContent = input;
+        return div.innerHTML;
     }
     // loads all row data
     function loadData() {
